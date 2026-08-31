@@ -390,22 +390,38 @@ export function AgendaBoard(props: AgendaBoardProps) {
                   </span>
 
                   {dayAppointments.length > 0 ? (
-                    <span className="mt-1 block space-y-1">
-                      {dayAppointments.slice(0, 2).map((appointment) => (
-                        <span
-                          key={appointment.id}
-                          className="block truncate rounded bg-petrol-700/90 px-1.5 py-0.5 text-[0.625rem] font-medium text-white"
-                        >
-                          {formatTime(appointment.starts_at, props.timezone)}{' '}
-                          {appointment.patient?.full_name ?? appointment.contact_name ?? ''}
+                    <>
+                      {/* Em telas estreitas a célula não cabe texto: mostra a
+                          quantidade e o detalhe abre na visão de dia. */}
+                      <span className="mt-1 flex items-center gap-1 sm:hidden">
+                        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-petrol-600" />
+                        <span className="text-[0.625rem] font-medium text-petrol-700">
+                          {dayAppointments.length}
                         </span>
-                      ))}
-                      {dayAppointments.length > 2 ? (
-                        <span className="block text-[0.625rem] text-ink-muted">
-                          +{dayAppointments.length - 2}
-                        </span>
-                      ) : null}
-                    </span>
+                      </span>
+
+                      <span className="mt-1 hidden space-y-1 sm:block">
+                        {dayAppointments.slice(0, 2).map((appointment) => (
+                          <span
+                            key={appointment.id}
+                            className="block truncate rounded bg-petrol-700/90 px-1.5 py-0.5 text-[0.625rem] font-medium text-white"
+                          >
+                            {formatTime(appointment.starts_at, props.timezone)}{' '}
+                            {appointment.patient?.full_name ?? appointment.contact_name ?? ''}
+                          </span>
+                        ))}
+                        {dayAppointments.length > 2 ? (
+                          <span className="block text-[0.625rem] text-ink-muted">
+                            +{dayAppointments.length - 2}
+                          </span>
+                        ) : null}
+                      </span>
+
+                      <span className="sr-only">
+                        {dayAppointments.length}{' '}
+                        {dayAppointments.length === 1 ? 'atendimento' : 'atendimentos'}
+                      </span>
+                    </>
                   ) : null}
                 </button>
               );
