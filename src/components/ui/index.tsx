@@ -134,7 +134,6 @@ const buttonVariants = {
   secondary: 'bg-white text-petrol-800 ring-1 ring-inset ring-petrol-200 hover:bg-petrol-50 hover:ring-petrol-300',
   outline: 'bg-transparent text-petrol-800 ring-1 ring-inset ring-petrol-300 hover:bg-petrol-50',
   ghost: 'bg-transparent text-petrol-800 hover:bg-petrol-50',
-  clay: 'bg-clay-500 text-white shadow-card hover:bg-clay-600 hover:shadow-lift active:scale-[0.98]',
   onDark: 'bg-white text-petrol-900 shadow-lift hover:bg-sand-100 active:scale-[0.98]',
   danger: 'bg-red-600 text-white hover:bg-red-700',
 } as const;

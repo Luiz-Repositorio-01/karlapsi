@@ -7,11 +7,17 @@ const config: Config = {
     extend: {
       colors: {
         // Identidade Karla Neuropsi: verde-petróleo profundo + areia quente.
+        /*
+         * Escala de tinta calibrada para contraste WCAG AA (>= 4,5:1) em todas
+         * as superfícies claras do tema, inclusive `surface-sunken`, que é a
+         * mais escura. `faint` é usado em texto auxiliar pequeno, então também
+         * precisa passar em 4,5:1 — não apenas em 3:1.
+         */
         ink: {
           DEFAULT: '#14211E',
           soft: '#2C3B37',
-          muted: '#5C6B66',
-          faint: '#8A9894',
+          muted: '#54625E',
+          faint: '#61706C',
         },
         petrol: {
           50: '#EFF5F3',
@@ -37,10 +43,14 @@ const config: Config = {
           800: '#6E4E36',
           900: '#5A412F',
         },
+        /*
+         * Acento terracota. `500` é usado com texto branco (selos e avisos),
+         * por isso a escala foi escurecida até atingir 5:1 com branco.
+         */
         clay: {
-          400: '#D89A7E',
-          500: '#C2745B',
-          600: '#A55B44',
+          400: '#C2745B',
+          500: '#A55B44',
+          600: '#8E4B37',
         },
         surface: {
           DEFAULT: '#FFFFFF',
