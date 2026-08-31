@@ -76,7 +76,7 @@ export default async function HomePage() {
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
               <Reveal>
-                <p className="font-display text-4xl leading-[1.05] tracking-tight text-petrol-800 sm:text-5xl lg:text-[3.25rem]">
+                <p className="font-display text-display-xl text-petrol-800">
                   {identity.brand_name}
                 </p>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-petrol-600">
@@ -85,7 +85,7 @@ export default async function HomePage() {
               </Reveal>
 
               <Reveal delay={80}>
-                <h1 id="hero-title" className="mt-7 max-w-xl text-display-md text-ink-soft sm:text-display-lg">
+                <h1 id="hero-title" className="mt-7 max-w-xl text-display-sm text-ink-soft sm:text-display-md">
                   {identity.headline}
                 </h1>
               </Reveal>
