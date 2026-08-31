@@ -1,14 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 /**
- * Responsabilidades do middleware:
+ * Proxy (antigo middleware) do Next.js.
+ *
+ * Responsabilidades:
  * 1. Renovar a sessão do Supabase (refresh do cookie) em cada navegação.
  * 2. Barrar /admin para quem não tem sessão — primeira barreira, não a única:
- *    cada página do admin revalida a sessão e a permissão no servidor, e o
- *    banco valida novamente via RLS.
+ *    cada página do admin revalida sessão e permissão no servidor, e o banco
+ *    valida novamente via RLS.
  */
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -16,7 +18,7 @@ export async function middleware(request: NextRequest) {
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
 
   // Sem Supabase configurado, /admin exibe a tela de configuração pendente
-  // (a própria página trata o caso); o resto do site segue normalmente.
+  // (a própria página trata o caso) e o resto do site segue normalmente.
   if (!supabaseUrl || !supabaseKey) {
     return response;
   }
@@ -26,11 +28,16 @@ export async function middleware(request: NextRequest) {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet) {
+      setAll(
+        cookiesToSet: { name: string; value: string; options: CookieOptions }[],
+        headers: Record<string, string>,
+      ) {
         for (const { name, value } of cookiesToSet) {
           request.cookies.set(name, value);
         }
+
         response = NextResponse.next({ request });
+
         for (const { name, value, options } of cookiesToSet) {
           response.cookies.set(name, value, {
             ...options,
@@ -38,6 +45,11 @@ export async function middleware(request: NextRequest) {
             sameSite: 'lax',
             secure: process.env.NODE_ENV === 'production',
           });
+        }
+
+        // Impede que CDN/proxy reverso guarde uma resposta com cookie de sessão.
+        for (const [key, headerValue] of Object.entries(headers)) {
+          response.headers.set(key, headerValue);
         }
       },
     },
