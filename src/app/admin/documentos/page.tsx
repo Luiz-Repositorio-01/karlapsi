@@ -3,6 +3,7 @@ import { Alert, Badge, Card, EmptyState } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
 import { DataTable } from '@/components/admin/ui';
 import { DocumentUploader } from '@/app/admin/documentos/DocumentUploader';
+import { DocumentActions } from '@/app/admin/documentos/DocumentActions';
 import { requirePermission } from '@/lib/auth/session';
 import { can } from '@/lib/auth/rbac';
 import { listDocuments, listPatients } from '@/lib/data/admin';
@@ -108,6 +109,13 @@ export default async function DocumentosPage() {
             render: (document) => formatDate(document.created_at),
           },
         ]}
+        actions={(document) => (
+          <DocumentActions
+            documentId={document.id}
+            title={document.title}
+            canDelete={canManage}
+          />
+        )}
       />
 
       <Card className="mt-8 bg-surface-muted">

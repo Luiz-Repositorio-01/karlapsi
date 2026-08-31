@@ -24,6 +24,7 @@ import {
 } from '@/components/ui';
 import { Modal } from '@/components/ui/interactive';
 import { ActionButton, ActionForm } from '@/components/admin/forms';
+import { CurrencyField } from '@/components/admin/CurrencyField';
 import { StatusBadge } from '@/components/admin/ui';
 import { cn } from '@/lib/utils/cn';
 import {
@@ -944,17 +945,11 @@ function AppointmentForm({
 
           {canSeeFinance ? (
             <>
-              <FormField label="Valor (centavos)" htmlFor="atendimento-valor" hint="Ex.: 35000 = R$ 350,00">
-                <input
-                  {...fieldAria('atendimento-valor', { hint: true })}
-                  type="number"
-                  name="priceCents"
-                  min={0}
-                  step={100}
-                  defaultValue={appointment?.price_cents ?? ''}
-                  className={inputClasses}
-                />
-              </FormField>
+              <CurrencyField
+                name="priceCents"
+                label="Valor"
+                defaultCents={appointment?.price_cents ?? null}
+              />
 
               <FormField label="Forma de pagamento" htmlFor="atendimento-pagamento">
                 <select

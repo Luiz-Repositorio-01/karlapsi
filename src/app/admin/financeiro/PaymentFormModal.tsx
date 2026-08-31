@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import { Button, FormField, fieldAria, inputClasses } from '@/components/ui';
 import { Modal } from '@/components/ui/interactive';
 import { ActionForm } from '@/components/admin/forms';
+import { CurrencyField } from '@/components/admin/CurrencyField';
 import { PAYMENT_METHOD, PAYMENT_STATUS } from '@/lib/utils/labels';
 import type { ActionState } from '@/lib/actions/state';
 
@@ -79,26 +80,12 @@ export function PaymentFormModal({
                 </select>
               </FormField>
 
-              <FormField
-                label="Valor em centavos"
-                htmlFor="cobranca-valor"
+              <CurrencyField
+                name="amountCents"
+                label="Valor"
                 required
-                hint="Ex.: 35000 = R$ 350,00"
                 error={state.fields?.amountCents}
-              >
-                <input
-                  {...fieldAria('cobranca-valor', {
-                    hint: true,
-                    error: Boolean(state.fields?.amountCents),
-                  })}
-                  type="number"
-                  name="amountCents"
-                  min={0}
-                  step={100}
-                  className={inputClasses}
-                  required
-                />
-              </FormField>
+              />
 
               <FormField label="Forma de pagamento" htmlFor="cobranca-metodo">
                 <select

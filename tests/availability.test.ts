@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  computeAvailability,
-  formatDateKey,
-  isSlotOffered,
-  zonedInstant,
-} from '@/lib/domain/availability';
+import { computeAvailability, formatDateKey, zonedInstant } from '@/lib/domain/availability';
 import type { AvailabilityException, AvailabilityRule, BusyRange } from '@/lib/types';
 
 /**
@@ -249,19 +244,6 @@ describe('computeAvailability', () => {
     // 09:00 em São Paulo (UTC-3) equivale a 12:00 UTC.
     expect(day?.slots[0]?.startsAt).toBe('2026-09-02T12:00:00.000Z');
     expect(day?.slots[0]?.endsAt).toBe('2026-09-02T13:00:00.000Z');
-  });
-});
-
-describe('isSlotOffered', () => {
-  it('confirma um horário presente na lista', () => {
-    const days = computeAvailability(baseInput());
-    const slot = days[0]?.slots[0]?.startsAt ?? '';
-    expect(isSlotOffered(slot, days)).toBe(true);
-  });
-
-  it('recusa horário que não está na lista', () => {
-    const days = computeAvailability(baseInput());
-    expect(isSlotOffered('2026-09-02T03:00:00.000Z', days)).toBe(false);
   });
 });
 

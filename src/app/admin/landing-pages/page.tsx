@@ -23,7 +23,7 @@ const FIELDS: CrudField[] = [
   },
   { name: 'audience', label: 'Para quem é', type: 'textarea', rows: 2, fullWidth: true },
   { name: 'coverUrl', label: 'Capa (URL)', type: 'url' },
-  { name: 'priceCents', label: 'Preço em centavos', type: 'currency-cents', min: 0 },
+  { name: 'priceCents', label: 'Preço', type: 'currency-cents', min: 0 },
   { name: 'ctaLabel', label: 'Texto do botão', type: 'text', hint: 'Padrão: Acessar' },
   { name: 'ctaUrl', label: 'Link do botão (URL)', type: 'url' },
   {

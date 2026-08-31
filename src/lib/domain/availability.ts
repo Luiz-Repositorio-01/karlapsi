@@ -209,11 +209,3 @@ export function computeAvailability(input: ComputeSlotsInput): DayAvailability[]
 
   return result;
 }
-
-/** Confere se um horário específico continua elegível (dupla checagem na API). */
-export function isSlotOffered(
-  slotIso: string,
-  availability: DayAvailability[],
-): boolean {
-  return availability.some((day) => day.slots.some((slot) => slot.startsAt === slotIso));
-}

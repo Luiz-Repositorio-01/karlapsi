@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ArrowUpRight, TrendingUp } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Badge, Card } from '@/components/ui';
 import { cn } from '@/lib/utils/cn';
 
@@ -211,15 +211,5 @@ export function DataTable<T extends { id: string | number }>({
         })}
       </ul>
     </>
-  );
-}
-
-/** Aviso de leitura restrita (quando o papel não vê certos dados). */
-export function RestrictedNotice({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex items-start gap-2 rounded-xl bg-surface-sunken px-4 py-3 text-xs leading-relaxed text-ink-muted">
-      <TrendingUp aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-      {children}
-    </div>
   );
 }

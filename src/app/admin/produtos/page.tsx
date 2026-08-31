@@ -24,7 +24,7 @@ const FIELDS: CrudField[] = [
       { value: 'other', label: 'Outro' },
     ],
   },
-  { name: 'priceCents', label: 'Preço em centavos', type: 'currency-cents', min: 0, required: true },
+  { name: 'priceCents', label: 'Preço', type: 'currency-cents', min: 0, required: true },
   { name: 'summary', label: 'Resumo', type: 'textarea', rows: 2, fullWidth: true },
   { name: 'description', label: 'Descrição', type: 'textarea', rows: 6, fullWidth: true },
   {

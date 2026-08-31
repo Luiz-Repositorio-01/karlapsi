@@ -77,10 +77,6 @@ export function formatLongDate(value: string | Date, timezone = DEFAULT_TIMEZONE
   return `${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
 }
 
-export function formatWeekdayLong(value: string | Date, timezone = DEFAULT_TIMEZONE): string {
-  return WEEKDAY_LONG[zoned(value, timezone).getDay()] ?? '';
-}
-
 /** Data local YYYY-MM-DD → "Ter, 10 de março". */
 export function formatDateKeyLabel(dateKey: string): string {
   const [year = '1970', month = '01', day = '01'] = dateKey.split('-');
@@ -166,11 +162,6 @@ export function slugify(value: string): string {
 export function estimateReadingMinutes(content: string): number {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
-}
-
-export function truncate(value: string, max: number): string {
-  if (value.length <= max) return value;
-  return `${value.slice(0, max - 1).trimEnd()}…`;
 }
 
 /** Link de WhatsApp com mensagem pré-preenchida. */

@@ -32,10 +32,10 @@ const FIELDS: CrudField[] = [
   },
   {
     name: 'priceCents',
-    label: 'Valor em centavos',
+    label: 'Valor',
     type: 'currency-cents',
     min: 0,
-    hint: 'Ex.: 35000 = R$ 350,00. Deixe vazio para "a combinar".',
+    hint: 'Em reais, ex.: 350,00. Deixe vazio para "a combinar".',
   },
   { name: 'sortOrder', label: 'Ordem de exibição', type: 'number', min: 0, max: 999 },
   {

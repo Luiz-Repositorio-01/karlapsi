@@ -29,7 +29,7 @@ const FIELDS: CrudField[] = [
     hint: 'Ex.: legacy/landing-pages/cuidar/index.html — o arquivo NÃO é alterado, apenas exibido.',
     fullWidth: true,
   },
-  { name: 'priceCents', label: 'Preço em centavos', type: 'currency-cents', min: 0 },
+  { name: 'priceCents', label: 'Preço', type: 'currency-cents', min: 0 },
   {
     name: 'status',
     label: 'Status',

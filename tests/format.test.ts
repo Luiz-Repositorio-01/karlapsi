@@ -12,7 +12,6 @@ import {
   initials,
   parseCurrencyToCents,
   slugify,
-  truncate,
   whatsappLink,
 } from '@/lib/utils/format';
 
@@ -114,11 +113,6 @@ describe('utilidades de texto', () => {
   it('gera iniciais do nome', () => {
     expect(initials('Karla Dias')).toBe('KD');
     expect(initials('Ana')).toBe('A');
-  });
-
-  it('trunca preservando o limite', () => {
-    expect(truncate('abcdefghij', 5)).toBe('abcd…');
-    expect(truncate('abc', 5)).toBe('abc');
   });
 
   it('estima tempo de leitura com mínimo de 1 minuto', () => {

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui';
 import { Modal } from '@/components/ui/interactive';
 import { ActionForm } from '@/components/admin/forms';
+import { CurrencyField } from '@/components/admin/CurrencyField';
 import { cn } from '@/lib/utils/cn';
 import { slugify } from '@/lib/utils/format';
 import type { ActionState } from '@/lib/actions/state';
@@ -169,6 +170,21 @@ function CrudForm({
             const error = state.fields?.[field.name];
             const rawValue = values[field.name];
 
+            if (field.type === 'currency-cents') {
+              return (
+                <CurrencyField
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  defaultCents={typeof rawValue === 'number' ? rawValue : null}
+                  hint={field.hint}
+                  error={error}
+                  required={field.required}
+                  className={cn(field.fullWidth && 'sm:col-span-2')}
+                />
+              );
+            }
+
             if (field.type === 'checkbox') {
               return (
                 <label
@@ -249,7 +265,7 @@ function CrudForm({
                   <input
                     {...fieldAria(id, { hint: Boolean(field.hint), error: Boolean(error) })}
                     type={
-                      field.type === 'number' || field.type === 'currency-cents'
+                      field.type === 'number'
                         ? 'number'
                         : field.type === 'url'
                           ? 'url'
@@ -263,7 +279,7 @@ function CrudForm({
                     defaultValue={rawValue == null ? '' : String(rawValue)}
                     min={field.min}
                     max={field.max}
-                    step={field.step ?? (field.type === 'currency-cents' ? 100 : undefined)}
+                    step={field.step}
                     className={inputClasses}
                     required={field.required}
                     onChange={
