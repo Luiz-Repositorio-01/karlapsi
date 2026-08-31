@@ -502,7 +502,8 @@ export const PROCESS_HIGHLIGHTS = [
   },
   {
     title: 'Agenda organizada',
-    description: 'Horário reservado, confirmação registrada e lembretes de cada encontro.',
+    description:
+      'Horário reservado com exclusividade, confirmação registrada e histórico de cada encontro.',
   },
   {
     title: 'Dados tratados com cuidado',

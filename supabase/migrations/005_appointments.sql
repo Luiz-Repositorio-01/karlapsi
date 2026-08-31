@@ -46,6 +46,9 @@ create index if not exists appointments_patient_idx on public.appointments (pati
 create index if not exists appointments_status_idx on public.appointments (status, starts_at);
 create index if not exists appointments_upcoming_idx on public.appointments (starts_at)
   where status in ('requested', 'confirmed', 'awaiting_payment', 'paid');
+-- Suporta o limite de solicitações pendentes por e-mail (agendamento público).
+create index if not exists appointments_pending_contact_idx on public.appointments (contact_email, starts_at)
+  where status = 'requested';
 
 drop trigger if exists appointments_set_updated_at on public.appointments;
 create trigger appointments_set_updated_at
@@ -104,6 +107,9 @@ create table if not exists public.appointment_requests (
 
 create index if not exists appointment_requests_status_idx on public.appointment_requests (status, created_at desc);
 create index if not exists appointment_requests_email_idx on public.appointment_requests (email, created_at desc);
+-- Suporta a checagem de rate limit por IP (hash) das últimas horas.
+create index if not exists appointment_requests_ip_idx on public.appointment_requests (ip_hash, created_at desc)
+  where ip_hash is not null;
 
 drop trigger if exists appointment_requests_set_updated_at on public.appointment_requests;
 create trigger appointment_requests_set_updated_at

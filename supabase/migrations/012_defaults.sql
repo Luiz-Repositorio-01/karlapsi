@@ -53,7 +53,8 @@ insert into public.site_settings (key, value, description) values
     'auto_confirm', false,
     'show_prices_publicly', false,
     'require_consent', true,
-    'consent_version', '1.0'
+    'consent_version', '1.0',
+    'max_daily_public_requests', 40
   ),
   'Regras do agendamento público'
 ),

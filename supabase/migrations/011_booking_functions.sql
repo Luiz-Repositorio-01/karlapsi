@@ -194,6 +194,7 @@ begin
   -- ------------------------------------------------------------ rate limiting
   v_ip_hash := app.hash_ip(payload ->> 'ip');
 
+  -- 1) Frequência: no máximo 5 solicitações por hora do mesmo e-mail ou IP.
   select count(*) into v_recent_count
   from public.appointment_requests
   where created_at > now() - interval '1 hour'
@@ -201,6 +202,33 @@ begin
 
   if v_recent_count >= 5 then
     raise exception 'RATE_LIMITED';
+  end if;
+
+  -- 2) Acúmulo: no máximo 2 horários reservados e ainda não confirmados por
+  --    e-mail. Além de evitar reserva duplicada por engano, impede que alguém
+  --    bloqueie a agenda enfileirando solicitações que nunca serão pagas.
+  select count(*) into v_recent_count
+  from public.appointments
+  where status = 'requested'
+    and starts_at > now()
+    and contact_email = v_email;
+
+  if v_recent_count >= 2 then
+    raise exception 'TOO_MANY_PENDING'
+      using hint = 'Já existem solicitações aguardando confirmação para este e-mail.';
+  end if;
+
+  -- 3) Fila global: limite de solicitações pendentes na agenda como um todo.
+  --    Protege contra tentativa de esgotar os horários com e-mails variados.
+  select count(*) into v_recent_count
+  from public.appointments
+  where status = 'requested'
+    and origin = 'public_site'
+    and created_at > now() - interval '24 hours';
+
+  if v_recent_count >= app.booking_setting(array['max_daily_public_requests'], 40)::integer then
+    raise exception 'RATE_LIMITED'
+      using hint = 'Limite diário de solicitações atingido.';
   end if;
 
   -- -------------------------------------------------------------- persistência

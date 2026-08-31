@@ -363,6 +363,98 @@ begin
 end $$;
 
 -- =============================================================================
+-- Limite de solicitações pendentes por e-mail
+--
+-- Impede que alguém bloqueie a agenda enfileirando reservas que nunca serão
+-- confirmadas (e evita reserva duplicada por engano).
+-- =============================================================================
+do $$
+declare
+  v_service uuid := (select id from public.services where slug = 'entrevista-inicial');
+  v_tz text := 'America/Sao_Paulo';
+  v_base date;
+  v_email text := 'acumulador@example.com';
+begin
+  -- Próxima quarta-feira, com folga em relação à antecedência mínima.
+  select d::date into v_base
+  from generate_series(
+    (now() at time zone v_tz)::date + 3,
+    (now() at time zone v_tz)::date + 12,
+    interval '1 day'
+  ) as d
+  where extract(dow from d) = 3
+  limit 1;
+
+  perform pg_temp.act_as_anon();
+
+  -- Duas solicitações são aceitas.
+  perform public.create_appointment_request(jsonb_build_object(
+    'service_id', v_service,
+    'starts_at', ((v_base::timestamp + time '09:00') at time zone v_tz),
+    'full_name', 'Visitante Acumulador', 'email', v_email,
+    'phone', '11955554444', 'consent_accepted', true, 'ip', '203.0.113.20'
+  ));
+  perform public.create_appointment_request(jsonb_build_object(
+    'service_id', v_service,
+    'starts_at', ((v_base::timestamp + time '10:00') at time zone v_tz),
+    'full_name', 'Visitante Acumulador', 'email', v_email,
+    'phone', '11955554444', 'consent_accepted', true, 'ip', '203.0.113.21'
+  ));
+  raise notice 'ok — duas solicitações pendentes por e-mail são aceitas';
+
+  -- A terceira é recusada.
+  begin
+    perform public.create_appointment_request(jsonb_build_object(
+      'service_id', v_service,
+      'starts_at', ((v_base::timestamp + time '11:00') at time zone v_tz),
+      'full_name', 'Visitante Acumulador', 'email', v_email,
+      'phone', '11955554444', 'consent_accepted', true, 'ip', '203.0.113.22'
+    ));
+    raise exception 'FALHOU: RPC permitiu acumular solicitações pendentes sem limite';
+  exception when raise_exception then
+    raise notice 'ok — RPC recusa acúmulo de solicitações pendentes do mesmo e-mail';
+  end;
+
+  perform pg_temp.reset_role();
+end $$;
+
+-- Confirmar uma das solicitações libera espaço para o mesmo e-mail.
+do $$
+declare
+  v_owner uuid := (select owner_id from test_users);
+  v_service uuid := (select id from public.services where slug = 'entrevista-inicial');
+  v_tz text := 'America/Sao_Paulo';
+  v_base date;
+begin
+  perform pg_temp.act_as(v_owner);
+  update public.appointments
+  set status = 'confirmed'
+  where contact_email = 'acumulador@example.com' and status = 'requested'
+    and starts_at = (select min(starts_at) from public.appointments
+                     where contact_email = 'acumulador@example.com' and status = 'requested');
+  perform pg_temp.reset_role();
+
+  select d::date into v_base
+  from generate_series(
+    (now() at time zone v_tz)::date + 3,
+    (now() at time zone v_tz)::date + 12,
+    interval '1 day'
+  ) as d
+  where extract(dow from d) = 3
+  limit 1;
+
+  perform pg_temp.act_as_anon();
+  perform public.create_appointment_request(jsonb_build_object(
+    'service_id', v_service,
+    'starts_at', ((v_base::timestamp + time '11:00') at time zone v_tz),
+    'full_name', 'Visitante Acumulador', 'email', 'acumulador@example.com',
+    'phone', '11955554444', 'consent_accepted', true, 'ip', '203.0.113.23'
+  ));
+  raise notice 'ok — confirmar solicitação libera nova reserva para o mesmo e-mail';
+  perform pg_temp.reset_role();
+end $$;
+
+-- =============================================================================
 -- LGPD / auditoria
 -- =============================================================================
 do $$

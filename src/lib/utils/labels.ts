@@ -93,6 +93,8 @@ export const DOMAIN_ERROR_MESSAGES: Record<string, string> = {
   SERVICE_UNAVAILABLE: 'Este serviço não está disponível para agendamento online.',
   CONSENT_REQUIRED: 'É necessário aceitar a política de privacidade para continuar.',
   RATE_LIMITED: 'Recebemos várias solicitações recentes. Aguarde alguns minutos e tente novamente.',
+  TOO_MANY_PENDING:
+    'Já existe solicitação aguardando confirmação para este e-mail. Aguarde a resposta antes de reservar outro horário.',
   INVALID_EMAIL: 'Informe um e-mail válido.',
   INVALID_PHONE: 'Informe um telefone válido com DDD.',
   INVALID_NAME: 'Informe o nome completo.',

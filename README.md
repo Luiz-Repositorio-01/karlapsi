@@ -144,7 +144,12 @@ padrão de `anon`/`authenticated` são revogados antes das políticas.
 Escrita vinda do site público **não** usa INSERT direto: passa por funções
 `SECURITY DEFINER` (`create_appointment_request`, `submit_contact_message`,
 `submit_data_subject_request`) que validam serviço, janela de agendamento,
-disponibilidade, consentimento e rate limit por e-mail/IP.
+disponibilidade, consentimento e limites anti-abuso:
+
+- no máximo 5 solicitações por hora do mesmo e-mail ou IP (hash);
+- no máximo 2 horários reservados e não confirmados por e-mail;
+- teto diário de solicitações públicas (`booking.max_daily_public_requests`,
+  padrão 40), para que ninguém consiga esgotar a agenda com e-mails variados.
 
 ### 4.4 Validar o banco localmente
 
@@ -154,8 +159,9 @@ sudo apt-get install -y postgresql   # se necessário
 ```
 
 O script cria um banco temporário, aplica stubs mínimos do Supabase
-(`auth`/`storage`), roda todas as migrations e executa **35 asserções** de
-RLS, RBAC, prevenção de double booking, agendamento público e LGPD.
+(`auth`/`storage`), roda todas as migrations e executa **38 asserções** de
+RLS, RBAC, prevenção de double booking, agendamento público, limites
+anti-abuso e LGPD.
 
 ## 5. Autenticação e criação do primeiro OWNER
 
