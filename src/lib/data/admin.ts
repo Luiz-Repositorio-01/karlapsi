@@ -283,7 +283,7 @@ export async function getPatient(id: string): Promise<AdminResult<Patient | null
 export async function getPatientTimeline(patientId: string) {
   const client = await createSupabaseServerClient();
   if (!client) {
-    return { appointments: [], payments: [], documents: [], history: [] };
+    return { appointments: [], upcoming: [], past: [], payments: [], documents: [], history: [] };
   }
 
   const [appointments, payments, documents, history] = await Promise.all([
@@ -314,8 +314,23 @@ export async function getPatientTimeline(patientId: string) {
       .limit(30),
   ]);
 
+  const allAppointments = (appointments.data ?? []) as AppointmentWithRelations[];
+
+  // A separação entre futuro e histórico é feita aqui, na camada de dados, e
+  // não durante a renderização (a página é um Server Component puro).
+  const now = Date.now();
+  const closedStatuses = new Set(['cancelled', 'no_show', 'rescheduled']);
+
+  const upcoming = allAppointments.filter(
+    (appointment) =>
+      new Date(appointment.starts_at).getTime() >= now && !closedStatuses.has(appointment.status),
+  );
+  const upcomingIds = new Set(upcoming.map((appointment) => appointment.id));
+
   return {
-    appointments: (appointments.data ?? []) as AppointmentWithRelations[],
+    appointments: allAppointments,
+    upcoming,
+    past: allAppointments.filter((appointment) => !upcomingIds.has(appointment.id)),
     payments: (payments.data ?? []) as PaymentWithRelations[],
     documents: (documents.data ?? []) as DocumentRecord[],
     history: (history.data ?? []) as AuditLog[],

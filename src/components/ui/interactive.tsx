@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -18,9 +19,48 @@ import { Button, buttonClasses } from '@/components/ui';
 
 /** Componentes que precisam de estado no navegador. */
 
+/**
+ * Sinaliza que o componente já está no navegador.
+ *
+ * Usa `useSyncExternalStore` (em vez de `useEffect` + `setState`) porque a
+ * informação vem do ambiente, não do React: no servidor devolve `false`, no
+ * cliente devolve `true` já na hidratação — sem render em cascata.
+ */
+const emptySubscribe = () => () => {};
+
+function useIsMounted(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
+
 // -----------------------------------------------------------------------------
 // Revelação no scroll (respeitando prefers-reduced-motion)
 // -----------------------------------------------------------------------------
+
+/**
+ * Verdadeiro quando a animação de entrada deve ser ignorada: usuário pediu
+ * menos movimento, ou o navegador não suporta IntersectionObserver.
+ */
+function subscribeReducedMotion(onChange: () => void) {
+  if (typeof window === 'undefined' || !window.matchMedia) return () => {};
+  const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+function getSkipRevealSnapshot(): boolean {
+  if (typeof window === 'undefined') return true;
+  if (typeof IntersectionObserver === 'undefined') return true;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function useSkipReveal(): boolean {
+  return useSyncExternalStore(subscribeReducedMotion, getSkipRevealSnapshot, () => false);
+}
+
 export function Reveal({
   children,
   className,
@@ -33,23 +73,19 @@ export function Reveal({
   as?: 'div' | 'li' | 'section' | 'article';
 }) {
   const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [intersected, setIntersected] = useState(false);
+  const skipReveal = useSkipReveal();
+  const visible = skipReveal || intersected;
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
-
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
-      setVisible(true);
-      return;
-    }
+    if (!node || skipReveal) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setVisible(true);
+            setIntersected(true);
             observer.disconnect();
           }
         }
@@ -59,7 +95,7 @@ export function Reveal({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [skipReveal]);
 
   return (
     <Tag
@@ -214,10 +250,9 @@ export function Modal({
   const titleId = useId();
   const descriptionId = useId();
   const containerRef = useFocusTrap(open, onClose);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   useBodyLock(open);
-  useEffect(() => setMounted(true), []);
 
   if (!mounted || !open) return null;
 
@@ -285,10 +320,9 @@ export function Drawer({
 }) {
   const titleId = useId();
   const containerRef = useFocusTrap(open, onClose);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   useBodyLock(open);
-  useEffect(() => setMounted(true), []);
 
   if (!mounted || !open) return null;
 

@@ -168,7 +168,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div
               className="article-body"
               /* Markdown já escapado e convertido no servidor (ver lib/content/markdown.ts). */
-              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: html }}
             />
 

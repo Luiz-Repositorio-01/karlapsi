@@ -49,16 +49,6 @@ export default async function PacienteDetalhePage({
   const canAnonymize = can(session.profile.role, 'patients:anonymize');
   const timezone = settings.booking.timezone;
 
-  const now = Date.now();
-  const upcoming = timeline.appointments.filter(
-    (appointment) =>
-      new Date(appointment.starts_at).getTime() >= now &&
-      !['cancelled', 'no_show', 'rescheduled'].includes(appointment.status),
-  );
-  const past = timeline.appointments.filter(
-    (appointment) => !upcoming.some((item) => item.id === appointment.id),
-  );
-
   return (
     <>
       <Link
@@ -128,7 +118,7 @@ export default async function PacienteDetalhePage({
               </ButtonLink>
             </div>
 
-            {upcoming.length === 0 ? (
+            {timeline.upcoming.length === 0 ? (
               <EmptyState
                 icon={<CalendarDays aria-hidden="true" className="h-5 w-5" />}
                 title="Nenhum atendimento futuro"
@@ -136,7 +126,7 @@ export default async function PacienteDetalhePage({
               />
             ) : (
               <ul className="space-y-3">
-                {upcoming.map((appointment) => (
+                {timeline.upcoming.map((appointment) => (
                   <li key={appointment.id}>
                     <Card className="flex flex-wrap items-start justify-between gap-3 p-4">
                       <div>
@@ -161,11 +151,11 @@ export default async function PacienteDetalhePage({
               Histórico de atendimentos
             </h2>
 
-            {past.length === 0 ? (
+            {timeline.past.length === 0 ? (
               <EmptyState title="Sem histórico" description="Nenhum atendimento anterior registrado." />
             ) : (
               <ol className="relative space-y-4 border-l border-petrol-100 pl-5">
-                {past.map((appointment) => (
+                {timeline.past.map((appointment) => (
                   <li key={appointment.id} className="relative">
                     <span
                       aria-hidden="true"

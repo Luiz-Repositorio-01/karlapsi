@@ -390,6 +390,8 @@ export interface NotificationRecord {
   payload: Record<string, unknown>;
   status: 'queued' | 'sent' | 'failed' | 'skipped';
   error: string | null;
+  related_table: string | null;
+  related_id: string | null;
   read_at: string | null;
   created_at: string;
 }

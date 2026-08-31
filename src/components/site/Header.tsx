@@ -20,9 +20,21 @@ export function Header({
   whatsapp: string;
 }) {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
+
+  /*
+   * Menu e submenu guardam a rota em que foram abertos. Assim a navegação os
+   * fecha naturalmente, sem `useEffect` observando o pathname (que causaria
+   * render em cascata).
+   */
+  const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null);
+  const [openGroupAt, setOpenGroupAt] = useState<{ group: string; path: string } | null>(null);
+
+  const menuOpen = menuOpenAt === pathname;
+  const openGroup = openGroupAt?.path === pathname ? openGroupAt.group : null;
+  const setMenuOpen = (value: boolean) => setMenuOpenAt(value ? pathname : null);
+  const setOpenGroup = (group: string | null) =>
+    setOpenGroupAt(group ? { group, path: pathname } : null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -30,11 +42,6 @@ export function Header({
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-    setOpenGroup(null);
-  }, [pathname]);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);

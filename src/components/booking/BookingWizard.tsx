@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import {
   AlertCircle,
   ArrowLeft,
@@ -145,15 +145,35 @@ export function BookingWizard({
     [],
   );
 
-  useEffect(() => {
-    if (step === 1) void loadAvailability(serviceSlug, weekOffset);
-  }, [step, serviceSlug, weekOffset, loadAvailability]);
-
-  useEffect(() => {
-    // Trocar de serviço invalida a escolha anterior de horário.
+  /*
+   * A busca de horários é disparada pelos próprios eventos do usuário (avançar
+   * para o passo 2, trocar de semana, trocar de serviço) em vez de um
+   * `useEffect` observando estado — evita render em cascata e deixa explícito
+   * quando a agenda é consultada.
+   */
+  const goToSlots = (slug: string, offset: number) => {
+    setServiceSlug(slug);
+    setWeekOffset(offset);
     setSelectedSlot(null);
     setSelectedDate(null);
-  }, [serviceSlug]);
+    setStep(1);
+    void loadAvailability(slug, offset);
+  };
+
+  const changeWeek = (direction: number) => {
+    const nextOffset = Math.min(11, Math.max(0, weekOffset + direction));
+    if (nextOffset === weekOffset) return;
+    setWeekOffset(nextOffset);
+    setSelectedSlot(null);
+    setSelectedDate(null);
+    void loadAvailability(serviceSlug, nextOffset);
+  };
+
+  const changeService = (slug: string) => {
+    setServiceSlug(slug);
+    setSelectedSlot(null);
+    setSelectedDate(null);
+  };
 
   const daysWithSlots = days.filter((day) => day.slots.length > 0);
   const activeDay =
@@ -325,7 +345,7 @@ export function BookingWizard({
                         name="servico"
                         value={item.slug}
                         checked={checked}
-                        onChange={() => setServiceSlug(item.slug)}
+                        onChange={() => changeService(item.slug)}
                         className="mt-1 h-4 w-4 shrink-0 accent-petrol-700"
                       />
                       <span className="flex-1">
@@ -353,7 +373,12 @@ export function BookingWizard({
           </fieldset>
 
           <div className="mt-8 flex justify-end">
-            <Button type="button" onClick={() => setStep(1)} disabled={!service} size="lg">
+            <Button
+              type="button"
+              onClick={() => goToSlots(serviceSlug, weekOffset)}
+              disabled={!service}
+              size="lg"
+            >
               Ver horários
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Button>
@@ -378,7 +403,7 @@ export function BookingWizard({
                 type="button"
                 variant="secondary"
                 size="sm"
-                onClick={() => setWeekOffset((current) => Math.max(0, current - 1))}
+                onClick={() => changeWeek(-1)}
                 disabled={weekOffset === 0 || loadingSlots}
                 aria-label="Semana anterior"
               >
@@ -388,7 +413,7 @@ export function BookingWizard({
                 type="button"
                 variant="secondary"
                 size="sm"
-                onClick={() => setWeekOffset((current) => Math.min(11, current + 1))}
+                onClick={() => changeWeek(1)}
                 disabled={loadingSlots}
                 aria-label="Semana seguinte"
               >
@@ -428,7 +453,7 @@ export function BookingWizard({
                   type="button"
                   variant="secondary"
                   size="sm"
-                  onClick={() => setWeekOffset((current) => current + 1)}
+                  onClick={() => changeWeek(1)}
                 >
                   Ver próxima semana
                 </Button>

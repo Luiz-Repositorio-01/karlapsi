@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Bell,
   BookOpen,
@@ -71,9 +71,14 @@ export function AdminShell({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => setMenuOpen(false), [pathname]);
+  /*
+   * O drawer guarda a rota em que foi aberto: mudar de página fecha o menu sem
+   * precisar de `useEffect` observando o pathname.
+   */
+  const [menuOpenAt, setMenuOpenAt] = useState<string | null>(null);
+  const menuOpen = menuOpenAt === pathname;
+  const setMenuOpen = (value: boolean) => setMenuOpenAt(value ? pathname : null);
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
