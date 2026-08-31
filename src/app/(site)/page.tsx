@@ -8,8 +8,6 @@ import {
   FileText,
   MessageCircle,
   Quote,
-  ShieldCheck,
-  Sparkles,
 } from 'lucide-react';
 import {
   Badge,
@@ -17,7 +15,6 @@ import {
   Card,
   Container,
   EmptyState,
-  Pill,
   Section,
   SectionHeader,
 } from '@/components/ui';
@@ -79,20 +76,22 @@ export default async function HomePage() {
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
               <Reveal>
-                <Pill>
-                  <Brain aria-hidden="true" className="h-3.5 w-3.5 text-petrol-600" />
+                <p className="font-display text-4xl leading-[1.05] tracking-tight text-petrol-800 sm:text-5xl lg:text-[3.25rem]">
+                  {identity.brand_name}
+                </p>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-petrol-600">
                   {identity.positioning}
-                </Pill>
+                </p>
               </Reveal>
 
               <Reveal delay={80}>
-                <h1 id="hero-title" className="mt-6 text-display-xl">
+                <h1 id="hero-title" className="mt-7 max-w-xl text-display-md text-ink-soft sm:text-display-lg">
                   {identity.headline}
                 </h1>
               </Reveal>
 
               <Reveal delay={140}>
-                <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted">
+                <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
                   {identity.subheadline}
                 </p>
               </Reveal>
@@ -107,23 +106,6 @@ export default async function HomePage() {
                     Conhecer a Neuropsicologia
                   </ButtonLink>
                 </div>
-              </Reveal>
-
-              <Reveal delay={260}>
-                <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-ink-soft">
-                  <li className="flex items-center gap-2">
-                    <ShieldCheck aria-hidden="true" className="h-4 w-4 text-petrol-500" />
-                    Horário reservado e confirmado
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <FileText aria-hidden="true" className="h-4 w-4 text-petrol-500" />
-                    Devolutiva com orientações
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Sparkles aria-hidden="true" className="h-4 w-4 text-petrol-500" />
-                    {contact.service_area}
-                  </li>
-                </ul>
               </Reveal>
             </div>
 
