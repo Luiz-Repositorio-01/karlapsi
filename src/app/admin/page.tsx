@@ -201,11 +201,11 @@ export default async function AdminDashboard() {
                           }}
                         />
                         <ButtonLink
-                          href={`/admin/agenda?atendimento=${appointment.id}`}
+                          href={`/admin/agenda?visao=dia&data=${appointment.starts_at.slice(0, 10)}`}
                           variant="ghost"
                           size="sm"
                         >
-                          Detalhes
+                          Ver no dia
                         </ButtonLink>
                       </div>
                     ) : null}

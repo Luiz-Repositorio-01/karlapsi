@@ -18,8 +18,11 @@ import { requirePermission } from '@/lib/auth/session';
 import { can } from '@/lib/auth/rbac';
 import { getPatient, getPatientTimeline } from '@/lib/data/admin';
 import { getSiteSettings } from '@/lib/data/public';
-import { savePatient, togglePatientArchive } from '@/app/admin/_actions/patients';
-import { anonymizePatient } from '@/app/admin/_actions/patients';
+import {
+  anonymizePatient,
+  savePatient,
+  togglePatientArchive,
+} from '@/app/admin/_actions/patients';
 import { APPOINTMENT_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/lib/utils/labels';
 import {
   formatAge,

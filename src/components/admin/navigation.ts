@@ -80,6 +80,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         permission: 'content:view',
       },
       {
+        label: 'Páginas',
+        href: '/admin/paginas',
+        icon: 'layout',
+        permission: 'settings:manage',
+      },
+      {
         label: 'Depoimentos',
         href: '/admin/depoimentos',
         icon: 'file',
