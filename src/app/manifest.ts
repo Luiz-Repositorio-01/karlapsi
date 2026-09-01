@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
 import { getSiteSettings } from '@/lib/data/public';
-import { env } from '@/lib/env';
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const settings = await getSiteSettings();
@@ -10,6 +9,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     short_name: settings.identity.brand_name,
     description: settings.seo.default_description,
     start_url: '/',
+    // id relativo à origem atual (evita warning "should be same origin" em localhost)
+    id: '/',
     display: 'standalone',
     background_color: '#FBF8F3',
     theme_color: '#1E433B',
@@ -26,6 +27,5 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
         type: 'image/png',
       },
     ],
-    id: env.siteUrl,
   };
 }
