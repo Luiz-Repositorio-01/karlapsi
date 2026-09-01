@@ -30,5 +30,6 @@ Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`
 
 ## Próximo passo humano (OWNER)
 
-OWNER já existe e está ativo. Auth URLs já foram aplicadas no projeto remoto.
-Faça login em `/login` com a senha definida no aceite do convite e confira `/admin`.
+OWNER ativo com login confirmado (`last_sign_in` presente).
+Continue o go-live com dados reais em `/admin/configuracoes` e, quando houver,
+credenciais de Mercado Pago / e-mail / cron e arquivos em `public/legacy/`.
