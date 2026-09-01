@@ -157,7 +157,7 @@ export function CTASection({
   description,
   whatsapp,
   primaryHref = '/agendamento',
-  primaryLabel = 'Agendar avaliação',
+  primaryLabel = 'Agendar atendimento',
   secondaryHref,
   secondaryLabel,
 }: {

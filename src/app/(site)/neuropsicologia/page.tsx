@@ -38,7 +38,7 @@ export default async function NeuropsicologiaPage() {
         breadcrumb={[{ label: 'Neuropsicologia' }]}
         actions={
           <>
-            <ButtonLink href="/agendamento">Agendar avaliação</ButtonLink>
+            <ButtonLink href="/agendamento">Agendar atendimento</ButtonLink>
             <ButtonLink href="/avaliacao-neuropsicologica" variant="secondary">
               Ver a avaliação em detalhe
             </ButtonLink>

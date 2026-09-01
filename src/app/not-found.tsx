@@ -6,11 +6,10 @@ import { ButtonLink, Container } from '@/components/ui';
 export default function NotFound() {
   const suggestions = [
     { label: 'Neuropsicologia', href: '/neuropsicologia' },
-    { label: 'Serviços', href: '/servicos' },
+    { label: 'Atendimentos', href: '/atendimentos' },
     { label: 'Agendamento', href: '/agendamento' },
     { label: 'Blog', href: '/blog' },
     { label: 'Infobooks', href: '/infobooks' },
-    { label: 'PDF Online', href: '/pdf-online' },
     { label: 'Contato', href: '/contato' },
   ];
 

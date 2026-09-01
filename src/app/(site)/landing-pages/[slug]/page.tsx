@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!page) {
     return buildMetadata({
       title: slug.replace(/-/g, ' '),
-      description: 'Página de material publicada por Karla Dias Neuropsi.',
+      description: 'Página de material publicada por Karla Dias.',
       path: `/landing-pages/${slug}`,
     });
   }

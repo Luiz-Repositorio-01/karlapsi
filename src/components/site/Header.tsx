@@ -182,7 +182,7 @@ export function Header({
             ) : null}
 
             <Link href="/agendamento" className={buttonClasses('primary', 'sm', 'hidden sm:inline-flex')}>
-              Agendar avaliação
+              Agendar atendimento
             </Link>
 
             <button
@@ -253,7 +253,7 @@ export function Header({
 
         <div className="mt-6 space-y-3 border-t border-petrol-100 pt-6">
           <Link href="/agendamento" className={buttonClasses('primary', 'md', 'w-full')}>
-            Agendar avaliação
+            Agendar atendimento
           </Link>
           {whatsapp ? (
             <a

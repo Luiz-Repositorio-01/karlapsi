@@ -13,23 +13,18 @@ import type {
 /**
  * CONTEÚDO PADRÃO (fallback)
  *
- * Regras seguidas aqui:
- * - Nenhuma credencial, registro profissional, especialização, certificado,
- *   tempo de experiência, número de pacientes, depoimento ou promessa de
- *   resultado. Onde essa informação seria necessária, o campo fica vazio e é
- *   preenchido em /admin/configuracoes.
- * - Os textos explicativos descrevem a área de neuropsicologia de forma geral
- *   e neutra, sem afirmação clínica específica, e são 100% editáveis: quando
- *   existir registro em `site_pages`, ele substitui o texto daqui.
+ * Marca: Karla Dias.
+ * Domínio/Instagram: karlaneuropsi.com.br / @karlaneuropsi (identificadores).
+ * Sem CRP, formação, preços, depoimentos ou bio inventados.
  */
 
 export const DEFAULT_IDENTITY: IdentitySettings = {
-  brand_name: 'Karla Dias Neuropsi',
+  brand_name: 'Karla Dias',
   professional_name: 'Karla Dias',
-  positioning: 'Neuropsicologia',
-  headline: 'Avaliação neuropsicológica com ciência, escuta e clareza',
+  positioning: 'Psicóloga e Neuropsicóloga',
+  headline: 'Especialista em Transtornos do Neurodesenvolvimento',
   subheadline:
-    'Um processo estruturado para compreender como a pessoa atende, memoriza, se organiza e aprende — com devolutiva compreensível e orientações aplicáveis à vida real.',
+    'Avaliação neuropsicológica com ciência, escuta e clareza — um processo estruturado para compreender como a pessoa aprende, se organiza e se relaciona, com devolutiva compreensível e orientações práticas.',
   professional_registration_label: '',
   professional_registration_value: '',
   short_bio: '',
@@ -43,7 +38,7 @@ export const DEFAULT_CONTACT: ContactSettings = {
   whatsapp: '5511988830377',
   phone: '',
   email: '',
-  instagram: '',
+  instagram: '@karlaneuropsi',
   address_line: '',
   city: '',
   state: '',
@@ -64,19 +59,19 @@ export const DEFAULT_BOOKING: BookingSettings = {
 };
 
 export const DEFAULT_SEO: SeoSettings = {
-  site_name: 'Karla Dias Neuropsi',
-  default_title: 'Karla Dias Neuropsi — Neuropsicologia',
+  site_name: 'Karla Dias',
+  default_title: 'Karla Dias | Psicóloga e Neuropsicóloga',
   default_description:
-    'Avaliação neuropsicológica, atendimentos e materiais sobre desenvolvimento, aprendizagem e funções cognitivas.',
+    'Karla Dias — Psicóloga e Neuropsicóloga. Especialista em Transtornos do Neurodesenvolvimento. Avaliação neuropsicológica, atendimento online e presencial.',
   default_keywords:
-    'neuropsicologia, avaliação neuropsicológica, aprendizagem, atenção, memória, funções executivas',
+    'Karla Dias, neuropsicologia, psicóloga, avaliação neuropsicológica, transtornos do neurodesenvolvimento, aprendizagem, funções executivas',
   default_og_image: '',
 };
 
 export const DEFAULT_FEATURES: FeatureSettings = {
   show_testimonials: true,
   enable_online_payments: false,
-  enable_pdf_online: true,
+  enable_pdf_online: false,
   enable_blog: true,
   enable_store: true,
 };
@@ -202,11 +197,29 @@ export const DEFAULT_FAQS: Faq[] = [
   },
   {
     id: 'faq-6',
+    question: 'Há atendimento presencial?',
+    answer:
+      'Sim. Sessões de testagem e encontros que exigem material físico ou observação direta podem ser presenciais. O formato é combinado na entrevista inicial conforme o objetivo.',
+    category: 'atendimento',
+    sort_order: 6,
+    is_active: true,
+  },
+  {
+    id: 'faq-7',
+    question: 'O que são os Infobooks?',
+    answer:
+      'São materiais digitais desenvolvidos para ampliar o acesso à informação sobre psicologia, neuropsicologia e desenvolvimento. Cada Infobook tem capa, descrição e acesso próprios quando publicados no site.',
+    category: 'infobooks',
+    sort_order: 7,
+    is_active: true,
+  },
+  {
+    id: 'faq-8',
     question: 'Como meus dados são tratados?',
     answer:
       'Os dados são usados apenas para o atendimento e para o cumprimento de obrigações legais, com acesso restrito e registro de consentimento. Você pode solicitar acesso, correção ou exclusão a qualquer momento na página de Política de Privacidade.',
     category: 'privacidade',
-    sort_order: 6,
+    sort_order: 8,
     is_active: true,
   },
 ];
@@ -215,13 +228,13 @@ export const DEFAULT_FAQS: Faq[] = [
 export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
   sobre: {
     slug: 'sobre',
-    title: 'Sobre',
-    subtitle: 'Neuropsicologia praticada com método, ética e escuta.',
+    title: 'Sobre Karla Dias',
+    subtitle: 'Psicóloga e Neuropsicóloga. Especialista em Transtornos do Neurodesenvolvimento.',
     sections: [
       {
         id: 'apresentacao',
         heading: 'Apresentação',
-        body: 'Este espaço é dedicado à neuropsicologia: à investigação cuidadosa do funcionamento cognitivo e à tradução desses achados em orientações úteis para a vida cotidiana. O texto de apresentação profissional é editável no painel administrativo, para que cada informação publicada seja exatamente a que a profissional deseja divulgar.',
+        body: 'Este espaço é dedicado à neuropsicologia: à investigação cuidadosa do funcionamento cognitivo e à tradução desses achados em orientações úteis para a vida cotidiana. A biografia profissional completa é publicada somente quando preenchida no painel administrativo — para que cada informação divulgada seja exatamente a que a profissional deseja comunicar.',
       },
       {
         id: 'como-trabalho',
@@ -266,9 +279,9 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
         ],
       },
     ],
-    seo_title: 'Sobre — Karla Dias Neuropsi',
+    seo_title: 'Sobre Karla Dias | Psicóloga e Neuropsicóloga',
     seo_description:
-      'Conheça a proposta de trabalho em neuropsicologia: método, ética, escuta e devolutiva clara.',
+      'Conheça Karla Dias, Psicóloga e Neuropsicóloga. Especialista em Transtornos do Neurodesenvolvimento.',
     is_published: true,
   },
 
@@ -281,7 +294,7 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
       {
         id: 'o-que-e',
         heading: 'O que é neuropsicologia',
-        body: 'A neuropsicologia investiga como processos cognitivos — atenção, memória, linguagem, percepção, raciocínio e funções executivas — sustentam o comportamento e a aprendizagem. Na prática clínica, ela usa entrevistas, observação e instrumentos padronizados para descrever esse funcionamento de forma objetiva, comparando o desempenho com referências adequadas à idade e à escolaridade.',
+        body: 'A neuropsicologia investiga como processos cognitivos — atenção, memória, linguagem, percepção, raciocínio e funções executivas — sustentam o comportamento e a aprendizagem. Na prática clínica, ela usa entrevistas, observação e instrumentos padronizados para descrever esse funcionamento de forma objetiva, comparando o desempenho com referências adequadas à idade e à escolaridade. Os conteúdos deste site são informativos e não substituem avaliação profissional individualizada.',
       },
       {
         id: 'para-quem',
@@ -308,6 +321,11 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
               'Casos em que médicos, psicólogos, fonoaudiólogos ou escolas precisam de dados cognitivos objetivos.',
           },
         ],
+      },
+      {
+        id: 'neurodesenvolvimento',
+        heading: 'Transtornos do neurodesenvolvimento',
+        body: 'A avaliação neuropsicológica pode contribuir para compreender demandas relacionadas a atenção, aprendizagem, linguagem, funções executivas e desenvolvimento socioemocional — sempre no contexto de uma investigação responsável, sem diagnosticar o visitante pelo conteúdo do site e sem substituir acompanhamento clínico individualizado.',
       },
       {
         id: 'como-funciona',
@@ -374,30 +392,30 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
         body: 'Com um retrato claro do funcionamento cognitivo, decisões deixam de ser tentativa e erro: a escola sabe onde adaptar, a família entende o que observa em casa, a pessoa reconhece suas estratégias e a equipe de saúde ganha dados para conduzir o cuidado. A avaliação não promete resolver tudo — ela organiza o caminho.',
       },
     ],
-    seo_title: 'Neuropsicologia: o que é, para quem é e como funciona a avaliação',
+    seo_title: 'Neuropsicologia | Karla Dias — o que é, para quem é e como funciona',
     seo_description:
-      'Entenda o que é neuropsicologia, quem se beneficia da avaliação neuropsicológica, quais são as etapas do processo e quais objetivos ele atende.',
+      'Entenda o que é neuropsicologia, quem se beneficia da avaliação neuropsicológica e como o processo é conduzido.',
     is_published: true,
   },
 
   atendimentos: {
     slug: 'atendimentos',
     title: 'Atendimentos',
-    subtitle: 'Formatos, etapas e o que esperar de cada encontro.',
+    subtitle: 'Online e presencial — formatos, etapas e o que esperar de cada encontro.',
     sections: [
       {
         id: 'formatos',
-        heading: 'Formatos de atendimento',
+        heading: 'Atendimento online e presencial',
         items: [
-          {
-            title: 'Presencial',
-            description:
-              'Indicado especialmente para sessões de testagem que exigem material físico e observação direta.',
-          },
           {
             title: 'Online',
             description:
-              'Adequado a entrevistas, devolutivas e orientações, e a instrumentos com aplicação remota validada.',
+              'Comodidade e privacidade para entrevistas, devolutivas, orientações e instrumentos com aplicação remota validada. Requer ambiente silencioso, conexão estável e dispositivo adequado.',
+          },
+          {
+            title: 'Presencial',
+            description:
+              'Indicado especialmente para sessões de testagem que exigem material físico e observação direta. A localização é informada quando configurada no painel — nunca inventada no site.',
           },
           {
             title: 'Híbrido',
@@ -426,9 +444,9 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
         ],
       },
     ],
-    seo_title: 'Atendimentos — Karla Dias Neuropsi',
+    seo_title: 'Atendimentos online e presencial | Karla Dias',
     seo_description:
-      'Formatos de atendimento, etapas do processo e o que esperar de cada encontro em neuropsicologia.',
+      'Formatos de atendimento online e presencial, etapas do processo e o que esperar de cada encontro.',
     is_published: true,
   },
 
@@ -478,7 +496,7 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
         body: 'A avaliação neuropsicológica não substitui consulta médica, não garante resultado terapêutico e não fecha diagnóstico isoladamente. Ela descreve funcionamento cognitivo com método e contribui, junto de outras avaliações, para decisões de cuidado.',
       },
     ],
-    seo_title: 'Avaliação neuropsicológica: indicações, etapas e limites',
+    seo_title: 'Avaliação neuropsicológica | Karla Dias',
     seo_description:
       'Quando a avaliação neuropsicológica é indicada, como é conduzida por etapas e o que ela pode ou não responder.',
     is_published: true,
@@ -488,18 +506,18 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
 /** Diferenciais do processo (não são credenciais nem promessas). */
 export const PROCESS_HIGHLIGHTS = [
   {
-    title: 'Processo em etapas',
+    title: 'Atendimento individualizado',
     description:
-      'Entrevista, testagem, análise e devolutiva. Você sabe em que ponto está e o que vem depois.',
+      'Cada processo considera a história, a idade e o objetivo — sem pacote fixo de testes.',
   },
   {
-    title: 'Linguagem sem jargão',
-    description:
-      'A devolutiva é feita para ser entendida por família e escola, não apenas por especialistas.',
+    title: 'Escuta antes do instrumento',
+    description: 'A queixa é compreendida no contexto de vida antes da escolha de qualquer escala.',
   },
   {
-    title: 'Instrumentos escolhidos caso a caso',
-    description: 'A bateria é definida pelo objetivo da avaliação, não por um pacote fixo.',
+    title: 'Devolutiva compreensível',
+    description:
+      'Resultados apresentados em linguagem acessível para família, escola e a própria pessoa.',
   },
   {
     title: 'Orientações aplicáveis',
@@ -560,5 +578,18 @@ export const HOW_IT_WORKS_STEPS = [
     title: 'Processo e devolutiva',
     description:
       'Sessões conduzidas conforme o plano combinado, com devolutiva clara e orientações práticas ao final.',
+  },
+];
+
+export const MODALITY_ITEMS = [
+  {
+    title: 'Online',
+    description:
+      'Comodidade, privacidade e alcance remoto para entrevistas, devolutivas e orientações — com requisitos técnicos combinados previamente.',
+  },
+  {
+    title: 'Presencial',
+    description:
+      'Experiência em ambiente adequado para testagem com material físico e observação direta. Endereço exibido somente quando configurado.',
   },
 ];

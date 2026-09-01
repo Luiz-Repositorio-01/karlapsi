@@ -24,8 +24,8 @@ export default async function BlogAdminPage() {
   return (
     <>
       <AdminPageHeader
-        title="Blog"
-        description="Artigos do site: rascunho, agendamento, publicação, SEO, categoria e tags."
+        title="Calendário editorial"
+        description="Blog e agenda de publicação: rascunho, agendamento (scheduled_for), publicação, SEO, categoria e tags."
         actions={
           canManage ? (
             <>
@@ -39,6 +39,15 @@ export default async function BlogAdminPage() {
           ) : undefined
         }
       />
+
+      {scheduled.length > 0 && pendingPublication.length === 0 ? (
+        <Alert tone="info" title="Calendário editorial" className="mb-5">
+          {scheduled.length}{' '}
+          {scheduled.length === 1 ? 'artigo agendado' : 'artigos agendados'} no calendário. A
+          publicação automática usa <code className="mx-1">publish_scheduled_posts()</code> (cron
+          ou botão abaixo quando a data chegar).
+        </Alert>
+      ) : null}
 
       {pendingPublication.length > 0 ? (
         <Alert tone="warning" title="Artigos agendados aguardando publicação" className="mb-5">

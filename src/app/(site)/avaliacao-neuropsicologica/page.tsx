@@ -42,7 +42,7 @@ export default async function AvaliacaoPage() {
         ]}
         actions={
           <>
-            <ButtonLink href={`/agendamento?servico=${SLUG}`}>Agendar avaliação</ButtonLink>
+            <ButtonLink href={`/agendamento?servico=${SLUG}`}>Agendar atendimento</ButtonLink>
             <ButtonLink href="/servicos" variant="secondary">
               Ver todos os serviços
             </ButtonLink>
@@ -69,7 +69,7 @@ export default async function AvaliacaoPage() {
       <FaqSection faqs={faqs} title="Perguntas sobre a avaliação" tone="default" />
 
       <CTASection
-        title="Agendar a entrevista inicial"
+        title="Agendar atendimento"
         description="O primeiro encontro define objetivos e etapas — sem compromisso de continuidade."
         whatsapp={settings.contact.whatsapp}
         primaryHref={`/agendamento?servico=${SLUG}`}

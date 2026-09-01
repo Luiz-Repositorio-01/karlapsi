@@ -148,6 +148,43 @@
   .scroll-subtle::-webkit-scrollbar-thumb {
     @apply rounded-full bg-petrol-200;
   }
+
+  /*
+   * Moldura tipográfica do retrato (fallback verde).
+   * Foto real: PENDENTE DE ARQUIVO — não inventar imagem.
+   */
+  .photo-frame {
+    isolation: isolate;
+    background:
+      radial-gradient(120% 90% at 20% 0%, rgba(84, 140, 129, 0.35) 0%, transparent 55%),
+      linear-gradient(165deg, #1a3d35 0%, #0f2823 100%);
+  }
+
+  .photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0.75rem;
+    z-index: 1;
+    border-radius: 1.35rem;
+    border: 1px solid rgba(226, 205, 174, 0.28);
+    pointer-events: none;
+  }
+
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(135deg, rgba(253, 251, 247, 0.08) 0%, transparent 42%),
+      radial-gradient(80% 60% at 85% 90%, rgba(84, 140, 129, 0.45) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .photo-frame > * {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 @layer utilities {

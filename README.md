@@ -1,13 +1,21 @@
-# Karla Dias Neuropsi — plataforma
+# Karla Dias — plataforma (karlaneuropsi.com.br)
 
 Site público de alta conversão + sistema interno de gestão para a prática em
 **neuropsicologia**: agenda sem conflito, CRM de pacientes, financeiro,
-conteúdos (blog, infobooks, landing pages, PDF Online) e integração de
-pagamento.
+conteúdos (blog, infobooks, materiais) e integração de pagamento.
+
+**Marca pública:** Karla Dias · **Posicionamento:** Psicóloga e Neuropsicóloga ·
+**Headline:** Especialista em Transtornos do Neurodesenvolvimento ·
+**Instagram:** @karlaneuropsi · **Domínio:** karlaneuropsi.com.br
+
+> “Karla Dias Neuropsi” **não** é o nome de marca primário — é apenas o
+> identificador histórico do domínio/Instagram.
 
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript estrito ·
   Tailwind CSS · Supabase (PostgreSQL + Auth + Storage) · Zod · Vitest
 - **Idioma:** pt-BR · **Fuso padrão:** America/Sao_Paulo (configurável)
+
+Status real de produção: ver [`docs/PRODUCTION_CHECKLIST.md`](docs/PRODUCTION_CHECKLIST.md).
 
 ---
 
@@ -315,19 +323,24 @@ reagendamento, pagamento aprovado, pagamento pendente e contato recebido.
 
 ## 10. Módulos preservados: PDF Online, Infobooks e Landing Pages
 
-Os arquivos originais moram em **`public/legacy/`** e são servidos como
-estáticos, **sem passar pelo processamento do Next.js**. Nenhum conteúdo
-original é reescrito.
+**Experiência pública atual:** PDF Online e Landing Pages **não** aparecem no
+menu, home, footer, `/publicacoes` nem no sitemap. Rotas `/pdf-online` e
+`/landing-pages` redirecionam (301) para `/infobooks` e `/materiais`.
+`enable_pdf_online` está desligado.
+
+Os arquivos originais (quando existirem) moram em **`public/legacy/`** e são
+servidos como estáticos, **sem passar pelo processamento do Next.js**. Nenhum
+conteúdo original é reescrito. Admin de infobooks/LP permanece útil.
 
 ```
 public/legacy/
-├── pdf-online/            → exibido em /pdf-online
-└── landing-pages/<slug>/  → exibido em /landing-pages/<slug> e /infobooks/<slug>
+├── pdf-online/            → arquivos via rewrite (não na UX pública)
+└── landing-pages/<slug>/  → arquivos via rewrite / cadastro admin
 ```
 
 - A detecção é automática (`src/lib/legacy.ts`): se o arquivo existe, a página
   o incorpora; se não, mostra uma instrução clara em vez de um iframe quebrado.
-- **URLs antigas continuam válidas** por rewrites em `next.config.ts`:
+- **URLs antigas de arquivos continuam válidas** por rewrites em `next.config.ts`:
   `/pdf-online/index.html`, `/pdf-online/assets/*`,
   `/infobooks/<slug>/index.html`, `/landing-pages/<slug>/index.html` e os
   respectivos `/assets/*`.

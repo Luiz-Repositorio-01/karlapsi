@@ -5,7 +5,10 @@ import {
   BookOpen,
   Brain,
   CalendarCheck,
+  ExternalLink,
   FileText,
+  Laptop,
+  MapPin,
   MessageCircle,
   Quote,
 } from 'lucide-react';
@@ -25,17 +28,18 @@ import {
   HighlightGrid,
   StepList,
 } from '@/components/site/sections';
-import { BlogCard, InfobookCard, LandingPageCard, ServiceCard } from '@/components/site/cards';
+import { BlogCard, InfobookCard, ServiceCard } from '@/components/site/cards';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
   AUDIENCE_ITEMS,
   HOW_IT_WORKS_STEPS,
+  MODALITY_ITEMS,
   PROCESS_HIGHLIGHTS,
 } from '@/lib/content/defaults';
 import {
   getFaqs,
   getInfobooks,
-  getLandingPages,
+  getProducts,
   getPublishedPosts,
   getServices,
   getSitePage,
@@ -45,17 +49,16 @@ import {
 import { faqSchema, personSchema } from '@/lib/seo/jsonld';
 import { whatsappLink } from '@/lib/utils/format';
 
-// ISR: o conteúdo institucional é revalidado a cada 5 minutos.
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [settings, services, posts, infobooks, landingPages, faqs, testimonials, neuroPage] =
+  const [settings, services, posts, infobooks, products, faqs, testimonials, neuroPage] =
     await Promise.all([
       getSiteSettings(),
       getServices(),
       getPublishedPosts(3),
       getInfobooks(),
-      getLandingPages(),
+      getProducts(),
       getFaqs(),
       getTestimonials(),
       getSitePage('neuropsicologia'),
@@ -64,35 +67,45 @@ export default async function HomePage() {
   const { identity, contact, features, booking } = settings;
   const featuredServices = services.filter((service) => service.is_featured).slice(0, 3);
   const homeServices = featuredServices.length > 0 ? featuredServices : services.slice(0, 3);
+  const hotmartProducts = products.filter((p) => p.external_url?.includes('hotmart.com'));
 
   const neuroSteps =
     neuroPage?.sections.find((section) => section.id === 'como-funciona')?.items ?? [];
+
+  const displayName = identity.professional_name || identity.brand_name || 'Karla Dias';
 
   return (
     <>
       {/* ----------------------------------------------------------------- HERO */}
       <section className="relative overflow-hidden surface-warm" aria-labelledby="hero-title">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(30,67,59,0.07),transparent_55%),radial-gradient(ellipse_at_90%_20%,rgba(196,164,132,0.12),transparent_45%)]"
+        />
         <Container className="relative py-16 sm:py-20 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
               <Reveal>
-                <p className="font-display text-display-xl text-petrol-800">
-                  {identity.brand_name}
-                </p>
+                <p className="font-display text-display-xl text-petrol-800">{displayName}</p>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-petrol-600">
                   {identity.positioning}
                 </p>
               </Reveal>
 
               <Reveal delay={80}>
-                <h1 id="hero-title" className="mt-7 max-w-xl text-display-sm text-ink-soft sm:text-display-md">
+                <h1
+                  id="hero-title"
+                  className="mt-6 max-w-xl text-display-sm text-ink-soft sm:text-display-md"
+                >
                   {identity.headline}
                 </h1>
               </Reveal>
 
               <Reveal delay={140}>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
-                  {identity.subheadline}
+                  {identity.short_bio
+                    ? identity.short_bio.split('\n\n')[0]
+                    : identity.subheadline}
                 </p>
               </Reveal>
 
@@ -100,38 +113,40 @@ export default async function HomePage() {
                 <div className="mt-9 flex flex-wrap gap-3">
                   <ButtonLink href="/agendamento" size="lg">
                     <CalendarCheck aria-hidden="true" className="h-4 w-4" />
-                    Agendar avaliação
+                    Agendar atendimento
                   </ButtonLink>
-                  <ButtonLink href="/neuropsicologia" variant="secondary" size="lg">
-                    Conhecer a Neuropsicologia
+                  <ButtonLink href="/sobre" variant="secondary" size="lg">
+                    Conheça meu trabalho
                   </ButtonLink>
                 </div>
               </Reveal>
             </div>
 
             <Reveal delay={160} className="relative">
-              <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-surface-sunken shadow-lift ring-1 ring-white/60">
+              {/* Retrato: PENDENTE DE ARQUIVO — moldura tipográfica até foto real. */}
+              <div className="photo-frame relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-surface-sunken shadow-lift ring-1 ring-white/60">
                 {identity.photo_url ? (
                   <Image
                     src={identity.photo_url}
-                    alt={`Retrato de ${identity.professional_name}`}
+                    alt={`Retrato de ${displayName}`}
                     fill
                     priority
                     sizes="(max-width: 1024px) 90vw, 420px"
-                    className="object-cover"
+                    className="object-cover object-[center_20%]"
                   />
                 ) : (
-                  /* Sem foto cadastrada: composição tipográfica em vez de imagem
-                     genérica de banco de imagens. */
-                  <div className="flex h-full flex-col justify-between bg-gradient-to-br from-petrol-700 to-petrol-900 p-8 text-petrol-50">
+                  <div className="flex h-full flex-col justify-between bg-gradient-to-br from-petrol-700 via-petrol-800 to-petrol-950 p-8 text-petrol-50">
                     <Brain aria-hidden="true" className="h-9 w-9 text-petrol-300" />
                     <div>
-                      <p className="font-display text-3xl leading-tight text-white">
-                        {identity.professional_name}
-                      </p>
+                      <p className="font-display text-3xl leading-tight text-white">{displayName}</p>
                       <p className="mt-2 text-sm uppercase tracking-[0.18em] text-petrol-300">
                         {identity.positioning}
                       </p>
+                      {identity.headline ? (
+                        <p className="mt-4 max-w-[16rem] text-sm leading-relaxed text-petrol-200">
+                          {identity.headline}
+                        </p>
+                      ) : null}
                       {identity.professional_registration_value ? (
                         <p className="mt-4 text-sm text-petrol-200">
                           {identity.professional_registration_label || 'Registro'}:{' '}
@@ -147,27 +162,34 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* -------------------------------------------------- POSICIONAMENTO */}
-      <Section tone="default" ariaLabelledBy="posicionamento-title">
+      {/* -------------------------------------------------- APRESENTAÇÃO */}
+      <Section tone="default" ariaLabelledBy="apresentacao-title">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
             <SectionHeader
-              id="posicionamento-title"
-              eyebrow="Posicionamento"
-              title="Um trabalho centrado na compreensão, não no rótulo"
+              id="apresentacao-title"
+              eyebrow="Conheça"
+              title={`Conheça ${displayName}`}
+              description={identity.positioning}
             />
             <div className="article-body max-w-prose">
               <p>
-                O foco deste consultório é a <strong>neuropsicologia</strong>: entender como cada
-                pessoa presta atenção, memoriza, organiza tarefas, comunica e aprende — e o que
-                isso significa na escola, no trabalho e na convivência.
+                O foco deste consultório é a <strong>neuropsicologia</strong> e o cuidado com
+                demandas relacionadas ao <strong>neurodesenvolvimento</strong>: entender como cada
+                pessoa presta atenção, memoriza, organiza tarefas, comunica e aprende — e o que isso
+                significa na escola, no trabalho e na convivência.
               </p>
-              <p>
-                A avaliação é um processo com etapas definidas, instrumentos escolhidos caso a caso
-                e uma devolutiva que a família consegue usar. Nada de promessa rápida: o que se
-                entrega é informação organizada, ética e aplicável.
-              </p>
-              {identity.short_bio ? <p>{identity.short_bio}</p> : null}
+              {identity.short_bio ? (
+                identity.short_bio.split('\n\n').map((paragraph) => (
+                  <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+                ))
+              ) : (
+                <p>
+                  A avaliação é um processo com etapas definidas, instrumentos escolhidos caso a caso
+                  e uma devolutiva que a família consegue usar. Nada de promessa rápida: o que se
+                  entrega é informação organizada, ética e aplicável.
+                </p>
+              )}
               <p>
                 <Link href="/sobre">Conhecer a proposta de trabalho</Link>
               </p>
@@ -176,7 +198,7 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* --------------------------------------------- NEUROPSICOLOGIA (destaque) */}
+      {/* --------------------------------------------- NEUROPSICOLOGIA */}
       <Section tone="deep" id="neuropsicologia" ariaLabelledBy="neuro-title">
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
@@ -184,8 +206,8 @@ export default async function HomePage() {
               <SectionHeader
                 id="neuro-title"
                 tone="dark"
-                eyebrow="Foco principal"
-                title="Neuropsicologia em destaque"
+                eyebrow="Eixo principal"
+                title="Neuropsicologia"
                 description={
                   neuroPage?.subtitle ??
                   'A área que estuda a relação entre funcionamento cerebral, cognição e comportamento.'
@@ -237,6 +259,86 @@ export default async function HomePage() {
         </Container>
       </Section>
 
+      {/* -------------------------------- NEURODESENVOLVIMENTO */}
+      <Section tone="muted" ariaLabelledBy="neurodev-title">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
+            <SectionHeader
+              id="neurodev-title"
+              eyebrow="Área de atuação"
+              title="Transtornos do Neurodesenvolvimento"
+              description="Conteúdo informativo — não substitui avaliação profissional."
+            />
+            <div className="article-body max-w-prose">
+              <p>
+                A avaliação neuropsicológica pode contribuir para compreender demandas relacionadas a
+                atenção, aprendizagem, linguagem, funções executivas, comportamento e desenvolvimento
+                socioemocional — sempre no contexto de uma investigação responsável.
+              </p>
+              <p>
+                Temas como TDAH, TEA e dificuldades de aprendizagem entram nesta conversa clínica
+                quando há indicação. O site não diagnostica o visitante e não transforma artigos em
+                consultas.
+              </p>
+              <p>
+                <Link href="/neuropsicologia">Saiba mais sobre neuropsicologia</Link>
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* ------------------------------------------------------------ PARA QUEM */}
+      <Section tone="default" ariaLabelledBy="para-quem-title">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
+            <SectionHeader
+              id="para-quem-title"
+              eyebrow="Indicações"
+              title="Para quem a avaliação pode ser indicada"
+            />
+            <HighlightGrid items={AUDIENCE_ITEMS} columns={2} />
+          </div>
+        </Container>
+      </Section>
+
+      {/* ------------------------------------------------ ONLINE / PRESENCIAL */}
+      <Section tone="sunken" ariaLabelledBy="modalidade-title">
+        <Container>
+          <SectionHeader
+            id="modalidade-title"
+            eyebrow="Atendimento"
+            title="Online e presencial"
+            description="O formato é definido na entrevista inicial, conforme o objetivo e a viabilidade."
+            align="center"
+          />
+          <ul className="mt-12 grid gap-5 md:grid-cols-2">
+            {MODALITY_ITEMS.map((item, index) => (
+              <Reveal as="li" key={item.title} delay={index * 80}>
+                <Card className="h-full">
+                  {item.title === 'Online' ? (
+                    <Laptop aria-hidden="true" className="h-5 w-5 text-petrol-600" />
+                  ) : (
+                    <MapPin aria-hidden="true" className="h-5 w-5 text-petrol-600" />
+                  )}
+                  <h3 className="mt-4 font-display text-xl text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.description}</p>
+                  {item.title === 'Presencial' && contact.address_line ? (
+                    <p className="mt-4 text-sm text-ink-soft">{contact.address_line}</p>
+                  ) : null}
+                </Card>
+              </Reveal>
+            ))}
+          </ul>
+          <div className="mt-8 flex justify-center">
+            <ButtonLink href="/atendimentos" variant="ghost">
+              Ver detalhes dos atendimentos
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </ButtonLink>
+          </div>
+        </Container>
+      </Section>
+
       {/* ------------------------------------------------------------ SERVIÇOS */}
       <Section tone="default" id="servicos" ariaLabelledBy="servicos-title">
         <Container>
@@ -279,22 +381,8 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* ------------------------------------------------------------ PARA QUEM */}
-      <Section tone="default" ariaLabelledBy="para-quem-title">
-        <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
-            <SectionHeader
-              id="para-quem-title"
-              eyebrow="Para quem é"
-              title="Quem busca uma avaliação neuropsicológica"
-            />
-            <HighlightGrid items={AUDIENCE_ITEMS} columns={2} />
-          </div>
-        </Container>
-      </Section>
-
       {/* -------------------------------------------------------- DIFERENCIAIS */}
-      <Section tone="sunken" ariaLabelledBy="diferenciais-title">
+      <Section tone="default" ariaLabelledBy="diferenciais-title">
         <Container>
           <SectionHeader
             id="diferenciais-title"
@@ -309,16 +397,16 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* ------------------------------------------------------------- CONTEÚDOS */}
+      {/* ------------------------------------------------------------- BLOG */}
       {features.enable_blog ? (
-        <Section tone="default" ariaLabelledBy="conteudos-title">
+        <Section tone="muted" ariaLabelledBy="conteudos-title">
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeader
                 id="conteudos-title"
                 eyebrow="Conteúdos"
-                title="Artigos e materiais"
-                description="Textos para entender o processo antes de decidir."
+                title="Central de conteúdo"
+                description="Artigos para entender o processo antes de decidir."
               />
               <ButtonLink href="/blog" variant="ghost">
                 Ver o blog
@@ -353,17 +441,17 @@ export default async function HomePage() {
 
       {/* ------------------------------------------------------------ INFOBOOKS */}
       {features.enable_store ? (
-        <Section tone="muted" ariaLabelledBy="infobooks-title">
+        <Section tone="default" ariaLabelledBy="infobooks-title">
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeader
                 id="infobooks-title"
                 eyebrow="Infobooks"
-                title="Materiais para aprofundar"
-                description="Conteúdos organizados para famílias, educadores e profissionais."
+                title={`Conheça os Infobooks de ${displayName}`}
+                description="Conteúdos desenvolvidos para ampliar o acesso à informação sobre psicologia, neuropsicologia e desenvolvimento."
               />
               <ButtonLink href="/infobooks" variant="ghost">
-                Conhecer os Infobooks
+                Conhecer Infobooks
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </ButtonLink>
             </div>
@@ -380,11 +468,11 @@ export default async function HomePage() {
               <EmptyState
                 className="mt-10"
                 icon={<BookOpen aria-hidden="true" className="h-5 w-5" />}
-                title="Nenhum infobook publicado ainda"
-                description="Os materiais cadastrados no painel — inclusive os arquivos já existentes — aparecem nesta vitrine."
+                title="Infobooks em preparação"
+                description="Quando as capas e arquivos reais forem publicados no painel, eles aparecem nesta vitrine."
                 action={
                   <ButtonLink href="/infobooks" variant="secondary" size="sm">
-                    Ver a área de infobooks
+                    Ver a área de Infobooks
                   </ButtonLink>
                 }
               />
@@ -393,77 +481,50 @@ export default async function HomePage() {
         </Section>
       ) : null}
 
-      {/* ----------------------------------------------------------- PDF ONLINE */}
-      {features.enable_pdf_online ? (
-        <Section tone="default" ariaLabelledBy="pdf-online-title">
-          <Container>
-            <Reveal>
-              <Card className="overflow-hidden bg-gradient-to-br from-petrol-50 via-surface to-sand-50 p-0">
-                <div className="grid items-center gap-8 p-8 sm:p-10 lg:grid-cols-[1.3fr_1fr]">
-                  <div>
-                    <Badge tone="sand">Leitura online</Badge>
-                    <h2 id="pdf-online-title" className="mt-4 text-display-sm">
-                      PDF Online
-                    </h2>
-                    <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-muted">
-                      O material em PDF continua disponível para leitura direto no navegador, sem
-                      download e sem instalação. O conteúdo original foi preservado integralmente e
-                      agora ganhou uma área própria dentro do site.
-                    </p>
-                    <div className="mt-7 flex flex-wrap gap-3">
-                      <ButtonLink href="/pdf-online">
-                        Abrir o PDF Online
-                        <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                      </ButtonLink>
-                      <ButtonLink href="/materiais" variant="ghost">
-                        Ver materiais
-                      </ButtonLink>
-                    </div>
-                  </div>
-
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white ring-1 ring-petrol-100">
-                    <div className="flex h-full flex-col gap-2.5 p-6">
-                      <div className="h-2.5 w-1/3 rounded-full bg-petrol-200" />
-                      <div className="h-2 w-full rounded-full bg-petrol-100" />
-                      <div className="h-2 w-11/12 rounded-full bg-petrol-100" />
-                      <div className="h-2 w-10/12 rounded-full bg-petrol-100" />
-                      <div className="mt-3 h-2.5 w-1/4 rounded-full bg-sand-300" />
-                      <div className="h-2 w-full rounded-full bg-petrol-100" />
-                      <div className="h-2 w-9/12 rounded-full bg-petrol-100" />
-                      <div className="mt-auto flex items-center gap-2 text-xs text-ink-faint">
-                        <FileText aria-hidden="true" className="h-3.5 w-3.5" />
-                        Documento preservado
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Reveal>
-          </Container>
-        </Section>
-      ) : null}
-
-      {/* --------------------------------------------------------- LANDING PAGES */}
-      {features.enable_store && landingPages.length > 0 ? (
-        <Section tone="muted" ariaLabelledBy="landing-title">
+      {/* --------------------------------------------------------- HOTMART */}
+      {features.enable_store && hotmartProducts.length > 0 ? (
+        <Section tone="muted" ariaLabelledBy="produtos-title">
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeader
-                id="landing-title"
-                eyebrow="Produtos"
-                title="Páginas dos materiais"
-                description="As páginas comerciais já existentes, reunidas em uma vitrine."
+                id="produtos-title"
+                eyebrow="Conteúdos e materiais"
+                title="Produtos digitais"
+                description="Acesso direto aos materiais disponíveis na Hotmart. Nome, preço e descrição completos são editáveis no painel."
               />
-              <ButtonLink href="/landing-pages" variant="ghost">
-                Ver todas
+              <ButtonLink href="/materiais" variant="ghost">
+                Ver materiais
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </ButtonLink>
             </div>
 
-            <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {landingPages.slice(0, 3).map((page, index) => (
-                <Reveal as="li" key={page.id} delay={index * 60}>
-                  <LandingPageCard page={page} />
+            <ul className="mt-10 grid gap-5 md:grid-cols-2">
+              {hotmartProducts.map((product, index) => (
+                <Reveal as="li" key={product.id} delay={index * 60}>
+                  <Card className="flex h-full flex-col">
+                    <Badge tone="sand">Hotmart</Badge>
+                    <h3 className="mt-4 font-display text-xl text-ink">{product.name}</h3>
+                    {product.summary ? (
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">
+                        {product.summary}
+                      </p>
+                    ) : (
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">
+                        Detalhes do produto na página de checkout da Hotmart.
+                      </p>
+                    )}
+                    {product.external_url ? (
+                      <ButtonLink
+                        href={product.external_url}
+                        external
+                        size="sm"
+                        className="mt-6 self-start"
+                      >
+                        Acessar na Hotmart
+                        <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                      </ButtonLink>
+                    ) : null}
+                  </Card>
                 </Reveal>
               ))}
             </ul>
@@ -472,7 +533,6 @@ export default async function HomePage() {
       ) : null}
 
       {/* --------------------------------------------------------- DEPOIMENTOS */}
-      {/* Renderizado apenas quando existem depoimentos reais cadastrados. */}
       {features.show_testimonials && testimonials.length > 0 ? (
         <Section tone="default" ariaLabelledBy="depoimentos-title">
           <Container>
@@ -508,17 +568,19 @@ export default async function HomePage() {
 
       {/* --------------------------------------------------------------- CTA */}
       <CTASection
-        title="Pronto para dar o primeiro passo?"
-        description="Escolha um horário livre na agenda e envie sua solicitação. Você recebe a confirmação com todas as orientações."
+        title="Agende seu atendimento"
+        description="Escolha um horário livre na agenda ou fale pelo WhatsApp. Você recebe a confirmação com todas as orientações."
+        primaryHref="/agendamento"
+        primaryLabel="Agendar atendimento"
         whatsapp={contact.whatsapp}
-        secondaryHref="/servicos"
-        secondaryLabel="Ver serviços e duração"
+        secondaryHref="/contato"
+        secondaryLabel="Entrar em contato"
       />
 
       {/* --------------------------------------------------------------- FAQ */}
       <FaqSection
         faqs={faqs}
-        description="As dúvidas mais comuns sobre o processo, o agendamento e o tratamento de dados."
+        description="Dúvidas sobre atendimento, neuropsicologia, agendamento e Infobooks."
       />
 
       {/* ------------------------------------------------------------ CONTATO */}

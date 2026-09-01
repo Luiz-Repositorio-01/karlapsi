@@ -12,7 +12,11 @@ export interface NavGroup {
   items: NavItem[];
 }
 
+/**
+ * Menu limpo — sem PDF Online nem Landing Pages na experiência pública.
+ */
 export const PRIMARY_NAV: (NavItem | NavGroup)[] = [
+  { label: 'Sobre', href: '/sobre' },
   {
     label: 'Neuropsicologia',
     href: '/neuropsicologia',
@@ -30,63 +34,29 @@ export const PRIMARY_NAV: (NavItem | NavGroup)[] = [
       {
         label: 'Atendimentos',
         href: '/atendimentos',
-        description: 'Formatos, duração e o que esperar',
+        description: 'Online, presencial e o que esperar',
       },
     ],
   },
-  { label: 'Serviços', href: '/servicos' },
-  {
-    label: 'Conteúdos',
-    href: '/publicacoes',
-    items: [
-      { label: 'Blog', href: '/blog', description: 'Artigos sobre cognição e aprendizagem' },
-      { label: 'Infobooks', href: '/infobooks', description: 'Materiais digitais para aprofundar' },
-      { label: 'PDF Online', href: '/pdf-online', description: 'Leitura online do material' },
-      { label: 'Materiais', href: '/materiais', description: 'Produtos digitais disponíveis' },
-      { label: 'Landing pages', href: '/landing-pages', description: 'Páginas dos materiais' },
-    ],
-  },
-  { label: 'Sobre', href: '/sobre' },
+  { label: 'Atendimentos', href: '/atendimentos' },
+  { label: 'Infobooks', href: '/infobooks' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Novidades', href: '/novidades' },
   { label: 'Contato', href: '/contato' },
 ];
 
-export const FOOTER_NAV: NavGroup[] = [
-  {
-    label: 'Neuropsicologia',
-    items: [
-      { label: 'O que é', href: '/neuropsicologia' },
-      { label: 'Avaliação neuropsicológica', href: '/avaliacao-neuropsicologica' },
-      { label: 'Atendimentos', href: '/atendimentos' },
-      { label: 'Serviços', href: '/servicos' },
-    ],
-  },
-  {
-    label: 'Conteúdos',
-    items: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Infobooks', href: '/infobooks' },
-      { label: 'PDF Online', href: '/pdf-online' },
-      { label: 'Materiais', href: '/materiais' },
-      { label: 'Landing pages', href: '/landing-pages' },
-      { label: 'Publicações', href: '/publicacoes' },
-    ],
-  },
-  {
-    label: 'Atendimento',
-    items: [
-      { label: 'Agendar', href: '/agendamento' },
-      { label: 'Contato', href: '/contato' },
-      { label: 'Sobre', href: '/sobre' },
-    ],
-  },
-  {
-    label: 'Institucional',
-    items: [
-      { label: 'Política de privacidade', href: '/politica-de-privacidade' },
-      { label: 'Termos de uso', href: '/termos' },
-      { label: 'Área profissional', href: '/login' },
-    ],
-  },
+/** Footer compacto — poucos links, sem PDF Online / Landing Pages. */
+export const FOOTER_NAV: NavItem[] = [
+  { label: 'Início', href: '/' },
+  { label: 'Sobre', href: '/sobre' },
+  { label: 'Atendimentos', href: '/atendimentos' },
+  { label: 'Infobooks', href: '/infobooks' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Novidades', href: '/novidades' },
+  { label: 'Agendamento', href: '/agendamento' },
+  { label: 'Contato', href: '/contato' },
+  { label: 'Privacidade', href: '/politica-de-privacidade' },
+  { label: 'Termos', href: '/termos' },
 ];
 
 export function isNavGroup(item: NavItem | NavGroup): item is NavGroup {

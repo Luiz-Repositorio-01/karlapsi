@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!infobook) {
     return buildMetadata({
       title: 'Infobook',
-      description: 'Material digital publicado por Karla Dias Neuropsi.',
+      description: 'Material digital publicado por Karla Dias.',
       path: `/infobooks/${slug}`,
     });
   }

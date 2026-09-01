@@ -86,8 +86,8 @@ export default async function InfobooksPage() {
         title="Prefere uma orientação individual?"
         description="Os materiais explicam o geral. A avaliação responde ao caso específico, com dados e devolutiva."
         whatsapp={settings.contact.whatsapp}
-        secondaryHref="/pdf-online"
-        secondaryLabel="Ler o PDF Online"
+        secondaryHref="/agendamento"
+        secondaryLabel="Agendar atendimento"
       />
 
       <JsonLd data={breadcrumbSchema([{ label: 'Infobooks', href: '/infobooks' }])} />

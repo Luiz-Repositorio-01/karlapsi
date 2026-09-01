@@ -19,7 +19,7 @@ export async function generateMetadata() {
   return buildMetadata({
     title: 'Publicações',
     description:
-      'Tudo o que é publicado em um só lugar: artigos do blog, infobooks, PDF Online e materiais digitais.',
+      'Tudo o que é publicado em um só lugar: artigos do blog, infobooks e materiais digitais.',
     path: '/publicacoes',
   });
 }
@@ -48,13 +48,6 @@ export default async function PublicacoesPage() {
       count: infobooks.length,
     },
     {
-      icon: FileText,
-      title: 'PDF Online',
-      description: 'Leitura do material diretamente no navegador.',
-      href: '/pdf-online',
-      count: null,
-    },
-    {
       icon: ShoppingBag,
       title: 'Materiais',
       description: 'Catálogo de produtos digitais com checkout.',
@@ -68,13 +61,13 @@ export default async function PublicacoesPage() {
       <PageHero
         eyebrow="Conteúdos"
         title="Publicações"
-        description="Todo o material publicado reunido em um índice: artigos, infobooks, PDF Online e materiais digitais."
+        description="Todo o material publicado reunido em um índice: artigos, infobooks e materiais digitais."
         breadcrumb={[{ label: 'Publicações' }]}
       />
 
       <Section tone="default">
         <Container>
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {areas.map((area, index) => (
               <Reveal as="li" key={area.href} delay={index * 50}>
                 <Card interactive className="flex h-full flex-col">
@@ -83,11 +76,9 @@ export default async function PublicacoesPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">
                     {area.description}
                   </p>
-                  {area.count !== null ? (
-                    <p className="mt-3 text-xs text-ink-faint">
-                      {area.count} {area.count === 1 ? 'item publicado' : 'itens publicados'}
-                    </p>
-                  ) : null}
+                  <p className="mt-3 text-xs text-ink-faint">
+                    {area.count} {area.count === 1 ? 'item publicado' : 'itens publicados'}
+                  </p>
                   <ButtonLink href={area.href} variant="ghost" size="sm" className="mt-4 self-start">
                     Acessar
                     <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />

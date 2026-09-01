@@ -71,7 +71,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     label: 'Conteúdo',
     items: [
-      { label: 'Blog', href: '/admin/blog', icon: 'edit', permission: 'content:view' },
+      {
+        label: 'Calendário editorial',
+        href: '/admin/blog',
+        icon: 'edit',
+        permission: 'content:view',
+      },
       { label: 'Infobooks', href: '/admin/infobooks', icon: 'book', permission: 'content:view' },
       {
         label: 'Landing pages',
