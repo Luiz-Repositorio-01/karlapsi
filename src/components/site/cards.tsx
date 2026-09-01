@@ -143,64 +143,98 @@ export function BlogCard({
   );
 }
 
-export function InfobookCard({ infobook }: { infobook: Infobook }) {
+export function InfobookCard({
+  infobook,
+  featured = false,
+}: {
+  infobook: Infobook;
+  featured?: boolean;
+}) {
   const isFree = infobook.is_free;
   const price = infobook.price_cents;
+  const priceLabel = isFree ? 'Acesso liberado' : formatCurrency(price);
+  const actionLabel = isFree ? 'Baixar' : 'Comprar';
 
   return (
-    <Card as="article" interactive className="flex h-full flex-col overflow-hidden p-0">
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-surface-sunken">
+    <Card
+      as="article"
+      interactive
+      className={cn(
+        'flex h-full overflow-hidden p-0',
+        featured ? 'flex-col md:flex-row' : 'flex-col',
+      )}
+    >
+      <div
+        className={cn(
+          'relative w-full shrink-0 overflow-hidden bg-surface-sunken',
+          featured ? 'aspect-[4/5] md:w-[42%] md:max-w-sm' : 'aspect-[4/5]',
+        )}
+      >
         {infobook.cover_url ? (
           <Image
             src={infobook.cover_url}
             alt={`Capa do infobook ${infobook.title}`}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes={
+              featured
+                ? '(max-width: 768px) 100vw, 50vw'
+                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw'
+            }
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-sand-100 to-petrol-50">
+          <div className="flex h-full items-center justify-center bg-sand-100">
             <BookOpen aria-hidden="true" className="h-9 w-9 text-petrol-300" />
           </div>
         )}
         <div className="absolute left-3 top-3">
-          <Badge tone={isFree ? 'success' : 'sand'}>{isFree ? 'Gratuito' : 'Material pago'}</Badge>
+          <Badge tone={isFree ? 'success' : 'sand'}>{isFree ? 'Gratuito' : 'Infobook'}</Badge>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className={cn('flex flex-1 flex-col', featured ? 'p-6 sm:p-8' : 'p-5')}>
         {infobook.category ? (
-          <p className="text-xs font-medium text-petrol-600">{infobook.category}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-petrol-600">
+            {infobook.category}
+          </p>
         ) : null}
-        <h3 className="mt-1.5 font-display text-lg text-ink">{infobook.title}</h3>
+        <h3 className={cn('mt-2 font-display text-ink', featured ? 'text-2xl sm:text-3xl' : 'text-lg')}>
+          {infobook.title}
+        </h3>
         {infobook.description ? (
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">
+          <p
+            className={cn(
+              'mt-3 flex-1 leading-relaxed text-ink-muted',
+              featured ? 'text-base' : 'text-sm',
+            )}
+          >
             {infobook.description}
           </p>
         ) : null}
 
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <span className="text-sm font-medium text-ink">
-            {isFree ? 'Acesso liberado' : formatCurrency(price)}
-          </span>
-          {infobook.pages ? (
-            <span className="text-xs text-ink-faint">{infobook.pages} páginas</span>
-          ) : null}
-        </div>
+        <p
+          className={cn('mt-5 font-display text-petrol-800', featured ? 'text-3xl' : 'text-xl')}
+          aria-label={`Preço: ${priceLabel}`}
+        >
+          {priceLabel}
+        </p>
+        {infobook.pages ? (
+          <p className="mt-1 text-xs text-ink-faint">{infobook.pages} páginas</p>
+        ) : null}
 
-        <div className="mt-4">
-          <ButtonLink href={`/infobooks/${infobook.slug}`} size="sm" className="w-full">
+        <div className={cn('mt-6', featured ? '' : 'mt-4')}>
+          <ButtonLink
+            href={`/infobooks/${infobook.slug}`}
+            size={featured ? 'lg' : 'sm'}
+            className={featured ? 'w-full sm:w-auto' : 'w-full'}
+            aria-label={`${actionLabel} ${infobook.title}`}
+          >
             {isFree ? (
-              <>
-                <Download aria-hidden="true" className="h-4 w-4" />
-                Baixar
-              </>
+              <Download aria-hidden="true" className="h-4 w-4" />
             ) : (
-              <>
-                <ShoppingBag aria-hidden="true" className="h-4 w-4" />
-                Comprar
-              </>
+              <ShoppingBag aria-hidden="true" className="h-4 w-4" />
             )}
+            {actionLabel}
           </ButtonLink>
         </div>
       </div>

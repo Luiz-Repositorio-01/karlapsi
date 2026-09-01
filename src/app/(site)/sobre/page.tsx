@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { Alert, ButtonLink, Card, Container, Section } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero, SitePageSections } from '@/components/site/sections';
 import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -44,7 +43,6 @@ export default async function SobrePage() {
 
       <Section tone="default">
         <Container>
-          <Reveal>
             <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
               <div>
                 <ProfessionalPortrait
@@ -130,7 +128,6 @@ export default async function SobrePage() {
                 </div>
               </div>
             </div>
-          </Reveal>
         </Container>
       </Section>
 

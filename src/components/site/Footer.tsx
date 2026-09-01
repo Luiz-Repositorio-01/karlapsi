@@ -38,6 +38,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               >
                 <Instagram aria-hidden="true" className="h-3.5 w-3.5" />
                 {instagramLabel}
+                <span className="sr-only"> (abre em nova aba)</span>
               </a>
               {contact.whatsapp ? (
                 <a
@@ -48,6 +49,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 >
                   <MessageCircle aria-hidden="true" className="h-3.5 w-3.5" />
                   {formatPhone(contact.whatsapp)}
+                  <span className="sr-only"> (abre em nova aba)</span>
                 </a>
               ) : null}
             </div>

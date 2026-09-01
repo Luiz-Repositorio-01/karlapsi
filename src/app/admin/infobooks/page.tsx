@@ -14,22 +14,29 @@ const FIELDS: CrudField[] = [
   { name: 'category', label: 'Categoria', type: 'text' },
   { name: 'pages', label: 'Páginas', type: 'number', min: 1, max: 5000 },
   { name: 'description', label: 'Descrição', type: 'textarea', rows: 4, fullWidth: true },
-  { name: 'coverUrl', label: 'Capa (URL)', type: 'url' },
+  { name: 'coverUrl', label: 'Capa (URL)', type: 'url', hint: 'Imagem da vitrine. Pode ser /images/infobooks/arquivo.jpg' },
   {
     name: 'publicFileUrl',
-    label: 'Arquivo público (URL)',
+    label: 'Link de venda (Hotmart ou produto próprio)',
     type: 'url',
-    hint: 'Para materiais gratuitos',
+    hint: 'Cole o checkout da Hotmart (ex.: https://go.hotmart.com/...) ou o link do seu próprio produto/arquivo. O botão Comprar do site abre este endereço.',
+    fullWidth: true,
   },
   { name: 'previewUrl', label: 'Prévia (URL)', type: 'url' },
   {
     name: 'legacyPath',
     label: 'Caminho do arquivo original',
     type: 'text',
-    hint: 'Ex.: legacy/landing-pages/cuidar/index.html — o arquivo NÃO é alterado, apenas exibido.',
+    hint: 'Ex.: legacy/infobooks/cuidar/index.html — o arquivo NÃO é alterado, apenas exibido.',
     fullWidth: true,
   },
-  { name: 'priceCents', label: 'Preço', type: 'currency-cents', min: 0 },
+  {
+    name: 'priceCents',
+    label: 'Preço',
+    type: 'currency-cents',
+    min: 0,
+    hint: 'Valor exibido na vitrine. Use 37,90 para R$ 37,90.',
+  },
   {
     name: 'status',
     label: 'Status',
@@ -44,7 +51,7 @@ const FIELDS: CrudField[] = [
   { name: 'sortOrder', label: 'Ordem', type: 'number', min: 0, max: 999 },
   { name: 'seoTitle', label: 'SEO — título', type: 'text' },
   { name: 'seoDescription', label: 'SEO — descrição', type: 'textarea', rows: 2, fullWidth: true },
-  { name: 'isFree', label: 'Gratuito', type: 'checkbox' },
+  { name: 'isFree', label: 'Gratuito (sem cobrança)', type: 'checkbox' },
 ];
 
 export default async function InfobooksAdminPage() {
@@ -60,8 +67,15 @@ export default async function InfobooksAdminPage() {
     <>
       <AdminPageHeader
         title="Infobooks"
-        description="Cadastro editorial dos materiais. Para os módulos originais já publicados, informe o caminho legado — o arquivo continua intacto e apenas passa a ter capa, descrição e preço na vitrine."
+        description="Cadastre, edite e publique Infobooks para venda: título, descrição, capa, preço e o link de checkout (Hotmart ou produto próprio). O que estiver com status Publicado aparece na home e em /infobooks."
       />
+
+      <Alert tone="info" title="Como vender um Infobook" className="mb-5">
+        Clique em <strong>Novo infobook</strong>. Preencha título, descrição, capa e preço. Em
+        <strong> Link de venda</strong>, cole o checkout da Hotmart ou o endereço do seu próprio
+        produto. Marque <strong>Publicado</strong>. O site exibe o preço e o botão Comprar abre esse
+        link. Para editar Autismo (R$ 37,90) ou Cuidar (R$ 34,00), abra o item na lista abaixo.
+      </Alert>
 
       {unregistered.length > 0 ? (
         <Alert tone="info" title="Módulos originais sem cadastro" className="mb-5">
@@ -96,7 +110,7 @@ export default async function InfobooksAdminPage() {
         createLabel="Novo infobook"
         editLabel="Editar infobook"
         emptyTitle="Nenhum infobook cadastrado"
-        emptyDescription="Cadastre um material para exibi-lo na vitrine com capa, descrição, preço e botão de acesso."
+        emptyDescription="Clique em Novo infobook para vender um material: preencha título, descrição, capa, preço e o link da Hotmart ou do seu próprio produto. Com status Publicado, ele entra na vitrine."
         renderItem={(infobook, onEdit) => (
           <CrudRow
             title={infobook.title}
