@@ -103,11 +103,26 @@ As migrations ficam em `supabase/migrations/`, numeradas e idempotentes
 | `011_booking_functions.sql` | RPCs de escrita pública, reagendamento e métricas |
 | `012_defaults.sql` | Configuração inicial editável (sem conteúdo profissional inventado) |
 
+**Projeto Supabase de produção (Karla Neuropsi):**
+
+- Project Ref: `oerlxsstjuyptnryhpyi`
+- URL: `https://oerlxsstjuyptnryhpyi.supabase.co`
+
 **Opção A — Supabase CLI (recomendado):**
 
+Com as variáveis já no ambiente (`NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`):
+
 ```bash
-supabase link --project-ref <ref-do-projeto>
-supabase db push
+./scripts/connect-supabase.sh   # escreve .env.local, linka e faz db push (sem reset)
+```
+
+Ou manualmente:
+
+```bash
+supabase link --project-ref oerlxsstjuyptnryhpyi
+supabase migration list         # conferir divergências ANTES
+supabase db push                # NUNCA use db reset em produção
 ```
 
 **Opção B — SQL Editor:** abra cada arquivo na ordem numérica e execute.
@@ -118,6 +133,10 @@ supabase db push
 for f in supabase/migrations/*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"; done
 ```
 
+> **Service role:** usada só no servidor (`createSupabaseAdminClient`) —
+> webhook Mercado Pago, preferência de pagamento, dispatch de notificações e
+> páginas de retorno de pagamento. Nunca no frontend. Sem a chave, essas rotas
+> degradam com aviso; a anon key **não** a substitui.
 ### 4.2 Dados de demonstração (opcional)
 
 ```bash
