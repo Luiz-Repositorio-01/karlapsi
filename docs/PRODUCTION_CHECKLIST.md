@@ -30,6 +30,5 @@ Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`
 
 ## Próximo passo humano (OWNER)
 
-1. Authentication → URL Configuration (callbacks localhost + produção).
-2. Invite do e-mail da profissional.
-3. Login em `/login` → confirmar OWNER em `/admin/usuarios`.
+OWNER já existe e está ativo. Auth URLs já foram aplicadas no projeto remoto.
+Faça login em `/login` com a senha definida no aceite do convite e confira `/admin`.
