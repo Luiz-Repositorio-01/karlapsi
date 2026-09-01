@@ -54,7 +54,7 @@ export function getContentReadiness(settings: SiteSettings): ReadinessItem[] {
       label: 'Foto profissional',
       status: filled(identity.photo_url) ? 'ok' : 'pending',
       group: 'dados',
-      hint: 'URL no bucket public-assets',
+      hint: 'Foto em public/images/karla-dias.jpg',
     },
     {
       id: 'email',
@@ -94,7 +94,7 @@ export function getLegacyReadiness(): ReadinessItem[] {
       label: 'Arquivos PDF Online (public/legacy/pdf-online)',
       status: pdf ? 'ok' : 'pending',
       group: 'legacy',
-      hint: 'Importe com scripts/import-legacy-zip.sh site_kaka.zip',
+      hint: 'Arquivos em public/legacy/pdf-online — acesso só no painel (/admin/pdf-online)',
     },
     {
       id: 'legacy-catalog',
@@ -104,7 +104,7 @@ export function getLegacyReadiness(): ReadinessItem[] {
       hint:
         landings.length > 0
           ? `${landings.length} módulo(s) detectado(s)`
-          : 'Copie pastas para public/legacy/landing-pages/<slug>/',
+          : 'Copie pastas para public/legacy/infobooks/<slug>/',
     },
   ];
 }

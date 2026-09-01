@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="google-site-verification" content="Ft5P1NBDpYwdcqUxXEccDTeEWXjP440hlcHj34FFTL0" />
+
+    <title>Karla Dias | Neuropsicóloga</title>
+
+    <link rel="icon" type="image/png" href="faviconkaka.png">
+    <link rel="shortcut icon" href="faviconkaka.png">
+    <link rel="apple-touch-icon" href="faviconkaka.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        /* =========================================
+RESET
+========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            font-family: 'Poppins', sans-serif;
+
+            background: #f6f1e9;
+
+            overflow-x: hidden;
+
+            color: #1f1f1f;
+
+        }
+
+        /* =========================================
+CORES
+========================================= */
+
+        :root {
+
+            --verde: #11231b;
+            --verde2: #1d352b;
+            --verde3: #08130f;
+
+            --dourado: #d2ad78;
+
+            --claro: #f7f3ed;
+
+            --texto: #222;
+
+            --verdebotao: #25D366;
+
+        }
+
+        /* =========================================
+FUNDO PREMIUM
+========================================= */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            top: -300px;
+            right: -250px;
+
+            width: 1000px;
+            height: 1000px;
+
+            background:
+                radial-gradient(circle,
+                    rgba(210, 173, 120, .13),
+                    transparent 70%);
+
+            z-index: -2;
+
+        }
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            bottom: -350px;
+            left: -300px;
+
+            width: 900px;
+            height: 900px;
+
+            background:
+                radial-gradient(circle,
+                    rgba(17, 35, 27, .08),
+                    transparent 70%);
+
+            z-index: -2;
+
+        }
+
+        /* =========================================
+INTRO
+========================================= */
+
+        #intro {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100vh;
+
+            background:
+                linear-gradient(135deg,
+                    #08130f,
+                    #173126);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            z-index: 999999;
+
+            animation: fechar 1.2s ease forwards;
+
+            animation-delay: 2s;
+
+        }
+
+        .intro-content {
+
+            text-align: center;
+
+            animation: zoom .9s ease;
+
+        }
+
+        .intro-content h1 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 110px;
+
+            color: white;
+
+            margin-bottom: 10px;
+
+            text-shadow:
+                0 0 40px rgba(255, 255, 255, .15);
+
+        }
+
+        .intro-content p {
+
+            font-size: 19px;
+
+            letter-spacing: 7px;
+
+            font-weight: 600;
+
+            color: var(--dourado);
+
+            text-transform: uppercase;
+
+        }
+
+        @keyframes zoom {
+
+            0% {
+                opacity: 0;
+                transform: scale(.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+        @keyframes fechar {
+
+            0% {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+        }
+
+        /* =========================================
+NAVBAR
+========================================= */
+
+        nav {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+
+            padding: 18px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            background: rgba(255, 255, 255, .75);
+
+            backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid rgba(0, 0, 0, .05);
+
+            z-index: 999;
+
+        }
+
+        .logo {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 44px;
+
+            font-weight: 700;
+
+            color: var(--verde);
+
+        }
+
+        .menu {
+
+            display: flex;
+
+            gap: 34px;
+
+        }
+
+        .menu a {
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 500;
+
+            color: #111;
+
+            position: relative;
+
+        }
+
+        .menu a::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: -6px;
+
+            width: 0%;
+            height: 2px;
+
+            background: var(--dourado);
+
+            transition: .3s;
+
+        }
+
+        .menu a:hover::after {
+
+            width: 100%;
+
+        }
+
+        /* =========================================
+HERO
+========================================= */
+
+        .hero {
+
+            min-height: 100vh;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            align-items: center;
+
+            gap: 70px;
+
+            padding: 160px 7% 100px;
+
+            background:
+                linear-gradient(180deg,
+                    #f8f4ed,
+                    #ece1d2);
+
+        }
+
+        .hero-text {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+        .hero-text small {
+
+            font-size: 14px;
+
+            letter-spacing: 5px;
+
+            text-transform: uppercase;
+
+            font-weight: 600;
+
+            color: var(--dourado);
+
+            margin-bottom: 20px;
+
+        }
+
+        .hero-text h1 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 102px;
+
+            line-height: .9;
+
+            color: var(--verde);
+
+            margin-bottom: 26px;
+
+        }
+
+        .hero-text p {
+
+            font-size: 20px;
+
+            line-height: 1.9;
+
+            color: #555;
+
+            max-width: 620px;
+
+            margin-bottom: 18px;
+
+        }
+
+        /* =========================================
+BOTÕES
+========================================= */
+
+        .btn {
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            width: 100%;
+            max-width: 290px;
+
+            height: 60px;
+
+            border-radius: 999px;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            transition: .35s;
+
+            margin: auto;
+
+        }
+
+        .btn-primary {
+
+            background:
+                linear-gradient(135deg,
+                    #1bb557,
+                    #25D366);
+
+            color: white;
+
+            box-shadow:
+                0 18px 40px rgba(37, 211, 102, .35);
+
+        }
+
+        .btn-primary:hover {
+
+            transform:
+                translateY(-5px) scale(1.03);
+
+        }
+
+        /* =========================================
+HERO FOTO
+========================================= */
+
+        .hero-image {
+
+            display: flex;
+
+            justify-content: center;
+
+            position: relative;
+
+        }
+
+        .hero-image::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 430px;
+            height: 60px;
+
+            background: rgba(0, 0, 0, .15);
+
+            bottom: 0;
+
+            filter: blur(30px);
+
+            border-radius: 50%;
+
+        }
+
+        .hero-image img {
+
+            width: 100%;
+
+            max-width: 520px;
+
+            height: 690px;
+
+            object-fit: cover;
+
+            border-radius: 42px;
+
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, .14);
+
+        }
+
+        /* =========================================
+SEÇÕES
+========================================= */
+
+        section {
+
+            padding: 100px 7%;
+
+        }
+
+        .section-colored {
+
+            background:
+                linear-gradient(135deg,
+                    #f6f1e9,
+                    #e9ddcf);
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        .section-colored::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: -180px;
+            right: -120px;
+
+            width: 500px;
+            height: 500px;
+
+            background:
+                radial-gradient(circle,
+                    rgba(210, 173, 120, .10),
+                    transparent 70%);
+
+        }
+
+        /* =========================================
+TITULOS
+========================================= */
+
+        .section-title {
+
+            text-align: center;
+
+            margin-bottom: 70px;
+
+        }
+
+        .section-title small {
+
+            font-size: 14px;
+
+            letter-spacing: 4px;
+
+            text-transform: uppercase;
+
+            font-weight: 600;
+
+            color: var(--dourado);
+
+        }
+
+        .section-title h2 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 84px;
+
+            line-height: 1;
+
+            margin-top: 14px;
+
+            color: var(--verde);
+
+        }
+
+        /* =========================================
+EBOOKS
+========================================= */
+
+        .ebook-track {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: stretch;
+
+            gap: 34px;
+
+            flex-wrap: wrap;
+
+        }
+
+        /* CARD */
+
+        .book {
+
+            width: 430px;
+
+            background: white;
+
+            border-radius: 42px;
+
+            padding: 18px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, .10);
+
+            transition: .45s;
+
+            min-height: 860px;
+
+        }
+
+        .book:hover {
+
+            transform:
+                translateY(-14px) scale(1.02);
+
+            box-shadow:
+                0 45px 120px rgba(0, 0, 0, .16);
+
+        }
+
+        /* FOTO */
+
+        .book-image {
+
+            width: 100%;
+
+            height: 560px;
+
+            overflow: hidden;
+
+            border-radius: 30px;
+
+        }
+
+        .book-image img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition: .5s;
+
+        }
+
+        .book:hover .book-image img {
+
+            transform: scale(1.06);
+
+        }
+
+        /* CONTEUDO */
+
+        .book-content {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            flex: 1;
+
+            width: 100%;
+
+            padding-top: 28px;
+
+        }
+
+        /* TITULO */
+
+        .book h3 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 44px;
+
+            line-height: 1.1;
+
+            text-align: center;
+
+            color: var(--verde);
+
+            margin-bottom: 24px;
+
+            width: 100%;
+
+            min-height: 120px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0 10px;
+
+        }
+
+        /* TEXTO */
+
+        .book p {
+
+            font-size: 16px;
+
+            line-height: 1.9;
+
+            color: #666;
+
+            text-align: center;
+
+            max-width: 330px;
+
+            min-height: 100px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 34px;
+
+        }
+
+        /* =========================================
+ABOUT
+========================================= */
+
+        .about {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 70px;
+
+            align-items: center;
+
+            background:
+                linear-gradient(135deg,
+                    #ffffff,
+                    #f2ebe1);
+
+        }
+
+        .about img {
+
+            width: 100%;
+
+            max-width: 360px;
+
+            margin: auto;
+
+            border-radius: 40px;
+
+            box-shadow:
+                0 35px 90px rgba(0, 0, 0, .12);
+
+        }
+
+        .about-text {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+        .about-text h2 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 78px;
+
+            line-height: 1;
+
+            margin-bottom: 24px;
+
+            color: var(--verde);
+
+        }
+
+        .about-text p {
+
+            font-size: 19px;
+
+            line-height: 1.9;
+
+            color: #555;
+
+            margin-bottom: 20px;
+
+        }
+
+        /* =========================================
+CARDS
+========================================= */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 24px;
+
+        }
+
+        .card {
+
+            background: white;
+
+            padding: 34px;
+
+            border-radius: 32px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, .06);
+
+            transition: .35s;
+
+        }
+
+        .card:hover {
+
+            transform: translateY(-8px);
+
+        }
+
+        .card i {
+
+            font-size: 40px;
+
+            margin-bottom: 18px;
+
+            color: var(--dourado);
+
+        }
+
+        .card h3 {
+
+            font-size: 22px;
+
+            color: var(--verde);
+
+            margin-bottom: 14px;
+
+        }
+
+        .card p {
+
+            font-size: 15px;
+
+            line-height: 1.8;
+
+            color: #666;
+
+            margin-bottom: 24px;
+
+        }
+
+        /* =========================================
+CTA
+========================================= */
+
+        .cta {
+
+            background:
+                linear-gradient(135deg,
+                    #07140f,
+                    #173126,
+                    #28483a);
+
+            padding: 95px 7%;
+
+            border-radius: 44px;
+
+            margin: 0 7% 100px;
+
+            text-align: center;
+
+            color: white;
+
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, .18);
+
+        }
+
+        .cta h2 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 86px;
+
+            margin-bottom: 24px;
+
+        }
+
+        .cta p {
+
+            font-size: 20px;
+
+            line-height: 1.9;
+
+            max-width: 850px;
+
+            margin: auto auto 34px;
+
+            color: rgba(255, 255, 255, .88);
+
+        }
+
+        /* =========================================
+FOOTER
+========================================= */
+
+        footer {
+
+            background:
+                linear-gradient(135deg,
+                    #08110d,
+                    #122019);
+
+            padding: 70px 7%;
+
+            color: white;
+
+        }
+
+        .footer {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 34px;
+
+        }
+
+        .footer-left h3 {
+
+            font-family: 'Cormorant Garamond', serif;
+
+            font-size: 44px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .footer-right {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 14px;
+
+        }
+
+        .footer-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 14px 18px;
+
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, .05);
+
+        }
+
+        .footer-item i {
+
+            font-size: 18px;
+
+            color: var(--dourado);
+
+        }
+
+        .footer-item a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+        }
+
+        /* =========================================
+WHATS
+=============   ============================ */
+
+        .whatsapp {
+
+            position: fixed;
+
+            right: 18px;
+
+            bottom: 18px;
+
+            width: 65px;
+            height: 65px;
+
+            background: #25D366;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            box-shadow:
+                0 0 45px rgba(37, 211, 102, .45);
+
+            z-index: 99999;
+
+        }
+
+        .whatsapp i {
+
+            font-size: 32px;
+
+            color: white;
+
+        }
+
+        /* =========================================
+RESPONSIVO
+========================================= */
+
+        @media(max-width:1200px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text {
+                align-items: center;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .about-text {
+                align-items: center;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media(max-width:768px) {
+
+            .menu {
+                display: none;
+            }
+
+            .logo {
+                font-size: 34px;
+            }
+
+            .hero {
+                padding: 140px 20px 70px;
+                gap: 40px;
+            }
+
+            .hero-text h1 {
+                font-size: 60px;
+            }
+
+            .hero-text p {
+                font-size: 17px;
+            }
+
+            .hero-image img {
+                max-width: 340px;
+                height: 470px;
+            }
+
+            .section-title h2 {
+                font-size: 54px;
+            }
+
+            .book {
+
+                width: 100%;
+
+                max-width: 360px;
+
+                min-height: auto;
+
+            }
+
+            .book-image {
+                height: 430px;
+            }
+
+            .book h3 {
+                font-size: 38px;
+                min-height: auto;
+            }
+
+            .book p {
+                min-height: auto;
+            }
+
+            .about {
+                padding: 80px 20px;
+            }
+
+            .about img {
+                max-width: 300px;
+            }
+
+            .about-text h2 {
+                font-size: 54px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .cta {
+                padding: 70px 24px;
+                margin: 0 20px 80px;
+            }
+
+            .cta h2 {
+                font-size: 58px;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-item {
+                justify-content: center;
+            }
+
+            .btn {
+                max-width: 100%;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =========================================
+INTRO
+========================================= -->
+
+    <div id="intro">
+
+        <div class="intro-content">
+
+            <h1>Karla Dias</h1>
+
+            <p>Neuropsicóloga</p>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================
+NAVBAR
+========================================= -->
+
+    <nav>
+
+        <div class="logo">
+            Karla Dias
+        </div>
+
+        <div class="menu">
+
+            <a href="#sobre">Sobre</a>
+            <a href="#ebooks">Infobooks</a>
+            <a href="#desenvolvimento">Desenvolvimento</a>
+            <a href="#instituicoes">Instituições</a>
+            <a href="#contato">Contato</a>
+
+        </div>
+
+    </nav>
+
+    <!-- =========================================
+HERO
+========================================= -->
+
+    <section class="hero" id="sobre">
+
+        <div class="hero-text">
+
+            <small>
+                Psicóloga • Neuropsicóloga • TCC • ABA
+            </small>
+
+            <h1>
+                Transformando famílias através do acolhimento emocional
+            </h1>
+
+            <p>
+                Atendimento psicológico e neuropsicológico especializado em desenvolvimento infantil, comportamento
+                humano e fortalecimento familiar.
+            </p>
+
+            <p>
+                Um espaço seguro para acolhimento emocional, evolução e qualidade de vida.
+            </p>
+
+            <a href="https://wa.me/5511988830377" target="_blank" class="btn btn-primary">
+
+                Agendar Consulta
+
+            </a>
+
+        </div>
+
+        <div class="hero-image">
+
+            <img src="karla.jpg" alt="Karla Dias">
+
+        </div>
+
+    </section>
+
+    <!-- =========================================
+EBOOKS
+========================================= -->
+
+    <section id="ebooks" class="section-colored">
+
+        <div class="section-title">
+
+            <small>
+                Infobooks
+            </small>
+
+            <h2>
+                Conteúdos desenvolvidos para transformar vidas
+            </h2>
+
+        </div>
+
+        <div class="ebook-track">
+
+            <!-- CARD 1 -->
+
+            <div class="book">
+
+                <a href="https://hotmart.com/pt-br/marketplace/produtos/cuidar-ensinar-e-acompanhar-um-programa-parental-baseado-na-ciencia-e-na-pratica-clinica/S105848508C?sck=HOTMART_SITE"
+                    target="_blank" style="width:100%; text-decoration:none;">
+
+                    <div class="book-image">
+
+                        <img src="infobook.jpg" alt="Infobook">
+
+                    </div>
+
+                </a>
+
+                <div class="book-content">
+
+                    <h3>
+                        Cuidar, Ensinar e Acompanhar
+                    </h3>
+
+                    <p>
+                        Programa parental baseado em ciência, acolhimento emocional e desenvolvimento familiar.
+                    </p>
+
+                    <a href="https://hotmart.com/pt-br/marketplace/produtos/cuidar-ensinar-e-acompanhar-um-programa-parental-baseado-na-ciencia-e-na-pratica-clinica/S105848508C?sck=HOTMART_SITE"
+                        target="_blank" class="btn btn-primary">
+
+                        Quero Garantir Meu Acesso
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- CARD 2 -->
+
+            <div class="book">
+
+                <a href="https://hotmart.com/pt-br/marketplace/produtos/desenvolvimento-infantil-e-autismo/U105876781J?sck=HOTMART_SITE"
+                    target="_blank" style="width:100%; text-decoration:none;">
+
+                    <div class="book-image">
+
+                        <img src="autismo1.jpg" alt="Autismo">
+
+                    </div>
+
+                </a>
+
+                <div class="book-content">
+
+                    <h3>
+                        Autismo e Desenvolvimento Infantil
+                    </h3>
+
+                    <p>
+                        Guia completo para compreender o desenvolvimento infantil além do diagnóstico.
+                    </p>
+
+                    <a href="https://hotmart.com/pt-br/marketplace/produtos/desenvolvimento-infantil-e-autismo/U105876781J?sck=HOTMART_SITE"
+                        target="_blank" class="btn btn-primary">
+
+                        Quero Garantir Meu Acesso
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================================
+DESENVOLVIMENTO
+========================================= -->
+
+    <section class="about" id="desenvolvimento">
+
+        <img src="menino.jpg" alt="Desenvolvimento Infantil">
+
+        <div class="about-text">
+
+            <h2>
+                Cada criança possui um caminho único de desenvolvimento
+            </h2>
+
+            <p>
+                Atendimento baseado em evidências com experiência em TCC, ABA, orientação parental e avaliação
+                neuropsicológica.
+            </p>
+
+            <p>
+                Acolhimento emocional, fortalecimento familiar e desenvolvimento humano em cada etapa do processo
+                terapêutico.
+            </p>
+
+            <a href="https://wa.me/5511988830377" target="_blank" class="btn btn-primary">
+
+                Conversar no WhatsApp
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- =========================================
+CARDS
+========================================= -->
+
+    <section id="instituicoes" class="section-colored">
+
+        <div class="section-title">
+
+            <small>
+                Instituições
+            </small>
+
+            <h2>
+                Referências e Apoio
+            </h2>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <i class="fa-solid fa-scale-balanced"></i>
+
+                <h3>
+                    Conselho Federal de Psicologia
+                </h3>
+
+                <p>
+                    Órgão responsável pela regulamentação ética da psicologia no Brasil.
+                </p>
+
+                <a href="https://site.cfp.org.br/" target="_blank" class="btn btn-primary">
+
+                    Acessar Site
+
+                </a>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-building-columns"></i>
+
+                <h3>
+                    CRP São Paulo
+                </h3>
+
+                <p>
+                    Conselho Regional com informações clínicas e profissionais.
+                </p>
+
+                <a href="https://crpsp.org/" target="_blank" class="btn btn-primary">
+
+                    Acessar Site
+
+                </a>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-hand-holding-heart"></i>
+
+                <h3>
+                    CVV
+                </h3>
+
+                <p>
+                    Centro de apoio emocional e prevenção ao suicídio com atendimento gratuito.
+                </p>
+
+                <a href="https://www.cvv.org.br/" target="_blank" class="btn btn-primary">
+
+                    Acessar Site
+
+                </a>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fa-solid fa-brain"></i>
+
+                <h3>
+                    Vyapsicologia
+                </h3>
+
+                <p>
+                    Promovemos desenvolvimento e equilíbrio emocional em um ambiente acolhedor.
+                </p>
+
+                <a href="https://vyapsicologia.com.br" target="_blank" class="btn btn-primary">
+
+                    Acessar Site
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================================
+CTA
+========================================= -->
+
+    <section class="cta">
+
+        <h2>
+            Vamos caminhar juntos?
+        </h2>
+
+        <p>
+            A terapia é um espaço de acolhimento, desenvolvimento emocional e transformação.
+        </p>
+
+        <a href="https://wa.me/5511988830377" target="_blank" class="btn btn-primary">
+
+            Agendar Consulta
+
+        </a>
+
+    </section>
+
+    <!-- =========================================
+FOOTER
+========================================= -->
+
+    <footer id="contato">
+
+        <div class="footer">
+
+            <div class="footer-left">
+
+                <h3>
+                    Karla Dias
+                </h3>
+
+                <p>
+                    Psicóloga • Neuropsicóloga • TCC • ABA
+                </p>
+
+            </div>
+
+            <div class="footer-right">
+
+                <div class="footer-item">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <a href="mailto:karladiaspsicologa@gmail.com">
+
+                        karladiaspsicologa@gmail.com
+
+                    </a>
+
+                </div>
+
+                <div class="footer-item">
+
+                    <i class="fa-brands fa-instagram"></i>
+
+                    <a href="https://www.instagram.com/karlaneuro_psi/" target="_blank">
+
+                        @karlaneuro_psi
+
+                    </a>
+
+                </div>
+
+                <div class="footer-item">
+
+                    <i class="fa-brands fa-whatsapp"></i>
+
+                    <a href="https://wa.me/5511988830377" target="_blank">
+
+                        (11) 98883-0377
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- =========================================
+WHATSAPP FIXO
+========================================= -->
+
+    <a href="https://wa.me/5511988830377" class="whatsapp" target="_blank">
+
+        <i class="fa-brands fa-whatsapp"></i>
+
+    </a>
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+/* editor.css — estados diversos do editor, spinner, seleção de células, misc */
+.spinner {
+  width: 15px; height: 15px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.saved-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+/* Barra de busca (localizar/substituir) */
+.findbar {
+  position: absolute;
+  top: 8px; right: 20px;
+  z-index: var(--z-menu);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-menu);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 280px;
+}
+.findbar[hidden] { display: none; }
+.findbar__row { display: flex; gap: 4px; align-items: center; }
+.findbar input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+}
+.findbar__count { font-size: 0.74rem; color: var(--cor-texto-fraco); min-width: 46px; text-align: center; }
+mark.find-hit { background: #ffe066; color: inherit; }
+mark.find-hit.is-current { background: #ff9f1a; }
+
+/* Estilos de parágrafo — dropdown preview */
+.style-preview-normal { font-size: 0.9rem; }
+.style-preview-h1 { font-size: 1.3rem; font-weight: 700; }
+.style-preview-h2 { font-size: 1.15rem; font-weight: 700; }
+.style-preview-h3 { font-size: 1.05rem; font-weight: 700; }
+.style-preview-quote { font-style: italic; color: var(--cor-texto-suave); }
+
+.checkline { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 0.85rem; }
+.checkline input { width: 16px; height: 16px; }
+
+.hint { font-size: 0.76rem; color: var(--cor-texto-fraco); margin-top: 4px; }
+
+/* Botão de sair do modo foco — visível só no modo foco */
+.focus-exit {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: var(--z-menu);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: var(--cor-acento);
+  color: #fff;
+  border-radius: 22px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: var(--sombra-flutuante);
+}
+.focus-exit:hover { background: var(--cor-acento-forte); }
+.app.mode-focus .focus-exit { display: inline-flex; }

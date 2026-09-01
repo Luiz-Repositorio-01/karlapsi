@@ -1,0 +1,73 @@
+/* variables.css — tokens de design (cores, fontes, espaçamentos, z-index) */
+:root {
+  /* Paleta base (tema claro) */
+  --cor-fundo-app: #eceef2;
+  --cor-superficie: #ffffff;
+  --cor-superficie-2: #f5f6f8;
+  --cor-borda: #d8dbe0;
+  --cor-borda-forte: #b9bdc6;
+  --cor-texto: #1f2329;
+  --cor-texto-suave: #5a6270;
+  --cor-texto-fraco: #8a93a2;
+  /* Azul estilo Word — dois tons: topo escuro + faixa/ribbon claro */
+  --cor-acento: #2b579a;
+  --cor-acento-forte: #1e3f70;
+  --cor-acento-suave: #d7e5f7;
+  --cor-perigo: #d64545;
+  --cor-ok: #2f9e6b;
+  --cor-aviso: #c9821a;
+  --cor-scroll: #b7c4d8;
+
+  --cor-ribbon: #eaf1fb;
+  --cor-ribbon-borda: #cfdcf0;
+  --cor-topbar: #2b579a;
+  --cor-topbar-texto: #ffffff;
+  --cor-folha: #ffffff;
+  --cor-folha-sombra: rgba(20, 30, 50, 0.18);
+  --cor-margem-guia: #b7c6da;
+
+  /* Tipografia */
+  --fonte-ui: "Segoe UI", Roboto, system-ui, -apple-system, Arial, sans-serif;
+  --fonte-documento: "Times New Roman", Georgia, serif;
+  --fonte-mono: "Consolas", "SF Mono", Menlo, monospace;
+
+  /* Métricas */
+  --raio: 6px;
+  --raio-sm: 4px;
+  --alt-topbar: 44px;
+  --alt-abas: 34px;
+  --alt-ribbon: 78px;
+  --alt-statusbar: 26px;
+  --larg-painel: 240px;
+
+  --sombra-flutuante: 0 6px 24px rgba(20, 30, 50, 0.16);
+  --sombra-menu: 0 8px 28px rgba(20, 30, 50, 0.22);
+
+  --z-painel: 20;
+  --z-ribbon: 40;
+  --z-topbar: 50;
+  --z-menu: 800;
+  --z-dialog: 1000;
+  --z-toast: 1200;
+
+  --transicao: 140ms ease;
+}
+
+/* Tema escuro apenas para a MOLDURA do app (a folha permanece branca) */
+:root[data-tema="escuro"] {
+  --cor-fundo-app: #23262b;
+  --cor-superficie: #2c3036;
+  --cor-superficie-2: #33383f;
+  --cor-borda: #3d434b;
+  --cor-borda-forte: #4c535c;
+  --cor-texto: #e6e8ec;
+  --cor-texto-suave: #aab2be;
+  --cor-texto-fraco: #7d8593;
+  --cor-acento: #5aa0e0;
+  --cor-acento-suave: #2a3a4d;
+  --cor-scroll: #4a515a;
+  --cor-ribbon: #2c3036;
+  --cor-ribbon-borda: #3d434b;
+  --cor-topbar: #1f2937;
+  --cor-folha-sombra: rgba(0, 0, 0, 0.5);
+}

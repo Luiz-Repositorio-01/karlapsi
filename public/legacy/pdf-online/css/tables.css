@@ -1,0 +1,39 @@
+/* tables.css — tabelas editáveis dentro da folha */
+.page__content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.5em 0;
+  table-layout: fixed;
+}
+.page__content table th,
+.page__content table td {
+  border: 1px solid #444;
+  padding: 4px 6px;
+  vertical-align: top;
+  min-width: 24px;
+  position: relative;
+}
+.page__content table th { background: #eef1f5; font-weight: 700; text-align: left; }
+.page__content table.no-border th,
+.page__content table.no-border td { border-color: transparent; }
+.page__content table.striped tbody tr:nth-child(even) td { background: #f6f8fa; }
+
+/* Célula selecionada durante operações de tabela */
+.page__content td.cell-sel,
+.page__content th.cell-sel { outline: 2px solid var(--cor-acento); outline-offset: -2px; }
+
+/* Barra de contexto da tabela (flutuante) */
+.table-toolbar {
+  position: absolute;
+  z-index: var(--z-menu);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-menu);
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  max-width: 320px;
+}
+.table-toolbar .tbtn { height: 28px; min-width: 28px; }

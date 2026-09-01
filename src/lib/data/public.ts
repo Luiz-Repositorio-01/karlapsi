@@ -1,6 +1,7 @@
 import { createSupabasePublicClient } from '@/lib/supabase/public';
 import {
   DEFAULT_FAQS,
+  DEFAULT_INFOBOOKS,
   DEFAULT_SERVICES,
   DEFAULT_SETTINGS,
   DEFAULT_SITE_PAGES,
@@ -58,11 +59,25 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     const byKey = new Map(rows.map((row) => [row.key, row.value]));
 
     // Mescla campo a campo: uma chave ausente no banco não apaga o padrão.
+    // String vazia no banco também não esconde foto/logo/OG já publicados em /public.
+    const identity = {
+      ...DEFAULT_SETTINGS.identity,
+      ...(byKey.get('identity') ?? {}),
+    } as SiteSettings['identity'];
+    const seo = { ...DEFAULT_SETTINGS.seo, ...(byKey.get('seo') ?? {}) } as SiteSettings['seo'];
+
     return {
-      identity: { ...DEFAULT_SETTINGS.identity, ...(byKey.get('identity') ?? {}) },
+      identity: {
+        ...identity,
+        photo_url: identity.photo_url?.trim() || DEFAULT_SETTINGS.identity.photo_url,
+        logo_url: identity.logo_url?.trim() || DEFAULT_SETTINGS.identity.logo_url,
+      },
       contact: { ...DEFAULT_SETTINGS.contact, ...(byKey.get('contact') ?? {}) },
       booking: { ...DEFAULT_SETTINGS.booking, ...(byKey.get('booking') ?? {}) },
-      seo: { ...DEFAULT_SETTINGS.seo, ...(byKey.get('seo') ?? {}) },
+      seo: {
+        ...seo,
+        default_og_image: seo.default_og_image?.trim() || DEFAULT_SETTINGS.seo.default_og_image,
+      },
       features: { ...DEFAULT_SETTINGS.features, ...(byKey.get('features') ?? {}) },
     } as SiteSettings;
   }, DEFAULT_SETTINGS);
@@ -235,8 +250,9 @@ export async function getInfobooks(): Promise<Infobook[]> {
       .eq('status', 'published')
       .order('sort_order', { ascending: true });
     if (error) throw error;
-    return (data ?? []) as Infobook[];
-  }, []);
+    const items = (data ?? []) as Infobook[];
+    return items.length > 0 ? items : DEFAULT_INFOBOOKS;
+  }, DEFAULT_INFOBOOKS);
 }
 
 export async function getInfobookBySlug(slug: string): Promise<Infobook | null> {

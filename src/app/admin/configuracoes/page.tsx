@@ -596,7 +596,7 @@ export default async function ConfiguracoesPage() {
                     },
                     {
                       name: 'features.enable_pdf_online',
-                      label: 'PDF Online',
+                      label: 'PDF Online (somente painel interno — não entra no site público)',
                       checked: settings.features.enable_pdf_online,
                     },
                     {

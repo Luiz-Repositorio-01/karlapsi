@@ -72,7 +72,7 @@ export function legacyFileExists(relativePath: string): boolean {
   return existsSafe(resolved);
 }
 
-/** Caminho público do index.html do PDF Online, se estiver publicado. */
+/** Caminho do index.html do PDF Online, se os arquivos estiverem publicados. */
 export function getLegacyPdfEntry(): string | null {
   for (const candidate of ['index.html', 'pdf.html']) {
     if (existsSafe(path.join(LEGACY_PDF_ABS, candidate))) {

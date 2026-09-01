@@ -1,0 +1,47 @@
+/* reset.css — normalização básica, sem framework */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte-ui);
+  color: var(--cor-texto);
+  background: var(--cor-fundo-app);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure, ul, ol { margin: 0; }
+ul, ol { padding-left: 0; }
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+input, select, textarea { font: inherit; color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+a { color: var(--cor-acento); text-decoration: none; }
+
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 2px solid var(--cor-acento); outline-offset: 2px; }
+
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--cor-scroll);
+  border-radius: 8px;
+  border: 3px solid var(--cor-fundo-app);
+}

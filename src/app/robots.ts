@@ -8,7 +8,8 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         // Áreas privadas e endpoints nunca devem ser indexados.
-        disallow: ['/admin', '/admin/', '/api/', '/login', '/pagamento/'],
+        // Áreas privadas e endpoints nunca devem ser indexados.
+        disallow: ['/admin', '/admin/', '/api/', '/login', '/pagamento/', '/legacy/pdf-online'],
       },
     ],
     sitemap: new URL('/sitemap.xml', env.siteUrl).toString(),

@@ -56,6 +56,8 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
   const title = infobook?.title ?? slug.replace(/-/g, ' ');
   const isFree = infobook?.is_free ?? true;
   const accessUrl = infobook?.public_file_url || legacyEntry || infobook?.preview_url || null;
+  const isCheckout = Boolean(accessUrl && /hotmart\.com/i.test(accessUrl));
+  const accessLabel = isFree ? 'Baixar' : isCheckout ? 'Comprar' : 'Acessar';
 
   return (
     <>
@@ -75,8 +77,12 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
                   </>
                 ) : (
                   <>
-                    <ExternalLink aria-hidden="true" className="h-4 w-4" />
-                    Acessar
+                    {isCheckout ? (
+                      <ShoppingBag aria-hidden="true" className="h-4 w-4" />
+                    ) : (
+                      <ExternalLink aria-hidden="true" className="h-4 w-4" />
+                    )}
+                    {accessLabel}
                   </>
                 )}
               </ButtonLink>
@@ -178,7 +184,7 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
 
                 {accessUrl ? (
                   <ButtonLink href={accessUrl} external className="mt-6 w-full">
-                    {isFree ? 'Baixar material' : 'Acessar material'}
+                    {isFree ? 'Baixar material' : isCheckout ? 'Comprar' : 'Acessar material'}
                   </ButtonLink>
                 ) : null}
               </Card>

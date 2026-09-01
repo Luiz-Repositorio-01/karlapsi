@@ -4,6 +4,7 @@ import type {
   Faq,
   FeatureSettings,
   IdentitySettings,
+  Infobook,
   SeoSettings,
   Service,
   SitePage,
@@ -30,8 +31,8 @@ export const DEFAULT_IDENTITY: IdentitySettings = {
   short_bio: '',
   formation: '',
   specializations: '',
-  photo_url: '',
-  logo_url: '',
+  photo_url: '/images/karla-dias.jpg',
+  logo_url: '/images/logo-kd.jpg',
 };
 
 export const DEFAULT_CONTACT: ContactSettings = {
@@ -65,7 +66,7 @@ export const DEFAULT_SEO: SeoSettings = {
     'Karla Dias — Psicóloga e Neuropsicóloga. Especialista em Transtornos do Neurodesenvolvimento. Avaliação neuropsicológica, atendimento online e presencial.',
   default_keywords:
     'Karla Dias, neuropsicologia, psicóloga, avaliação neuropsicológica, transtornos do neurodesenvolvimento, aprendizagem, funções executivas',
-  default_og_image: '',
+  default_og_image: '/images/karla-dias.jpg',
 };
 
 export const DEFAULT_FEATURES: FeatureSettings = {
@@ -146,6 +147,54 @@ export const DEFAULT_SERVICES: Service[] = [
     image_url: null,
     preparation_notes: null,
     sort_order: 3,
+  },
+];
+
+/** Infobooks reais (títulos, textos, capas e links das landings originais). */
+export const DEFAULT_INFOBOOKS: Infobook[] = [
+  {
+    id: 'default-infobook-autismo',
+    title: 'Desenvolvimento Infantil e Autismo',
+    slug: 'autismo',
+    description:
+      'Guia completo para compreender o desenvolvimento infantil além do diagnóstico.',
+    category: 'Desenvolvimento infantil',
+    cover_url: '/images/infobooks/autismo.jpg',
+    product_id: null,
+    is_free: false,
+    price_cents: null,
+    file_path: null,
+    public_file_url: 'https://go.hotmart.com/U105876781J',
+    preview_url: null,
+    legacy_path: 'legacy/infobooks/autismo/index.html',
+    pages: null,
+    status: 'published',
+    sort_order: 1,
+    seo_title: 'Desenvolvimento Infantil e Autismo',
+    seo_description:
+      'Guia completo para pais que querem entender o desenvolvimento infantil além do diagnóstico.',
+  },
+  {
+    id: 'default-infobook-cuidar',
+    title: 'Cuidar, Ensinar e Acompanhar',
+    slug: 'cuidar',
+    description:
+      'Um material moderno e baseado em ciência para famílias que desejam fortalecer vínculos, melhorar a comunicação emocional e construir uma parentalidade mais consciente.',
+    category: 'Programa parental',
+    cover_url: '/images/infobooks/cuidar.jpg',
+    product_id: null,
+    is_free: false,
+    price_cents: 3400,
+    file_path: null,
+    public_file_url: 'https://go.hotmart.com/S105848508C',
+    preview_url: null,
+    legacy_path: 'legacy/infobooks/cuidar/index.html',
+    pages: null,
+    status: 'published',
+    sort_order: 2,
+    seo_title: 'Cuidar, Ensinar e Acompanhar',
+    seo_description:
+      'Programa parental baseado na ciência e na prática clínica, para fortalecer vínculos e a comunicação emocional.',
   },
 ];
 

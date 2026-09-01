@@ -13,16 +13,16 @@ describe('settings readiness', () => {
     const items = getContentReadiness(DEFAULT_SETTINGS);
     const byId = Object.fromEntries(items.map((item) => [item.id, item.status]));
 
-    // Instagram oficial @karlaneuropsi já está no defaults; demais dados reais pendentes.
+    // Instagram oficial @karlaneuropsi já está no defaults; foto e logo reais também.
     expect(byId.instagram).toBe('ok');
+    expect(byId.photo).toBe('ok');
+    expect(byId.og).toBe('ok');
     expect(byId.crp).toBe('pending');
     expect(byId.bio).toBe('pending');
     expect(byId.formation).toBe('pending');
     expect(byId.specializations).toBe('pending');
-    expect(byId.photo).toBe('pending');
     expect(byId.email).toBe('pending');
     expect(byId.address).toBe('pending');
-    expect(byId.og).toBe('pending');
   });
 
   it('marca CRP e bio como ok quando preenchidos', () => {

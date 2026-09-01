@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Alert, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero, SitePageSections } from '@/components/site/sections';
+import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSitePage, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema, personSchema } from '@/lib/seo/jsonld';
@@ -47,23 +47,12 @@ export default async function SobrePage() {
           <Reveal>
             <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
               <div>
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-sunken ring-1 ring-petrol-100">
-                  {identity.photo_url ? (
-                    <Image
-                      src={identity.photo_url}
-                      alt={`Retrato de ${identity.professional_name}`}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 320px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-gradient-to-br from-petrol-700 to-petrol-900 p-6 text-center">
-                      <p className="font-display text-2xl text-white">
-                        {identity.professional_name}
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <ProfessionalPortrait
+                  name={identity.professional_name}
+                  positioning={identity.positioning}
+                  photoUrl={identity.photo_url}
+                  className="max-w-none rounded-2xl"
+                />
 
                 <Card className="mt-5">
                   <dl className="space-y-3 text-sm">

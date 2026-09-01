@@ -64,24 +64,24 @@ export function Header({
         <div className="mx-auto flex h-[var(--header-height)] max-w-container items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="group flex items-center gap-3 leading-tight"
+            className="group flex items-center gap-3"
             aria-label={`${brandName} — página inicial`}
           >
             {logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- URL externa do Storage, dimensões variáveis
+              // eslint-disable-next-line @next/next/no-img-element -- URL local ou Storage
               <img
                 src={logoUrl}
                 alt=""
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-lg object-contain"
+                width={44}
+                height={44}
+                className="h-11 w-11 shrink-0 rounded-full object-cover"
               />
             ) : null}
-            <span className="flex flex-col">
+            <span className="flex min-w-0 flex-col justify-center leading-none">
               <span className="font-display text-lg tracking-tight text-ink sm:text-xl">
                 {brandName}
               </span>
-              <span className="text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-petrol-600">
+              <span className="mt-1 text-[0.625rem] font-medium uppercase tracking-[0.12em] text-petrol-600 sm:text-[0.6875rem]">
                 {positioning}
               </span>
             </span>

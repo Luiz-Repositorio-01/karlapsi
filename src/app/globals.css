@@ -150,8 +150,8 @@
   }
 
   /*
-   * Moldura tipográfica do retrato (fallback verde).
-   * Foto real: PENDENTE DE ARQUIVO — não inventar imagem.
+   * Moldura petrol do retrato. A foto (PNG com fundo removido) fica por cima;
+   * o verde da moldura aparece ao redor.
    */
   .photo-frame {
     isolation: isolate;
@@ -182,7 +182,6 @@
   }
 
   .photo-frame > * {
-    position: relative;
     z-index: 2;
   }
 }

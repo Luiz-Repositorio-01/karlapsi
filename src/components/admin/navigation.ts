@@ -102,6 +102,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         icon: 'file',
         permission: 'documents:view',
       },
+      {
+        label: 'PDF Online',
+        href: '/admin/pdf-online',
+        icon: 'file',
+        permission: 'documents:view',
+      },
     ],
   },
   {

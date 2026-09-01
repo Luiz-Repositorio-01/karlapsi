@@ -1,9 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
   BookOpen,
-  Brain,
   CalendarCheck,
   ExternalLink,
   FileText,
@@ -29,6 +27,7 @@ import {
   StepList,
 } from '@/components/site/sections';
 import { BlogCard, InfobookCard, ServiceCard } from '@/components/site/cards';
+import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
   AUDIENCE_ITEMS,
@@ -83,81 +82,47 @@ export default async function HomePage() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(30,67,59,0.07),transparent_55%),radial-gradient(ellipse_at_90%_20%,rgba(196,164,132,0.12),transparent_45%)]"
         />
         <Container className="relative py-16 sm:py-20 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-            <div>
-              <Reveal>
-                <p className="font-display text-display-xl text-petrol-800">{displayName}</p>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-petrol-600">
-                  {identity.positioning}
-                </p>
-              </Reveal>
-
-              <Reveal delay={80}>
-                <h1
-                  id="hero-title"
-                  className="mt-6 max-w-xl text-display-sm text-ink-soft sm:text-display-md"
-                >
-                  {identity.headline}
-                </h1>
-              </Reveal>
-
-              <Reveal delay={140}>
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
-                  {identity.short_bio
-                    ? identity.short_bio.split('\n\n')[0]
-                    : identity.subheadline}
-                </p>
-              </Reveal>
-
-              <Reveal delay={200}>
-                <div className="mt-9 flex flex-wrap gap-3">
-                  <ButtonLink href="/agendamento" size="lg">
-                    <CalendarCheck aria-hidden="true" className="h-4 w-4" />
-                    Agendar atendimento
-                  </ButtonLink>
-                  <ButtonLink href="/sobre" variant="secondary" size="lg">
-                    Conheça meu trabalho
-                  </ButtonLink>
-                </div>
-              </Reveal>
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14">
+            <div className="flex max-w-xl flex-col justify-center">
+              <p className="font-display text-display-xl leading-none text-petrol-800">
+                {displayName}
+              </p>
+              <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-petrol-600">
+                {identity.positioning}
+              </p>
+              <h1
+                id="hero-title"
+                className="mt-6 text-display-sm text-ink-soft sm:text-display-md"
+              >
+                {identity.headline}
+              </h1>
+              <p className="mt-5 text-base leading-relaxed text-ink-muted sm:text-lg">
+                {identity.short_bio
+                  ? identity.short_bio.split('\n\n')[0]
+                  : identity.subheadline}
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <ButtonLink href="/agendamento" size="lg">
+                  <CalendarCheck aria-hidden="true" className="h-4 w-4" />
+                  Agendar atendimento
+                </ButtonLink>
+                <ButtonLink href="/sobre" variant="secondary" size="lg">
+                  Conheça meu trabalho
+                </ButtonLink>
+              </div>
             </div>
 
-            <Reveal delay={160} className="relative">
-              {/* Retrato: PENDENTE DE ARQUIVO — moldura tipográfica até foto real. */}
-              <div className="photo-frame relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-surface-sunken shadow-lift ring-1 ring-white/60">
-                {identity.photo_url ? (
-                  <Image
-                    src={identity.photo_url}
-                    alt={`Retrato de ${displayName}`}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 90vw, 420px"
-                    className="object-cover object-[center_20%]"
-                  />
-                ) : (
-                  <div className="flex h-full flex-col justify-between bg-gradient-to-br from-petrol-700 via-petrol-800 to-petrol-950 p-8 text-petrol-50">
-                    <Brain aria-hidden="true" className="h-9 w-9 text-petrol-300" />
-                    <div>
-                      <p className="font-display text-3xl leading-tight text-white">{displayName}</p>
-                      <p className="mt-2 text-sm uppercase tracking-[0.18em] text-petrol-300">
-                        {identity.positioning}
-                      </p>
-                      {identity.headline ? (
-                        <p className="mt-4 max-w-[16rem] text-sm leading-relaxed text-petrol-200">
-                          {identity.headline}
-                        </p>
-                      ) : null}
-                      {identity.professional_registration_value ? (
-                        <p className="mt-4 text-sm text-petrol-200">
-                          {identity.professional_registration_label || 'Registro'}:{' '}
-                          {identity.professional_registration_value}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Reveal>
+            <ProfessionalPortrait
+              name={displayName}
+              positioning={identity.positioning}
+              headline={identity.headline}
+              photoUrl={identity.photo_url}
+              logoUrl={identity.logo_url}
+              registrationLabel={identity.professional_registration_label}
+              registrationValue={identity.professional_registration_value}
+              priority
+              className="w-full max-w-none"
+            />
           </div>
         </Container>
       </section>
@@ -165,14 +130,15 @@ export default async function HomePage() {
       {/* -------------------------------------------------- APRESENTAÇÃO */}
       <Section tone="default" ariaLabelledBy="apresentacao-title">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
             <SectionHeader
               id="apresentacao-title"
               eyebrow="Conheça"
               title={`Conheça ${displayName}`}
               description={identity.positioning}
+              className="lg:pt-1"
             />
-            <div className="article-body max-w-prose">
+            <div className="article-body max-w-prose lg:pt-8">
               <p>
                 O foco deste consultório é a <strong>neuropsicologia</strong> e o cuidado com
                 demandas relacionadas ao <strong>neurodesenvolvimento</strong>: entender como cada

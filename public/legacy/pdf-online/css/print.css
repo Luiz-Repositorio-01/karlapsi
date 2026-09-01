@@ -1,0 +1,28 @@
+/* print.css — regras de impressão: só as folhas, tamanho/margem reais */
+@media print {
+  html, body { background: #fff !important; height: auto !important; overflow: visible !important; }
+  .topbar, .tabs, .ribbon, .panel, .statusbar, .ruler,
+  .overlay, .menu, .toast-wrap, .table-toolbar,
+  .floatimg__handle, .floatimg__del,
+  .chartobj__handle, .chartobj__bar,
+  .shapeobj__handle, .shapeobj__bar { display: none !important; }
+
+  .app { display: block !important; height: auto !important; overflow: visible !important; }
+  .body { display: block !important; overflow: visible !important; }
+  .canvas { overflow: visible !important; position: static !important; background: #fff !important; }
+  .canvas__pages { padding: 0 !important; display: block !important; transform: none !important; }
+
+  .page {
+    margin: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+  .page__margin-guide { display: none !important; }
+  .floatimg { outline: none !important; }
+
+  /* @page é reescrito dinamicamente por print.js conforme tamanho/orientação */
+  @page { margin: 0; }
+}

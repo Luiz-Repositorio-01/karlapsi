@@ -59,9 +59,11 @@ export default async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (isAdminRoute && !user) {
+  const isPdfOnline = request.nextUrl.pathname.startsWith('/legacy/pdf-online');
+
+  if ((isAdminRoute || isPdfOnline) && !user) {
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+    loginUrl.searchParams.set('redirectTo', isPdfOnline ? '/admin/pdf-online' : request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -75,9 +77,10 @@ export default async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Roda em navegações de página, ignorando assets estáticos, imagens e os
-     * arquivos originais preservados em /legacy.
+     * Roda em navegações de página, ignorando assets estáticos e os infobooks
+     * públicos em /legacy. O editor PDF Online é a exceção: exige sessão.
      */
     '/((?!_next/static|_next/image|legacy/|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|pdf)$).*)',
+    '/legacy/pdf-online/:path*',
   ],
 };

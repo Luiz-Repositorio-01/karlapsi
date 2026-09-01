@@ -24,11 +24,13 @@ const connectSrc = [
 const contentSecurityPolicy = [
   "default-src 'self'",
   // Next.js injeta scripts inline para hidratação/streaming do App Router.
-  "script-src 'self' 'unsafe-inline' https://sdk.mercadopago.com https://www.mercadopago.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' data: https://fonts.gstatic.com",
+  // O editor interno (admin) carrega mammoth/pdf.js/jspdf do jsDelivr.
+  "script-src 'self' 'unsafe-inline' https://sdk.mercadopago.com https://www.mercadopago.com https://cdn.jsdelivr.net",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+  "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
   "img-src 'self' data: blob: https:",
-  `connect-src ${connectSrc}`,
+  `connect-src ${connectSrc} https://cdn.jsdelivr.net https://api.openai.com`,
+  "worker-src 'self' blob: https://cdn.jsdelivr.net",
   // Iframes: apenas conteúdo próprio (módulos legados) e checkout do Mercado Pago.
   "frame-src 'self' https://www.mercadopago.com.br https://www.mercadopago.com",
   "form-action 'self' https://www.mercadopago.com.br https://www.mercadopago.com",
@@ -77,16 +79,20 @@ const nextConfig: NextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
+      {
+        source: '/legacy/pdf-online/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
     ];
   },
   async rewrites() {
     // Mantém os links diretos dos módulos legados (arquivos em /public/legacy)
     // funcionando exatamente como antes da reconstrução do site.
     return [
-      { source: '/pdf-online/index.html', destination: '/legacy/pdf-online/index.html' },
-      { source: '/pdf-online/assets/:path*', destination: '/legacy/pdf-online/assets/:path*' },
-      { source: '/infobooks/:slug/index.html', destination: '/legacy/landing-pages/:slug/index.html' },
-      { source: '/infobooks/:slug/assets/:path*', destination: '/legacy/landing-pages/:slug/assets/:path*' },
+      { source: '/infobooks/:slug/index.html', destination: '/legacy/infobooks/:slug/index.html' },
       { source: '/landing-pages/:slug/index.html', destination: '/legacy/landing-pages/:slug/index.html' },
       { source: '/landing-pages/:slug/assets/:path*', destination: '/legacy/landing-pages/:slug/assets/:path*' },
     ];
@@ -103,6 +109,7 @@ const nextConfig: NextConfig = {
       { source: '/neuropsicologia.html', destination: '/neuropsicologia', permanent: true },
       { source: '/pdf', destination: '/infobooks', permanent: true },
       { source: '/pdf-online', destination: '/infobooks', permanent: true },
+      { source: '/pdf-online/:path*', destination: '/infobooks', permanent: true },
       { source: '/landing-pages', destination: '/materiais', permanent: true },
       { source: '/landing-pages/:slug', destination: '/materiais', permanent: true },
       { source: '/ebooks', destination: '/infobooks', permanent: true },
