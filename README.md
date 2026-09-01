@@ -209,9 +209,12 @@ sempre existe ao menos um OWNER ativo.
 
 | Bucket | Público? | Uso | Limite |
 | --- | --- | --- | --- |
-| `public-assets` | sim | Logo, capas, imagens do site | 10 MB |
-| `products` | **não** | Infobooks e materiais pagos | 50 MB |
-| `patient-documents` | **não** | Documentos de paciente | 25 MB |
+| `public-assets` | sim | Logo, capas, imagens do site e do blog | 10 MB |
+| `products` | **não** | Infobooks e materiais pagos (`product-assets`) | 50 MB |
+| `patient-documents` | **não** | Documentos de paciente (`private-documents`) | 25 MB |
+
+Pastas sugeridas dentro de `public-assets`: `logo/`, `blog-images/`, `og/`.
+Não há bucket separado `blog-images` — imagens de blog vão em `public-assets/blog-images/`.
 
 Buckets privados não têm URL pública: o download passa por **URL assinada** de
 120 segundos, gerada no servidor (`createDocumentDownloadUrl`). Tipos MIME e
@@ -348,7 +351,7 @@ npm run verify        # lint + typecheck + testes + build
 npm run db:validate   # migrations + RLS/RBAC/agenda/LGPD (PostgreSQL local)
 ```
 
-Cobertura dos testes unitários (82 casos):
+Cobertura dos testes unitários:
 
 - **Agenda:** grade, pausas, exceções, antecedência mínima, sobreposição total
   e parcial, fim exclusivo, múltiplos dias e conversão de fuso.
@@ -359,6 +362,7 @@ Cobertura dos testes unitários (82 casos):
 - **Mercado Pago:** mapeamento de status (desconhecido → `pending`, nunca
   aprovado), assinatura HMAC válida/adulterada/ausente.
 - **Formatação:** moeda, CPF mascarado, telefone, datas no fuso do consultório.
+- **Prontidão:** checklist de configurações pendentes e schema de settings.
 
 ## 13. Deploy
 
@@ -373,6 +377,27 @@ Railway, VPS com Docker). Checklist:
 6. Cron chamando `/api/notifications/dispatch`.
 7. Conferir `https://SEU_DOMINIO/robots.txt` e `/sitemap.xml`.
 8. Enviar o sitemap ao Google Search Console.
+
+Checklist detalhado por status (implementado / configurado / pendente):
+[`docs/PRODUCTION_CHECKLIST.md`](docs/PRODUCTION_CHECKLIST.md).
+
+### 13.1 Domínio `karlaneuropsi.com.br` (DNS)
+
+O código **não** configura DNS. No registrador / Cloudflare, prepare:
+
+| Tipo | Nome | Valor | Observação |
+| --- | --- | --- | --- |
+| `A` ou `CNAME` | `@` (apex) | IP ou hostname do provedor de hospedagem | Vercel costuma pedir CNAME/`A` próprios — use o que o painel indicar |
+| `CNAME` | `www` | `karlaneuropsi.com.br` ou o target do provedor | Redirecione `www` → apex (ou o contrário), sem loop |
+| TXT | conforme provedor | verificação de domínio / SSL | Só se o host pedir |
+
+Depois do DNS propagar:
+
+1. Emita certificado HTTPS no provedor (Let’s Encrypt / automático).
+2. Defina `NEXT_PUBLIC_SITE_URL=https://karlaneuropsi.com.br` (sem barra no final).
+3. Atualize o redirect URL do Supabase Auth: `https://karlaneuropsi.com.br/auth/callback`.
+4. Cadastre o webhook do Mercado Pago em `https://karlaneuropsi.com.br/api/payments/mercadopago/webhook`.
+5. Agende o cron contra `https://karlaneuropsi.com.br/api/notifications/dispatch`.
 
 **Headers de segurança** (em `next.config.ts`, aplicados a todas as rotas):
 Content-Security-Policy, `X-Content-Type-Options: nosniff`,

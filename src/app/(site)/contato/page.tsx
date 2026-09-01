@@ -126,11 +126,35 @@ export default async function ContatoPage() {
                 {contact.address_line || contact.city ? (
                   <div className="mt-6 flex items-start gap-3 border-t border-petrol-100 pt-5">
                     <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-petrol-600" />
-                    <p className="text-sm leading-relaxed text-ink-soft">
-                      {contact.address_line}
-                      {contact.address_line && contact.city ? <br /> : null}
-                      {[contact.city, contact.state].filter(Boolean).join(' - ')}
-                    </p>
+                    <div>
+                      <p className="text-sm leading-relaxed text-ink-soft">
+                        {contact.address_line}
+                        {contact.address_line && contact.city ? <br /> : null}
+                        {[contact.city, contact.state].filter(Boolean).join(' - ')}
+                      </p>
+                      {contact.map_url ? (
+                        <a
+                          href={contact.map_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-block text-sm font-medium text-petrol-700 underline-offset-2 hover:underline"
+                        >
+                          Abrir no mapa
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : contact.map_url ? (
+                  <div className="mt-6 flex items-start gap-3 border-t border-petrol-100 pt-5">
+                    <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-petrol-600" />
+                    <a
+                      href={contact.map_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-petrol-700 underline-offset-2 hover:underline"
+                    >
+                      Ver localização no mapa
+                    </a>
                   </div>
                 ) : null}
 

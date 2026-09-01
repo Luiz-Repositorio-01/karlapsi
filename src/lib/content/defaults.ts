@@ -33,7 +33,10 @@ export const DEFAULT_IDENTITY: IdentitySettings = {
   professional_registration_label: '',
   professional_registration_value: '',
   short_bio: '',
+  formation: '',
+  specializations: '',
   photo_url: '',
+  logo_url: '',
 };
 
 export const DEFAULT_CONTACT: ContactSettings = {
@@ -46,6 +49,7 @@ export const DEFAULT_CONTACT: ContactSettings = {
   state: '',
   service_area: 'Atendimento presencial e online',
   office_hours_label: '',
+  map_url: '',
 };
 
 export const DEFAULT_BOOKING: BookingSettings = {
@@ -66,6 +70,7 @@ export const DEFAULT_SEO: SeoSettings = {
     'Avaliação neuropsicológica, atendimentos e materiais sobre desenvolvimento, aprendizagem e funções cognitivas.',
   default_keywords:
     'neuropsicologia, avaliação neuropsicológica, aprendizagem, atenção, memória, funções executivas',
+  default_og_image: '',
 };
 
 export const DEFAULT_FEATURES: FeatureSettings = {

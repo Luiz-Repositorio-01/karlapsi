@@ -6,6 +6,7 @@ import { requirePermission } from '@/lib/auth/session';
 import { getSiteSettings } from '@/lib/data/public';
 import { saveSettings } from '@/app/admin/_actions/settings';
 import { integrationStatus } from '@/lib/env';
+import { getProductionReadiness } from '@/lib/settings/readiness';
 import { cn } from '@/lib/utils/cn';
 
 /** Tudo o que é configurável sem tocar em código. */
@@ -13,8 +14,10 @@ export default async function ConfiguracoesPage() {
   await requirePermission('settings:view', '/admin/configuracoes');
   const settings = await getSiteSettings();
   const integrations = integrationStatus();
+  const readiness = getProductionReadiness(settings);
 
   const field = (name: string) => `configuracoes-${name.replace(/\./g, '-')}`;
+  const pendingItems = readiness.items.filter((item) => item.status !== 'ok');
 
   return (
     <>
@@ -23,9 +26,42 @@ export default async function ConfiguracoesPage() {
         description="Identidade, contato, regras de agendamento, SEO e módulos do site. As alterações refletem no site público imediatamente."
       />
 
+      {pendingItems.length > 0 ? (
+        <Alert
+          tone={readiness.blockedCount > 0 ? 'warning' : 'info'}
+          title={
+            readiness.blockedCount > 0
+              ? 'Configuração pendente — go-live bloqueado'
+              : 'Configuração pendente — dados reais ainda faltam'
+          }
+          className="mb-6"
+        >
+          <p className="mb-3 text-sm">
+            O site nunca inventa registro, bio, foto ou credenciais. Itens abaixo precisam ser
+            preenchidos por você (ou com variáveis de ambiente no provedor de hospedagem).
+          </p>
+          <ul className="space-y-1.5 text-sm">
+            {pendingItems.map((item) => (
+              <li key={item.id} className="flex flex-wrap items-baseline gap-2">
+                <Badge tone={item.status === 'blocked' ? 'warning' : 'neutral'}>
+                  {item.status === 'blocked' ? 'bloqueado' : 'pendente'}
+                </Badge>
+                <span>{item.label}</span>
+                {item.hint ? <span className="text-ink-faint">— {item.hint}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      ) : (
+        <Alert tone="success" title="Configuração completa" className="mb-6">
+          Integrações e dados profissionais mínimos estão preenchidos.
+        </Alert>
+      )}
+
       <Alert tone="info" title="Sobre informações profissionais" className="mb-6">
-        Registro profissional, biografia e foto aparecem no site <strong>somente</strong> se forem
-        preenchidos aqui. O sistema nunca gera, presume ou completa esse tipo de informação.
+        Registro profissional, biografia, formação, especializações e foto aparecem no site{' '}
+        <strong>somente</strong> se forem preenchidos aqui. O sistema nunca gera, presume ou
+        completa esse tipo de informação.
       </Alert>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
@@ -87,6 +123,20 @@ export default async function ConfiguracoesPage() {
                       type="text"
                       name="identity.photo_url"
                       defaultValue={settings.identity.photo_url}
+                      className={inputClasses}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Logo (URL)"
+                    htmlFor={field('identity.logo_url')}
+                    hint="Opcional. Sem logo, o header usa o nome tipográfico."
+                  >
+                    <input
+                      {...fieldAria(field('identity.logo_url'), { hint: true })}
+                      type="text"
+                      name="identity.logo_url"
+                      defaultValue={settings.identity.logo_url}
                       className={inputClasses}
                     />
                   </FormField>
@@ -163,6 +213,36 @@ export default async function ConfiguracoesPage() {
                       name="identity.short_bio"
                       rows={6}
                       defaultValue={settings.identity.short_bio}
+                      className={cn(inputClasses, 'resize-y')}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Formação"
+                    htmlFor={field('identity.formation')}
+                    hint="Ex.: graduação, pós, cursos relevantes. Vazio = não exibir."
+                    className="sm:col-span-2"
+                  >
+                    <textarea
+                      {...fieldAria(field('identity.formation'), { hint: true })}
+                      name="identity.formation"
+                      rows={4}
+                      defaultValue={settings.identity.formation}
+                      className={cn(inputClasses, 'resize-y')}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Especializações"
+                    htmlFor={field('identity.specializations')}
+                    hint="Uma especialização por linha. Vazio = não exibir."
+                    className="sm:col-span-2"
+                  >
+                    <textarea
+                      {...fieldAria(field('identity.specializations'), { hint: true })}
+                      name="identity.specializations"
+                      rows={4}
+                      defaultValue={settings.identity.specializations}
                       className={cn(inputClasses, 'resize-y')}
                     />
                   </FormField>
@@ -278,6 +358,22 @@ export default async function ConfiguracoesPage() {
                       name="contact.office_hours_label"
                       defaultValue={settings.contact.office_hours_label}
                       className={inputClasses}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Link do mapa"
+                    htmlFor={field('contact.map_url')}
+                    hint="URL do Google Maps ou similar. Vazio = não exibir botão no Contato."
+                    className="sm:col-span-2"
+                  >
+                    <input
+                      {...fieldAria(field('contact.map_url'), { hint: true })}
+                      type="url"
+                      name="contact.map_url"
+                      defaultValue={settings.contact.map_url}
+                      className={inputClasses}
+                      placeholder="https://maps.google.com/…"
                     />
                   </FormField>
                 </div>
@@ -459,6 +555,21 @@ export default async function ConfiguracoesPage() {
                       type="text"
                       name="seo.default_keywords"
                       defaultValue={settings.seo.default_keywords}
+                      className={inputClasses}
+                    />
+                  </FormField>
+
+                  <FormField
+                    label="Imagem Open Graph (URL)"
+                    htmlFor={field('seo.default_og_image')}
+                    hint="Usada no compartilhamento padrão. Preferir 1200×630."
+                    className="sm:col-span-2"
+                  >
+                    <input
+                      {...fieldAria(field('seo.default_og_image'), { hint: true })}
+                      type="text"
+                      name="seo.default_og_image"
+                      defaultValue={settings.seo.default_og_image}
                       className={inputClasses}
                     />
                   </FormField>

@@ -22,6 +22,7 @@ const display = Fraunces({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const ogImage = settings.seo.default_og_image || undefined;
 
   return {
     metadataBase: new URL(env.siteUrl),
@@ -41,11 +42,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title: settings.seo.default_title,
       description: settings.seo.default_description,
       url: env.siteUrl,
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
     twitter: {
-      card: 'summary_large_image',
+      card: ogImage ? 'summary_large_image' : 'summary',
       title: settings.seo.default_title,
       description: settings.seo.default_description,
+      ...(ogImage ? { images: [ogImage] } : {}),
     },
     robots: {
       index: true,

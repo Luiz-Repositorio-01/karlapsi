@@ -44,7 +44,10 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
           formData.get('identity.professional_registration_value') ?? '',
         ),
         short_bio: String(formData.get('identity.short_bio') ?? ''),
+        formation: String(formData.get('identity.formation') ?? ''),
+        specializations: String(formData.get('identity.specializations') ?? ''),
         photo_url: String(formData.get('identity.photo_url') ?? ''),
+        logo_url: String(formData.get('identity.logo_url') ?? ''),
       },
       contact: {
         whatsapp: String(formData.get('contact.whatsapp') ?? ''),
@@ -56,6 +59,7 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
         state: String(formData.get('contact.state') ?? ''),
         service_area: String(formData.get('contact.service_area') ?? ''),
         office_hours_label: String(formData.get('contact.office_hours_label') ?? ''),
+        map_url: String(formData.get('contact.map_url') ?? ''),
       },
       booking: {
         timezone: String(formData.get('booking.timezone') ?? 'America/Sao_Paulo'),
@@ -72,6 +76,7 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
         default_title: String(formData.get('seo.default_title') ?? ''),
         default_description: String(formData.get('seo.default_description') ?? ''),
         default_keywords: String(formData.get('seo.default_keywords') ?? ''),
+        default_og_image: String(formData.get('seo.default_og_image') ?? ''),
       },
       features: {
         show_testimonials: readBoolean(formData, 'features.show_testimonials'),

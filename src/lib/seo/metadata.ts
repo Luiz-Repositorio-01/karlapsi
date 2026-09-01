@@ -19,6 +19,7 @@ export async function buildMetadata(options: {
   const settings = await getSiteSettings();
   const description = options.description ?? settings.seo.default_description;
   const canonical = options.path;
+  const image = options.image || settings.seo.default_og_image || null;
 
   return {
     title: options.title,
@@ -33,15 +34,15 @@ export async function buildMetadata(options: {
       title: options.title,
       description,
       url: canonical,
-      ...(options.image ? { images: [{ url: options.image }] } : {}),
+      ...(image ? { images: [{ url: image }] } : {}),
       ...(options.publishedTime ? { publishedTime: options.publishedTime } : {}),
       ...(options.modifiedTime ? { modifiedTime: options.modifiedTime } : {}),
     },
     twitter: {
-      card: options.image ? 'summary_large_image' : 'summary',
+      card: image ? 'summary_large_image' : 'summary',
       title: options.title,
       description,
-      ...(options.image ? { images: [options.image] } : {}),
+      ...(image ? { images: [image] } : {}),
     },
   };
 }

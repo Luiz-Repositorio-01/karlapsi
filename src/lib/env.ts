@@ -101,6 +101,13 @@ export function integrationStatus() {
       required: false,
     },
     {
+      id: 'cron',
+      label: 'CRON_SECRET (fila de notificações)',
+      configured: Boolean(read('CRON_SECRET')),
+      variables: ['CRON_SECRET'],
+      required: false,
+    },
+    {
       id: 'whatsapp',
       label: 'WhatsApp Cloud API (envio automático)',
       configured: isWhatsAppApiConfigured(),

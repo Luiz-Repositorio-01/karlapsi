@@ -18,6 +18,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         brandName={settings.identity.brand_name}
         positioning={settings.identity.positioning}
         whatsapp={settings.contact.whatsapp}
+        logoUrl={settings.identity.logo_url || undefined}
       />
 
       <main id="conteudo" className="min-h-[60vh] bg-surface">

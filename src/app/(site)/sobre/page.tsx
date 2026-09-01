@@ -7,6 +7,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { getSitePage, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema, personSchema } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { parseSpecializations } from '@/lib/settings/readiness';
 
 export const revalidate = 300;
 
@@ -25,6 +26,12 @@ export default async function SobrePage() {
 
   const { identity, contact } = settings;
   const hasRegistration = Boolean(identity.professional_registration_value);
+  const specializations = parseSpecializations(identity.specializations);
+  const hasProfessionalCopy =
+    Boolean(identity.short_bio) ||
+    Boolean(identity.formation) ||
+    specializations.length > 0 ||
+    hasRegistration;
 
   return (
     <>
@@ -74,6 +81,20 @@ export default async function SobrePage() {
                         </dd>
                       </div>
                     ) : null}
+                    {specializations.length > 0 ? (
+                      <div>
+                        <dt className="text-xs uppercase tracking-wide text-ink-faint">
+                          Especializações
+                        </dt>
+                        <dd className="mt-0.5">
+                          <ul className="space-y-1 font-medium text-ink">
+                            {specializations.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </div>
+                    ) : null}
                     <div>
                       <dt className="text-xs uppercase tracking-wide text-ink-faint">
                         Modalidades
@@ -85,18 +106,30 @@ export default async function SobrePage() {
               </div>
 
               <div>
-                {identity.short_bio ? (
-                  <div className="article-body max-w-prose">
-                    {identity.short_bio.split('\n\n').map((paragraph) => (
-                      <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                    ))}
+                {hasProfessionalCopy ? (
+                  <div className="article-body max-w-prose space-y-6">
+                    {identity.short_bio
+                      ? identity.short_bio.split('\n\n').map((paragraph) => (
+                          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                        ))
+                      : null}
+                    {identity.formation ? (
+                      <div>
+                        <h2 className="font-display text-xl text-ink">Formação</h2>
+                        <div className="mt-3 space-y-3">
+                          {identity.formation.split('\n\n').map((paragraph) => (
+                            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <Alert tone="info" title="Apresentação profissional a ser preenchida">
-                    O texto de apresentação, a formação e os registros profissionais são
-                    cadastrados pela própria profissional em <strong>Configurações</strong> no
-                    painel administrativo. Nada é publicado aqui sem essa confirmação — o site não
-                    presume nem gera informação profissional.
+                    O texto de apresentação, a formação, as especializações e os registros
+                    profissionais são cadastrados pela própria profissional em{' '}
+                    <strong>Configurações</strong> no painel administrativo. Nada é publicado aqui
+                    sem essa confirmação — o site não presume nem gera informação profissional.
                   </Alert>
                 )}
 

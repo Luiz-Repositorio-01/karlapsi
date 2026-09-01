@@ -433,7 +433,13 @@ export interface IdentitySettings {
   professional_registration_label: string;
   professional_registration_value: string;
   short_bio: string;
+  /** Formação acadêmica (texto livre; vazio = não exibir). */
+  formation: string;
+  /** Especializações, uma por linha; vazio = não exibir. */
+  specializations: string;
   photo_url: string;
+  /** Logo da marca (URL no bucket public-assets); vazio = tipografia no header. */
+  logo_url: string;
 }
 
 export interface ContactSettings {
@@ -446,6 +452,8 @@ export interface ContactSettings {
   state: string;
   service_area: string;
   office_hours_label: string;
+  /** Link externo do mapa (Google Maps etc.); vazio = não exibir. */
+  map_url: string;
 }
 
 export interface BookingSettings {
@@ -464,6 +472,8 @@ export interface SeoSettings {
   default_title: string;
   default_description: string;
   default_keywords: string;
+  /** Imagem padrão Open Graph / Twitter (URL absoluta ou caminho público). */
+  default_og_image: string;
 }
 
 export interface FeatureSettings {

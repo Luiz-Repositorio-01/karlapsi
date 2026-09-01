@@ -352,7 +352,10 @@ export const settingsSchema = z.object({
     professional_registration_label: z.string().trim().max(60),
     professional_registration_value: z.string().trim().max(60),
     short_bio: z.string().trim().max(2000),
+    formation: z.string().trim().max(2000),
+    specializations: z.string().trim().max(2000),
     photo_url: z.string().trim().max(500),
+    logo_url: z.string().trim().max(500),
   }),
   contact: z.object({
     whatsapp: z.string().trim().max(20),
@@ -364,6 +367,7 @@ export const settingsSchema = z.object({
     state: z.string().trim().max(2),
     service_area: z.string().trim().max(120),
     office_hours_label: z.string().trim().max(160),
+    map_url: z.string().trim().max(500),
   }),
   booking: z.object({
     timezone: z.string().trim().min(3).max(60),
@@ -380,6 +384,7 @@ export const settingsSchema = z.object({
     default_title: z.string().trim().min(5).max(70),
     default_description: z.string().trim().min(10).max(320),
     default_keywords: z.string().trim().max(300),
+    default_og_image: z.string().trim().max(500),
   }),
   features: z.object({
     show_testimonials: z.boolean(),

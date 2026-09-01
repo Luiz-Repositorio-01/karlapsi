@@ -16,8 +16,7 @@ export type EmailTemplateId =
   | 'appointment_rescheduled'
   | 'payment_approved'
   | 'payment_pending'
-  | 'contact_message_received'
-  | 'password_recovery_notice';
+  | 'contact_message_received';
 
 export interface EmailContent {
   subject: string;
