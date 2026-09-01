@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Infobook Parental | Karla Dias</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--verde:#203228;
+--verde2:#2f4d3a;
+--claro:#f8f4ee;
+--texto:#2d2d2d;
+--verdebotao:#25D366;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:var(--claro);
+color:var(--texto);
+overflow-x:hidden;
+}
+
+/* HERO */
+
+.hero{
+
+min-height:100vh;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:30px 5%;
+
+}
+
+.container{
+
+width:100%;
+max-width:1300px;
+
+display:grid;
+grid-template-columns:1fr 1fr;
+
+gap:40px;
+align-items:center;
+
+}
+
+/* CAPA */
+
+.left-side{
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+position:relative;
+
+}
+
+.big-cover{
+
+width:100%;
+max-width:520px;
+
+border-radius:30px;
+
+box-shadow:
+0 35px 80px rgba(0,0,0,.25),
+0 0 40px rgba(31,169,93,.18);
+
+animation:floatBook 4s ease-in-out infinite;
+
+transition:.4s;
+
+position:relative;
+z-index:2;
+
+}
+
+.big-cover:hover{
+
+transform:scale(1.04) rotate(-1deg);
+
+}
+
+.left-side::before{
+
+content:"";
+
+position:absolute;
+
+width:420px;
+height:420px;
+
+background:radial-gradient(circle,rgba(37,211,102,.18),transparent 70%);
+
+filter:blur(30px);
+
+z-index:1;
+
+animation:pulseGlow 3s infinite;
+
+}
+
+/* TEXTO */
+
+.right-side{
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+}
+
+.top-text{
+
+font-size:13px;
+font-weight:600;
+letter-spacing:2px;
+text-transform:uppercase;
+
+color:#7b6b52;
+
+margin-bottom:14px;
+
+}
+
+.right-side h1{
+
+font-size:58px;
+line-height:1;
+
+color:var(--verde);
+
+margin-bottom:20px;
+
+font-weight:700;
+
+}
+
+.description{
+
+font-size:18px;
+line-height:1.7;
+
+color:#555;
+
+margin-bottom:25px;
+
+max-width:600px;
+
+}
+
+/* BENEFÍCIOS */
+
+.benefits{
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+
+gap:14px;
+
+margin-bottom:25px;
+
+}
+
+.benefit{
+
+background:white;
+
+padding:18px;
+
+border-radius:18px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+
+transition:.3s;
+
+}
+
+.benefit:hover{
+
+transform:translateY(-5px);
+
+}
+
+.benefit h3{
+
+font-size:17px;
+margin-bottom:8px;
+color:var(--verde);
+
+}
+
+.benefit p{
+
+font-size:14px;
+line-height:1.5;
+color:#666;
+
+}
+
+/* PREÇO */
+
+.price{
+
+margin:10px 0 22px;
+
+}
+
+.price span{
+
+font-size:16px;
+text-decoration:line-through;
+color:#888;
+
+}
+
+.price h2{
+
+font-size:62px;
+line-height:1;
+color:#1fa95d;
+
+margin-top:5px;
+
+animation:pulsePrice 1.5s infinite;
+
+}
+
+/* BOTÃO */
+
+.main-btn{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:100%;
+
+max-width:420px;
+
+padding:20px;
+
+background:linear-gradient(135deg,#1f8f4d,#25D366);
+
+border-radius:60px;
+
+color:white;
+text-decoration:none;
+
+font-size:20px;
+font-weight:700;
+
+transition:.3s;
+
+box-shadow:0 15px 35px rgba(37,211,102,.28);
+
+}
+
+.main-btn:hover{
+
+transform:translateY(-4px) scale(1.02);
+
+}
+
+/* ANIMAÇÕES */
+
+@keyframes floatBook{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-18px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+@keyframes pulseGlow{
+
+0%{
+transform:scale(1);
+opacity:.7;
+}
+
+50%{
+transform:scale(1.12);
+opacity:1;
+}
+
+100%{
+transform:scale(1);
+opacity:.7;
+}
+
+}
+
+@keyframes pulsePrice{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.08);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+/* RESPONSIVO */
+
+@media(max-width:980px){
+
+.container{
+
+grid-template-columns:1fr;
+text-align:center;
+
+gap:30px;
+
+}
+
+.right-side{
+align-items:center;
+}
+
+.right-side h1{
+font-size:42px;
+}
+
+.description{
+font-size:16px;
+}
+
+.big-cover{
+max-width:320px;
+}
+
+.benefits{
+
+grid-template-columns:1fr;
+
+width:100%;
+
+}
+
+.price h2{
+font-size:48px;
+}
+
+.main-btn{
+font-size:18px;
+}
+
+.left-side::before{
+
+width:280px;
+height:280px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section class="hero">
+
+<div class="container">
+
+<!-- CAPA -->
+
+<div class="left-side">
+
+<img src="infobook.jpg" alt="Infobook Parental" class="big-cover">
+
+</div>
+
+<!-- TEXTO -->
+
+<div class="right-side">
+
+<div class="top-text">
+Karla Dias • Psicóloga • Neuropsicóloga
+</div>
+
+<h1>
+Compreenda melhor o comportamento infantil.
+</h1>
+
+<p class="description">
+Um material moderno e baseado em ciência para famílias que desejam fortalecer vínculos, melhorar a comunicação emocional e construir uma parentalidade mais consciente.
+</p>
+
+<!-- BENEFÍCIOS -->
+
+<div class="benefits">
+
+<div class="benefit">
+<h3>Mais conexão</h3>
+<p>
+Fortaleça vínculos familiares.
+</p>
+</div>
+
+<div class="benefit">
+<h3>Estratégias práticas</h3>
+<p>
+Ferramentas simples para o dia a dia.
+</p>
+</div>
+
+<div class="benefit">
+<h3>Base científica</h3>
+<p>
+Conteúdo baseado em TCC e ABA.
+</p>
+</div>
+
+<div class="benefit">
+<h3>Parentalidade consciente</h3>
+<p>
+Mais segurança emocional para sua família.
+</p>
+</div>
+
+</div>
+
+<!-- PREÇO -->
+
+<div class="price">
+
+<span>De R$47,00</span>
+
+<h2>
+R$34,00
+</h2>
+
+</div>
+
+<!-- BOTÃO -->
+
+<a href="https://go.hotmart.com/" target="_blank" class="main-btn">
+
+QUERO ADQUIRIR AGORA
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+</body>
+
+</html>

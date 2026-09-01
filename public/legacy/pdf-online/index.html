@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Editor de Documentos</title>
+<meta name="description" content="Editor de documentos online — HTML, CSS e JavaScript puro. Criar, editar e exportar PDF.">
+<link rel="icon" href="favicon.ico">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2b579a">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/toolbar.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/tables.css">
+<link rel="stylesheet" href="css/images.css">
+<link rel="stylesheet" href="css/charts.css">
+<link rel="stylesheet" href="css/shapes.css">
+<link rel="stylesheet" href="css/dialogs.css">
+<link rel="stylesheet" href="css/editor.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+<div class="app show-ruler">
+
+  <!-- Botão flutuante para sair do modo foco (só aparece no modo foco) -->
+  <button class="focus-exit" data-cmd="focusMode" title="Sair do modo foco (Esc)">
+    <i class="fa fa-compress"></i> Sair do foco
+  </button>
+
+  <!-- Fundo escuro atrás das gavetas de painel (mobile) -->
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+
+
+  <!-- ============ Barra superior ============ -->
+  <header class="topbar">
+    <span class="topbar__brand">
+      <i class="fa fa-feather-pointed logo"></i><span>Editor</span>
+    </span>
+    <button class="topbar__btn" data-menu="fileMenu" title="Arquivo"><i class="fa fa-bars"></i></button>
+    <button class="topbar__btn only-mobile" data-cmd="toggleLeft" title="Páginas"><i class="fa fa-clone"></i></button>
+    <input id="docTitle" class="topbar__title" value="Documento sem título" aria-label="Título do documento">
+    <button class="topbar__btn only-mobile" data-cmd="toggleRight" title="Propriedades"><i class="fa fa-circle-info"></i></button>
+    <button class="topbar__btn" data-cmd="undo" title="Desfazer (Ctrl+Z)"><i class="fa fa-rotate-left"></i></button>
+    <button class="topbar__btn" data-cmd="redo" title="Refazer (Ctrl+Y)"><i class="fa fa-rotate-right"></i></button>
+    <div class="topbar__spacer"></div>
+    <button class="topbar__btn" data-cmd="save" title="Salvar (Ctrl+S)"><i class="fa fa-floppy-disk"></i></button>
+    <button class="topbar__btn" data-cmd="print" title="Imprimir (Ctrl+P)"><i class="fa fa-print"></i></button>
+    <span id="saveStatus" class="topbar__status"></span>
+  </header>
+
+  <!-- Menu Arquivo (dropdown) -->
+  <div class="menu" id="fileMenu" hidden>
+    <button class="menu__item" data-cmd="newDoc"><i class="fa fa-file"></i> Novo <small>Ctrl+N</small></button>
+    <button class="menu__item" data-cmd="open"><i class="fa fa-folder-open"></i> Abrir <small>Ctrl+O</small></button>
+    <button class="menu__item" data-cmd="save"><i class="fa fa-floppy-disk"></i> Salvar <small>Ctrl+S</small></button>
+    <div class="menu__sep"></div>
+    <button class="menu__item" data-cmd="importFile"><i class="fa fa-file-import"></i> Importar (PDF, DOCX, TXT, imagem)</button>
+    <div class="menu__sep"></div>
+    <button class="menu__item" data-cmd="exportSearchable"><i class="fa fa-file-pdf"></i> Exportar PDF (texto pesquisável)</button>
+    <button class="menu__item" data-cmd="exportRaster"><i class="fa fa-image"></i> Baixar PDF (imagem)</button>
+    <button class="menu__item" data-cmd="exportDoc"><i class="fa fa-file-word"></i> Exportar Word (.doc)</button>
+    <button class="menu__item" data-cmd="exportHTML"><i class="fa fa-code"></i> Exportar HTML</button>
+    <button class="menu__item" data-cmd="print"><i class="fa fa-print"></i> Imprimir <small>Ctrl+P</small></button>
+  </div>
+
+  <!-- Menu de formas -->
+  <div class="menu" id="shapesMenu" hidden>
+    <button class="menu__item" data-cmd="shapeLine"><i class="fa fa-minus"></i> Linha</button>
+    <button class="menu__item" data-cmd="shapeArrow"><i class="fa fa-arrow-right-long"></i> Seta</button>
+    <button class="menu__item" data-cmd="shapeRect"><i class="fa fa-square"></i> Retângulo</button>
+    <button class="menu__item" data-cmd="shapeRound"><i class="fa fa-square-full"></i> Retângulo arredondado</button>
+    <button class="menu__item" data-cmd="shapeEllipse"><i class="fa fa-circle"></i> Elipse</button>
+    <button class="menu__item" data-cmd="shapeTriangle"><i class="fa fa-play fa-rotate-270"></i> Triângulo</button>
+    <button class="menu__item" data-cmd="shapeDiamond"><i class="fa fa-gem"></i> Losango</button>
+    <button class="menu__item" data-cmd="shapeStar"><i class="fa fa-star"></i> Estrela</button>
+  </div>
+
+  <!-- ============ Abas ============ -->
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="arquivo">Arquivo</button>
+    <button class="tab" role="tab" data-tab="inicio" aria-selected="true">Início</button>
+    <button class="tab" role="tab" data-tab="inserir">Inserir</button>
+    <button class="tab" role="tab" data-tab="modelos">Modelos</button>
+    <button class="tab" role="tab" data-tab="layout">Layout</button>
+    <button class="tab" role="tab" data-tab="revisao">Revisão</button>
+    <button class="tab" role="tab" data-tab="exibir">Exibir</button>
+  </nav>
+
+  <!-- ============ Ribbon ============ -->
+  <div class="ribbon">
+
+    <!-- ARQUIVO -->
+    <div class="ribbon__panel" data-panel="arquivo">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="newDoc"><i class="fa fa-file"></i> Novo</button>
+        <button class="tbtn tbtn--wide" data-cmd="open"><i class="fa fa-folder-open"></i> Abrir</button>
+        <button class="tbtn tbtn--wide" data-cmd="save"><i class="fa fa-floppy-disk"></i> Salvar</button>
+      </div><div class="group__label">Documento</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="importFile"><i class="fa fa-file-import"></i> Importar</button>
+      </div><div class="group__label">Entrada</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide tbtn--primary" data-cmd="exportSearchable"><i class="fa fa-file-pdf"></i> Exportar PDF</button>
+        <button class="tbtn tbtn--wide" data-cmd="exportRaster"><i class="fa fa-image"></i> PDF (imagem)</button>
+        <button class="tbtn tbtn--wide" data-cmd="exportDoc"><i class="fa fa-file-word"></i> Word</button>
+        <button class="tbtn tbtn--wide" data-cmd="exportHTML"><i class="fa fa-code"></i> HTML</button>
+        <button class="tbtn tbtn--wide" data-cmd="print"><i class="fa fa-print"></i> Imprimir</button>
+      </div><div class="group__label">Exportar</div></div>
+    </div>
+
+    <!-- INÍCIO -->
+    <div class="ribbon__panel is-active" data-panel="inicio">
+      <div class="group"><div class="group__row">
+        <button class="tbtn" data-cmd="cut" title="Recortar"><i class="fa fa-scissors"></i></button>
+        <button class="tbtn" data-cmd="copy" title="Copiar"><i class="fa fa-copy"></i></button>
+        <button class="tbtn" data-cmd="paste" title="Colar"><i class="fa fa-paste"></i></button>
+        <button class="tbtn" data-cmd="pastePlain" title="Colar sem formatação"><i class="fa fa-clipboard"></i></button>
+      </div><div class="group__label">Área transf.</div></div>
+
+      <div class="group"><div class="group__row">
+        <select id="selFont" class="tsel tsel--fonte" title="Fonte">
+          <option>Times New Roman</option><option>Arial</option><option>Calibri</option>
+          <option>Georgia</option><option>Verdana</option><option>Courier New</option>
+          <option>Tahoma</option><option>Garamond</option><option>Cormorant Garamond</option><option>Montserrat</option>
+        </select>
+        <select id="selSize" class="tsel tsel--tam" title="Tamanho">
+          <option>8</option><option>9</option><option>10</option><option>11</option><option selected>12</option>
+          <option>14</option><option>16</option><option>18</option><option>20</option><option>24</option>
+          <option>28</option><option>32</option><option>36</option><option>48</option><option>72</option>
+        </select>
+      </div><div class="group__row">
+        <button class="tbtn" data-cmd="bold" title="Negrito (Ctrl+B)"><i class="fa fa-bold"></i></button>
+        <button class="tbtn" data-cmd="italic" title="Itálico (Ctrl+I)"><i class="fa fa-italic"></i></button>
+        <button class="tbtn" data-cmd="underline" title="Sublinhado (Ctrl+U)"><i class="fa fa-underline"></i></button>
+        <button class="tbtn" data-cmd="strike" title="Tachado"><i class="fa fa-strikethrough"></i></button>
+        <button class="tbtn" data-cmd="superscript" title="Sobrescrito"><i class="fa fa-superscript"></i></button>
+        <button class="tbtn" data-cmd="subscript" title="Subscrito"><i class="fa fa-subscript"></i></button>
+        <label class="tcolor" title="Cor do texto"><i class="fa fa-a" style="font-size:.8rem"></i><span class="tcolor__bar" style="background:#c0392b"></span><input type="color" id="colText" value="#c0392b"></label>
+        <label class="tcolor" title="Realce"><i class="fa fa-highlighter" style="font-size:.8rem"></i><span class="tcolor__bar" style="background:#ffe066"></span><input type="color" id="colHi" value="#ffe066"></label>
+        <button class="tbtn" data-cmd="clearFormat" title="Limpar formatação"><i class="fa fa-text-slash"></i></button>
+      </div><div class="group__label">Fonte</div></div>
+
+      <div class="group"><div class="group__row">
+        <button class="tbtn" data-cmd="alignLeft" title="Esquerda"><i class="fa fa-align-left"></i></button>
+        <button class="tbtn" data-cmd="alignCenter" title="Centralizar"><i class="fa fa-align-center"></i></button>
+        <button class="tbtn" data-cmd="alignRight" title="Direita"><i class="fa fa-align-right"></i></button>
+        <button class="tbtn" data-cmd="alignJustify" title="Justificar"><i class="fa fa-align-justify"></i></button>
+      </div><div class="group__row">
+        <button class="tbtn" data-cmd="ul" title="Lista com marcadores"><i class="fa fa-list-ul"></i></button>
+        <button class="tbtn" data-cmd="ol" title="Lista numerada"><i class="fa fa-list-ol"></i></button>
+        <button class="tbtn" data-cmd="outdent" title="Diminuir recuo"><i class="fa fa-outdent"></i></button>
+        <button class="tbtn" data-cmd="indent" title="Aumentar recuo"><i class="fa fa-indent"></i></button>
+        <select id="selLine" class="tsel tsel--tam" title="Entrelinhas">
+          <option value="1">1,0</option><option value="1.15">1,15</option><option value="1.5" selected>1,5</option>
+          <option value="2">2,0</option><option value="2.5">2,5</option>
+        </select>
+      </div><div class="group__label">Parágrafo</div></div>
+
+      <div class="group"><div class="group__row">
+        <select id="selStyle" class="tsel" title="Estilo de parágrafo">
+          <option value="normal">Normal</option>
+          <option value="h1">Título 1</option>
+          <option value="h2">Título 2</option>
+          <option value="h3">Título 3</option>
+          <option value="h4">Título 4</option>
+          <option value="subtitulo">Subtítulo</option>
+          <option value="citacao">Citação</option>
+        </select>
+      </div><div class="group__row">
+        <button class="tbtn" data-cmd="upper" title="MAIÚSCULAS">AA</button>
+        <button class="tbtn" data-cmd="lower" title="minúsculas">aa</button>
+        <button class="tbtn" data-cmd="capitalize" title="Capitalizar">Aa</button>
+      </div><div class="group__label">Estilos</div></div>
+    </div>
+
+    <!-- INSERIR -->
+    <div class="ribbon__panel" data-panel="inserir">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="addPage"><i class="fa fa-file-circle-plus"></i> Página</button>
+        <button class="tbtn tbtn--wide" data-cmd="pageBreak"><i class="fa fa-scissors"></i> Quebra</button>
+      </div><div class="group__label">Páginas</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="table"><i class="fa fa-table"></i> Tabela</button>
+        <button class="tbtn tbtn--wide" data-cmd="image"><i class="fa fa-image"></i> Imagem</button>
+        <button class="tbtn tbtn--wide" data-cmd="chart"><i class="fa fa-chart-column"></i> Gráfico</button>
+        <button class="tbtn tbtn--wide" data-menu="shapesMenu"><i class="fa fa-shapes"></i> Formas <i class="fa fa-caret-down"></i></button>
+        <button class="tbtn tbtn--wide" data-cmd="textbox"><i class="fa fa-square"></i> Caixa de texto</button>
+        <button class="tbtn tbtn--wide" data-cmd="hr"><i class="fa fa-minus"></i> Linha</button>
+      </div><div class="group__label">Elementos</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="link"><i class="fa fa-link"></i> Link</button>
+        <button class="tbtn tbtn--wide" data-cmd="date"><i class="fa fa-calendar"></i> Data</button>
+        <button class="tbtn tbtn--wide" data-cmd="datetime"><i class="fa fa-clock"></i> Data/hora</button>
+      </div><div class="group__label">Campos</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="pageNumFooter"><i class="fa fa-hashtag"></i> Nº no rodapé</button>
+        <button class="tbtn tbtn--wide" data-cmd="pageNumHeader"><i class="fa fa-hashtag"></i> Nº no cabeçalho</button>
+      </div><div class="group__label">Cabeçalho/Rodapé</div></div>
+    </div>
+
+    <!-- MODELOS (documentos da Karla, sobre o timbrado) -->
+    <div class="ribbon__panel" data-panel="modelos">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide tbtn--primary" data-cmd="modeloRecibo"><i class="fa fa-receipt"></i> Recibo</button>
+        <button class="tbtn tbtn--wide" data-cmd="modeloComprovantePag"><i class="fa fa-money-check-dollar"></i> Comprovante de pagamento</button>
+      </div><div class="group__label">Pagamento</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="modeloComprovante"><i class="fa fa-file-invoice"></i> Comprovante de sessão</button>
+        <button class="tbtn tbtn--wide" data-cmd="modeloDeclaracao"><i class="fa fa-calendar-check"></i> Declaração de presença (horas)</button>
+      </div><div class="group__label">Atendimento</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="modeloDados"><i class="fa fa-user-pen"></i> Dados da profissional</button>
+      </div><div class="group__label">Assinatura</div></div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="ribbon__panel" data-panel="layout">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide tbtn--primary" data-cmd="pageSetup"><i class="fa fa-ruler-combined"></i> Configurar página</button>
+      </div><div class="group__label">Página</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="orientationPortrait"><i class="fa fa-file"></i> Retrato</button>
+        <button class="tbtn tbtn--wide" data-cmd="orientationLandscape"><i class="fa fa-file fa-rotate-90"></i> Paisagem</button>
+      </div><div class="group__label">Orientação</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide tbtn--primary" data-cmd="letterheadKarla"><i class="fa fa-stamp"></i> Timbrado Karla</button>
+        <button class="tbtn tbtn--wide" data-cmd="letterheadNone"><i class="fa fa-ban"></i> Sem timbrado</button>
+      </div><div class="group__label">Timbrado</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="addPage"><i class="fa fa-plus"></i> Adicionar</button>
+        <button class="tbtn tbtn--wide" data-cmd="duplicatePage"><i class="fa fa-clone"></i> Duplicar</button>
+        <button class="tbtn tbtn--wide" data-cmd="deletePage"><i class="fa fa-trash"></i> Excluir</button>
+      </div><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="movePageUp"><i class="fa fa-arrow-up"></i> Subir</button>
+        <button class="tbtn tbtn--wide" data-cmd="movePageDown"><i class="fa fa-arrow-down"></i> Descer</button>
+        <button class="tbtn tbtn--wide" data-cmd="reflow"><i class="fa fa-arrows-up-down"></i> Ajustar páginas</button>
+      </div><div class="group__label">Páginas</div></div>
+    </div>
+
+    <!-- REVISÃO -->
+    <div class="ribbon__panel" data-panel="revisao">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="find"><i class="fa fa-magnifying-glass"></i> Localizar</button>
+        <button class="tbtn tbtn--wide" data-cmd="replace"><i class="fa fa-right-left"></i> Substituir</button>
+      </div><div class="group__label">Edição</div></div>
+      <div class="group"><div class="group__row">
+        <span class="hint" style="max-width:220px">Corretor ortográfico nativo do navegador ativo nas folhas (spellcheck).</span>
+      </div><div class="group__label">Idioma</div></div>
+    </div>
+
+    <!-- EXIBIR -->
+    <div class="ribbon__panel" data-panel="exibir">
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="toggleLeft"><i class="fa fa-table-columns"></i> Miniaturas</button>
+        <button class="tbtn tbtn--wide" data-cmd="toggleRight"><i class="fa fa-sliders"></i> Propriedades</button>
+      </div><div class="group__label">Painéis</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="toggleRuler"><i class="fa fa-ruler"></i> Régua</button>
+        <button class="tbtn tbtn--wide" data-cmd="toggleMargins"><i class="fa fa-border-none"></i> Margens</button>
+        <button class="tbtn tbtn--wide" data-cmd="toggleHF"><i class="fa fa-heading"></i> Cabeçalho/Rodapé</button>
+      </div><div class="group__label">Marcas</div></div>
+      <div class="group"><div class="group__row">
+        <button class="tbtn tbtn--wide" data-cmd="focusMode"><i class="fa fa-expand"></i> Foco</button>
+        <button class="tbtn tbtn--wide" data-cmd="toggleTheme"><i class="fa fa-circle-half-stroke"></i> Tema</button>
+        <button class="tbtn" data-cmd="zoomOut" title="Menos zoom"><i class="fa fa-minus"></i></button>
+        <button class="tbtn" data-cmd="zoomFit" title="Ajustar à largura"><i class="fa fa-arrows-left-right"></i></button>
+        <button class="tbtn" data-cmd="zoomIn" title="Mais zoom"><i class="fa fa-plus"></i></button>
+      </div><div class="group__label">Zoom</div></div>
+    </div>
+
+  </div><!-- /ribbon -->
+
+  <!-- ============ Corpo ============ -->
+  <div class="body">
+
+    <aside class="panel panel--left" id="panelLeft">
+      <div class="panel__head"><span>Páginas</span>
+        <button class="tbtn" data-cmd="addPage" title="Adicionar página"><i class="fa fa-plus"></i></button>
+      </div>
+      <div class="panel__body" id="thumbs"></div>
+    </aside>
+
+    <div style="flex:1 1 auto; display:flex; flex-direction:column; min-width:0;">
+      <div class="ruler" id="ruler"></div>
+      <div class="canvas" id="canvas">
+        <div class="findbar" id="findbar" hidden>
+          <div class="findbar__row">
+            <input id="findTerm" type="text" placeholder="Localizar…">
+            <span class="findbar__count" id="findCount">0/0</span>
+            <button class="tbtn" id="findPrev" title="Anterior"><i class="fa fa-chevron-up"></i></button>
+            <button class="tbtn" id="findNext" title="Próximo"><i class="fa fa-chevron-down"></i></button>
+            <button class="tbtn" id="findClose" title="Fechar"><i class="fa fa-times"></i></button>
+          </div>
+          <div class="findbar__row findbar__replace" style="display:none">
+            <input id="findRepl" type="text" placeholder="Substituir por…">
+            <button class="tbtn" id="findReplaceOne" title="Substituir">1×</button>
+            <button class="tbtn" id="findReplaceAll" title="Substituir tudo">Tudo</button>
+          </div>
+          <label class="checkline" style="margin:0"><input type="checkbox" id="findCase"> Diferenciar maiúsc./minúsc.</label>
+        </div>
+        <div class="canvas__pages" id="pages"></div>
+      </div>
+    </div>
+
+    <aside class="panel panel--right" id="panelRight">
+      <div class="panel__head"><span>Propriedades</span></div>
+      <div class="panel__body" id="props"></div>
+    </aside>
+
+  </div>
+
+  <!-- ============ Barra inferior ============ -->
+  <footer class="statusbar">
+    <span id="statPages">1 pág.</span>
+    <span id="statWords" class="hide-sm">0 palavras</span>
+    <span id="statChars" class="hide-sm">0 caracteres</span>
+    <span class="statusbar__spacer"></span>
+    <div class="statusbar__zoom">
+      <i class="fa fa-magnifying-glass-minus"></i>
+      <input type="range" id="zoomRange" min="25" max="400" step="5" value="100" aria-label="Zoom">
+      <span id="zoomLabel">100%</span>
+    </div>
+  </footer>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

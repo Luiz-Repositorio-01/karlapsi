@@ -1,0 +1,86 @@
+/* responsive.css — adaptação para tablet e celular (toque, gavetas, alvos maiores) */
+
+/* utilidades de visibilidade */
+.only-mobile { display: none !important; }
+
+/* Fundo escuro atrás das gavetas (painéis) no mobile */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 25, 0.42);
+  z-index: 19;
+}
+.drawer-backdrop[hidden] { display: none; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1024px) {
+  /* Painéis viram gavetas sobrepostas (não ocupam largura fixa) */
+  .panel--left,
+  .panel--right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 20;
+    width: min(82vw, 300px);
+    flex-basis: auto;
+    box-shadow: var(--sombra-flutuante);
+  }
+  .panel--left { left: 0; border-right: 1px solid var(--cor-borda); }
+  .panel--right { right: 0; border-left: 1px solid var(--cor-borda); }
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 768px) {
+  .only-mobile { display: inline-flex !important; }
+
+  .topbar { gap: 6px; padding: 0 8px; }
+  .topbar__title { flex: 1 1 auto; min-width: 80px; }
+
+  .group__label { display: none; }
+  .ribbon { min-height: 52px; padding: 5px 4px; }
+  .group { padding: 0 6px; }
+  .tsep { margin: 2px; }
+
+  /* alvos de toque maiores */
+  .tbtn { min-width: 42px; height: 42px; font-size: 1.02rem; }
+  .tsel { height: 40px; }
+  .tsel--fonte { min-width: 108px; }
+
+  .tabs { height: 44px; }
+  .tab { padding: 0 16px; font-size: 0.92rem; }
+
+  .canvas__pages { padding: 12px 6px 76px; }
+  .app.show-ruler .ruler { display: none; }   /* régua não ajuda no celular */
+
+  .menu { min-width: 230px; }
+  .menu__item { padding: 12px; font-size: 0.95rem; }
+
+  .findbar { right: 10px; left: 10px; width: auto; }
+}
+
+/* ---------- Celular pequeno ---------- */
+@media (max-width: 560px) {
+  .topbar__status { display: none; }
+  .topbar__brand span:not(.logo) { display: none; }   /* mantém só o ícone */
+
+  .statusbar { gap: 10px; overflow-x: auto; white-space: nowrap; }
+  .statusbar .hide-sm { display: none; }
+
+  .dialog, .dialog--wide { width: 100%; max-height: 92vh; }
+  .dialog__body { padding: 14px; }
+  .field-row { flex-direction: column; gap: 0; }   /* campos empilham */
+
+  .tbtn { min-width: 44px; height: 44px; }
+  .big-btn { width: 100%; justify-content: center; }
+}
+
+/* Modo foco / leitura */
+.app.mode-focus .panel,
+.app.mode-focus .tabs,
+.app.mode-focus .ribbon { display: none; }
+.app.mode-focus .canvas { background: #33373d; }
+
+/* Em telas de toque, esconde a régua por padrão (economiza altura) */
+@media (pointer: coarse) and (max-width: 900px) {
+  .ruler { display: none !important; }
+}

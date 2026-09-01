@@ -1,0 +1,162 @@
+/* pages.css — folha A4, margens, cabeçalho/rodapé, quebras, régua */
+.page {
+  position: relative;
+  background: var(--cor-folha);
+  box-shadow: 0 4px 24px var(--cor-folha-sombra);
+  margin: 0 auto 24px;
+  /* largura/altura/padding definidos inline via JS a partir do page-setup (mm reais) */
+  overflow: hidden;
+  color: #1a1a1a;
+  font-family: var(--fonte-documento);
+  font-size: 12pt;
+  line-height: 1.5;
+  /* garante que o timbrado (background) seja impresso e exportado */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.page.is-active { outline: 2px solid var(--cor-acento); outline-offset: 3px; }
+
+/* Timbrado (imagem real cobrindo a folha, atrás do conteúdo) */
+.page__bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.page__bg:not([src]) { display: none; }
+
+/* Guias de margem visíveis (não imprimem) */
+.page__margin-guide {
+  position: absolute;
+  border: 1px dashed var(--cor-margem-guia);
+  pointer-events: none;
+  z-index: 1;
+}
+.app.hide-margins .page__margin-guide { display: none; }
+
+.page__header,
+.page__footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0 6mm;
+  font-size: 9pt;
+  color: #555;
+  z-index: 2;
+  min-height: 8mm;
+  outline: none;
+}
+.page__header { top: 4mm; }
+.page__footer { bottom: 4mm; display: flex; align-items: flex-end; }
+.page__header:empty::before,
+.page__footer:empty::before {
+  content: attr(data-placeholder);
+  color: #bbb;
+  font-style: italic;
+}
+.app.hide-hf .page__header,
+.app.hide-hf .page__footer { display: none; }
+
+/* Área de conteúdo editável */
+.page__content {
+  position: relative;
+  z-index: 3;
+  outline: none;
+  min-height: 1em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.page__content:empty::before {
+  content: attr(data-placeholder);
+  color: #bbb;
+  pointer-events: none;
+}
+
+/* Número de página gerado */
+.page__num::after { content: attr(data-num); }
+
+/* Conteúdo semântico dentro da folha */
+.page__content h1 { font-size: 2em; margin: 0.5em 0 0.3em; font-weight: 700; }
+.page__content h2 { font-size: 1.5em; margin: 0.5em 0 0.3em; font-weight: 700; }
+.page__content h3 { font-size: 1.25em; margin: 0.5em 0 0.3em; font-weight: 700; }
+.page__content h4 { font-size: 1.1em; margin: 0.5em 0 0.3em; font-weight: 700; }
+.page__content p { margin: 0 0 0.35em; }
+.page__content ul { list-style: disc; padding-left: 1.6em; margin: 0 0 0.4em; }
+.page__content ol { list-style: decimal; padding-left: 1.6em; margin: 0 0 0.4em; }
+.page__content blockquote {
+  margin: 0.4em 0;
+  padding: 0.2em 1em;
+  border-left: 3px solid #bbb;
+  color: #555;
+  font-style: italic;
+}
+.page__content a { color: #1155cc; text-decoration: underline; }
+.page__content hr { border: none; border-top: 1px solid #999; margin: 0.6em 0; }
+.page__content img { display: inline-block; max-width: 100%; }
+.page__content .code {
+  font-family: var(--fonte-mono);
+  background: #f2f2f2;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.92em;
+}
+
+/* Régua horizontal */
+.ruler {
+  height: 22px;
+  background: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+  display: none;
+}
+.app.show-ruler .ruler { display: block; }
+.ruler__tick { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--cor-borda-forte); }
+.ruler__tick span { position: absolute; top: 2px; left: 2px; font-size: 0.6rem; color: var(--cor-texto-fraco); }
+
+/* Marca de quebra de página manual dentro do fluxo */
+.pagebreak {
+  height: 0;
+  border-top: 2px dashed #c0392b;
+  margin: 0.4em 0;
+  page-break-after: always;
+  break-after: page;
+}
+
+/* Miniaturas (painel esquerdo) */
+.thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  background: #fff;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.thumb.is-active { border-color: var(--cor-acento); box-shadow: 0 0 0 2px var(--cor-acento-suave); }
+.thumb__num {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.62rem;
+  color: var(--cor-texto-fraco);
+  background: rgba(255,255,255,0.8);
+  padding: 0 3px;
+  border-radius: 3px;
+}
+.thumb__mini {
+  transform-origin: top left;
+  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0;
+}

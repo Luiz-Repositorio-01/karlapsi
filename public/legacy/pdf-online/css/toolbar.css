@@ -1,0 +1,78 @@
+/* toolbar.css — grupos de ferramentas, botões, selects e separadores do ribbon */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 8px;
+  border-right: 1px solid var(--cor-ribbon-borda);
+}
+.group:last-child { border-right: none; }
+.group__row { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
+.group__label {
+  font-size: 0.64rem;
+  text-align: center;
+  color: var(--cor-texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: auto;
+  padding-top: 2px;
+}
+
+.tbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 7px;
+  border-radius: var(--raio-sm);
+  color: var(--cor-texto);
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.tbtn i { pointer-events: none; }
+.tbtn:hover { background: var(--cor-superficie-2); border-color: var(--cor-borda); }
+.tbtn:active { background: var(--cor-acento-suave); }
+.tbtn.is-active { background: var(--cor-acento-suave); border-color: var(--cor-acento); color: var(--cor-acento-forte); }
+.tbtn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.tbtn--wide { padding: 0 10px; font-size: 0.8rem; }
+.tbtn--primary { background: var(--cor-acento); color: #fff; }
+.tbtn--primary:hover { background: var(--cor-acento-forte); border-color: var(--cor-acento-forte); }
+
+.tsel {
+  height: 30px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  padding: 0 6px;
+  color: var(--cor-texto);
+}
+.tsel--fonte { min-width: 132px; }
+.tsel--tam { width: 58px; }
+
+.tcolor {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--raio-sm);
+}
+.tcolor:hover { background: var(--cor-superficie-2); }
+.tcolor input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.tcolor__bar { width: 18px; height: 4px; border-radius: 2px; margin-top: 1px; }
+
+.tsep { width: 1px; align-self: stretch; background: var(--cor-ribbon-borda); margin: 2px 4px; }
