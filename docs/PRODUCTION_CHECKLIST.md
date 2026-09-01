@@ -3,8 +3,8 @@
 Status objetivo. **Não declare 100%** enquanto houver item pendente.
 
 Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`  
-Migrations aplicadas no remoto: `001`–`013`  
-Última auditoria contínua: 2026-09-01
+Migrations no remoto: `001`–`013`  
+Encerramento técnico: 2026-09-01
 
 ## Status por área
 
@@ -22,6 +22,7 @@ Migrations aplicadas no remoto: `001`–`013`
 | PDF Online | PENDENTE DE ARQUIVO |
 | Landing Pages | PENDENTE DE ARQUIVO |
 | Supabase | OK |
+| Database | OK |
 | RLS | OK |
 | Auth | OK |
 | OWNER | OK |
@@ -35,34 +36,61 @@ Migrations aplicadas no remoto: `001`–`013`
 | Acessibilidade | OK |
 | Performance | OK |
 | Segurança | OK |
+| Domínio | PENDENTE OPERACIONAL |
 | Testes | OK |
 | Build | OK |
-| Domínio | PENDENTE OPERACIONAL |
-| Conteúdo profissional (CRP/bio/foto/preços reais) | PENDENTE DE DADO REAL |
-| Legacy (ZIP/assets originais) | PENDENTE DE ARQUIVO |
+| Conteúdo profissional (CRP/bio/foto/formação/especializações/e-mail/endereço/Instagram/preços) | PENDENTE DE DADO REAL |
+| Legacy (`site_kaka.zip`) | PENDENTE DE ARQUIVO |
 
-## Evidências desta execução
+## Busca do legacy (esta execução)
 
-- Rotas públicas (`/`, `/sobre`, `/neuropsicologia`, `/servicos`, `/atendimentos`, `/blog`, `/infobooks`, `/landing-pages`, `/pdf-online`, `/agendamento`, `/contato`, legal, `/login`): HTTP 200.
-- `/admin/*` sem sessão → redirect `/login`.
-- 404 humano sem stack; CSP/HSTS/nosniff presentes.
-- CRUD remoto (paciente, serviço, blog, produto) + limpeza DEMO (0 resíduos).
-- Booking público + conflito `SLOT_TAKEN` (double booking impedido no banco).
-- Storage: upload público + documento privado com signed URL; anon bloqueado no bucket privado.
-- RBAC: ASSISTANT não altera settings/`private_*`, não lê pagamentos nem audit; OWNER lê/escreve.
-- Checkout Mercado Pago sem token → `503 MERCADOPAGO_NOT_CONFIGURED`.
-- Cron sem/`CRON_SECRET` inválido → `503`.
-- `npm audit`: 0 vulnerabilidades.
-- Migrations `001`–`013` no remoto (`013` restringe `private_%` a OWNER/ADMIN).
+Procurou-se `site_kaka.zip` em:
 
-## Pendências que exigem ação humana
+- `/workspace`, `/home/ubuntu`, `/tmp`, `/opt/cursor`, `/mnt`, attachments
+- histórico Git / objetos / releases GitHub
+- domínio `karlaneuropsi.com.br` (DNS **sem registros A/AAAA**; host não resolve)
 
-1. **Arquivos legacy** em `public/legacy/` (PDF Online, Infobooks, Landing Pages).
-2. **Credenciais:** `MERCADOPAGO_*`, `EMAIL_*`, `CRON_SECRET`.
-3. **Dados reais** em `/admin/configuracoes` (CRP, bio, foto, preços — sem inventar).
-4. **DNS/HTTPS** para `karlaneuropsi.com.br` / `www` (sem alterar DNS sem autorização).
+**Resultado:** arquivo **não encontrado**. Integração permanece pronta:
 
-## Próximo passo humano (OWNER)
+```bash
+./scripts/import-legacy-zip.sh /caminho/para/site_kaka.zip
+```
 
-OWNER ativo (`karladiaspsicologa@gmail.com`, login confirmado).  
-Go-live: preencher dados reais → enviar legacy → configurar MP/e-mail/cron → apontar DNS → smoke no domínio final.
+## Dados profissionais (estado no banco)
+
+Presentes (reais): marca, nome profissional, WhatsApp `5511988830377`, SEO básico, serviços seed (sem preço público).
+
+Pendentes (não inventados): CRP, bio, formação, especializações, foto, e-mail público, Instagram, endereço, preços, OG image.
+
+Editar em `/admin/configuracoes` quando a profissional fornecer.
+
+## Credenciais (presença no ambiente)
+
+| Variável | Estado |
+| --- | --- |
+| Supabase URL / anon / service role | SET |
+| `MERCADOPAGO_ACCESS_TOKEN` / webhook | MISSING |
+| `EMAIL_API_KEY` / `EMAIL_FROM` | MISSING (`EMAIL_PROVIDER=log`) |
+| `CRON_SECRET` | MISSING |
+
+Checkout e cron respondem `503` com erro claro (sem token no client).
+
+## Domínio
+
+`karlaneuropsi.com.br` / `www` — **sem DNS**. Auth redirects de produção já cadastrados no Supabase. Não alterar DNS sem autorização.
+
+## Evidências técnicas desta passagem
+
+- `npm test` 91 · lint · typecheck · build · `db:validate` · `npm audit` 0
+- RLS `013`: ASSISTANT não lê `private_*`; OWNER lê
+- Double booking remoto: segundo request → `SLOT_TAKEN`
+- DEMO = 0
+- Rotas públicas 200; `/admin/*` → 307 `/login`
+- `.env.local` gitignored
+
+## Ações humanas restantes (bloqueiam go-live completo)
+
+1. Anexar `site_kaka.zip` e rodar `./scripts/import-legacy-zip.sh`
+2. Preencher dados reais em `/admin/configuracoes`
+3. Configurar Mercado Pago + e-mail + `CRON_SECRET` no provedor de hospedagem
+4. Autorizar e apontar DNS/HTTPS do domínio

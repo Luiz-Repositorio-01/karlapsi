@@ -336,11 +336,16 @@ public/legacy/
 - No painel, cada infobook/landing page tem o campo **Caminho legado** para
   apontar o arquivo original e ganhar capa, descrição, preço e CTA na vitrine.
 
-> **Estado neste repositório:** o histórico do Git tinha um único commit apenas
-> com arquivos de configuração — as pastas de `public/legacy` nunca foram
-> versionadas. A integração está pronta e testada; basta copiar os arquivos
-> originais para os caminhos acima e publicar. Detalhes em
-> `public/legacy/README.md`.
+> **Estado neste repositório:** o pacote `site_kaka.zip` **não está disponível**
+> neste ambiente (busca em disco, attachments, Git, releases e DNS do domínio).
+> Integração pronta; importação com verificação de hash:
+>
+> ```bash
+> ./scripts/import-legacy-zip.sh /caminho/para/site_kaka.zip
+> ```
+>
+> Detalhes em `public/legacy/README.md`. Enquanto o ZIP não for anexado:
+> **PENDENTE DE ARQUIVO**.
 
 ## 11. Estrutura do projeto
 

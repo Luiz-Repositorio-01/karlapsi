@@ -1,5 +1,6 @@
 import type { SiteSettings } from '@/lib/types';
 import { integrationStatus } from '@/lib/env';
+import { getLegacyPdfEntry, listLegacyLandingSlugs } from '@/lib/legacy';
 
 /**
  * Checklist de prontidão para produção / go-live.
@@ -10,7 +11,7 @@ export type ReadinessItem = {
   id: string;
   label: string;
   status: 'ok' | 'pending' | 'blocked';
-  group: 'dados' | 'integracao';
+  group: 'dados' | 'integracao' | 'legacy';
   hint?: string;
 };
 
@@ -68,11 +69,42 @@ export function getContentReadiness(settings: SiteSettings): ReadinessItem[] {
       group: 'dados',
     },
     {
+      id: 'instagram',
+      label: 'Instagram',
+      status: filled(contact.instagram) ? 'ok' : 'pending',
+      group: 'dados',
+    },
+    {
       id: 'og',
       label: 'Imagem Open Graph',
       status: filled(seo.default_og_image) ? 'ok' : 'pending',
       group: 'dados',
       hint: 'Recomendado para compartilhamento em redes',
+    },
+  ];
+}
+
+export function getLegacyReadiness(): ReadinessItem[] {
+  const pdf = getLegacyPdfEntry();
+  const landings = listLegacyLandingSlugs();
+
+  return [
+    {
+      id: 'legacy-pdf',
+      label: 'Arquivos PDF Online (public/legacy/pdf-online)',
+      status: pdf ? 'ok' : 'pending',
+      group: 'legacy',
+      hint: 'Importe com scripts/import-legacy-zip.sh site_kaka.zip',
+    },
+    {
+      id: 'legacy-catalog',
+      label: 'Infobooks / Landing Pages legados',
+      status: landings.length > 0 ? 'ok' : 'pending',
+      group: 'legacy',
+      hint:
+        landings.length > 0
+          ? `${landings.length} módulo(s) detectado(s)`
+          : 'Copie pastas para public/legacy/landing-pages/<slug>/',
     },
   ];
 }
@@ -92,7 +124,11 @@ export function getProductionReadiness(settings: SiteSettings): {
   pendingCount: number;
   blockedCount: number;
 } {
-  const items = [...getIntegrationReadiness(), ...getContentReadiness(settings)];
+  const items = [
+    ...getIntegrationReadiness(),
+    ...getContentReadiness(settings),
+    ...getLegacyReadiness(),
+  ];
   return {
     items,
     pendingCount: items.filter((item) => item.status === 'pending').length,

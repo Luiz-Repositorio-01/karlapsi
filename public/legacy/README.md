@@ -39,12 +39,24 @@ campo **Caminho legado** de cada infobook ou landing page (por exemplo
 
 No repositório recebido, apenas os arquivos de configuração do projeto estavam
 versionados — o `README` antigo mencionava `public/legacy`, mas os arquivos
-originais nunca foram enviados ao Git (o histórico tem um único commit, sem
-essas pastas).
+originais nunca foram enviados ao Git.
 
-Para restaurar os módulos originais, copie as pastas do pacote original para os
-caminhos acima e faça o deploy. **Nenhuma outra alteração é necessária:** a
-detecção é automática e as URLs antigas já estão mapeadas.
+O pacote `site_kaka.zip` **não está presente neste ambiente Cloud Agent**
+(busca em `/workspace`, attachments, histórico Git, releases e domínio DNS
+sem registros). Enquanto o ZIP não for anexado, PDF Online / Infobooks /
+Landing Pages permanecem **PENDENTE DE ARQUIVO**.
+
+### Importação com verificação de integridade
+
+Quando o ZIP estiver disponível:
+
+```bash
+./scripts/import-legacy-zip.sh /caminho/para/site_kaka.zip
+```
+
+O script extrai, inventaria, calcula SHA-256 antes/depois e copia bytes
+intactos para esta pasta. Em seguida reinicie o Next.js — a detecção é
+automática e as URLs antigas já estão mapeadas.
 
 ## Regras de segurança aplicadas a esta pasta
 

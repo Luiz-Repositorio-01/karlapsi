@@ -29,6 +29,7 @@ describe('settings readiness', () => {
         ...DEFAULT_SETTINGS.contact,
         email: 'contato@example.com',
         city: 'São Paulo',
+        instagram: '@exemplo',
       },
       seo: {
         ...DEFAULT_SETTINGS.seo,
