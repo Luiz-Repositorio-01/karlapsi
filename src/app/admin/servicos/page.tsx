@@ -1,13 +1,11 @@
-import { Alert, Badge } from '@/components/ui';
+import { Alert } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
-import { CrudManager, CrudRow, type CrudField } from '@/components/admin/CrudManager';
-import { ActionButton } from '@/components/admin/forms';
+import { CrudManager, type CrudField } from '@/components/admin/CrudManager';
 import { requirePermission } from '@/lib/auth/session';
 import { can } from '@/lib/auth/rbac';
 import { listAllServices } from '@/lib/data/admin';
 import { saveService, toggleServiceActive } from '@/app/admin/_actions/catalog';
 import { formatCurrency, formatDuration } from '@/lib/utils/format';
-import type { Service } from '@/lib/types';
 
 const FIELDS: CrudField[] = [
   { name: 'name', label: 'Nome', type: 'text', required: true },
@@ -89,60 +87,53 @@ export default async function ServicosAdminPage() {
         </Alert>
       ) : null}
 
-      <CrudManager<Service>
-        items={result.data}
+      <CrudManager
+        items={result.data.map((service) => ({
+          id: service.id,
+          title: service.name,
+          subtitle: service.summary,
+          meta: `${formatDuration(service.duration_minutes)} · ${
+            service.price_cents === null
+              ? 'valor a combinar'
+              : formatCurrency(service.price_cents)
+          }${service.show_price_publicly ? ' (visível no site)' : ' (não exibido)'} · /${service.slug}`,
+          badges: [
+            ...(!service.is_active ? [{ label: 'Inativo', tone: 'danger' as const }] : []),
+            ...(service.is_featured ? [{ label: 'Destaque', tone: 'sand' as const }] : []),
+            ...(!service.allows_online_booking
+              ? [{ label: 'Sem agendamento online' as const }]
+              : []),
+          ],
+          extraAction: canManage
+            ? {
+                label: service.is_active ? 'Desativar' : 'Ativar',
+                action: toggleServiceActive,
+                fields: { serviceId: service.id, isActive: !service.is_active },
+              }
+            : undefined,
+          values: {
+            name: service.name,
+            slug: service.slug,
+            summary: service.summary,
+            description: service.description,
+            durationMinutes: service.duration_minutes,
+            priceCents: service.price_cents,
+            sortOrder: service.sort_order,
+            imageUrl: service.image_url,
+            preparationNotes: service.preparation_notes,
+            showPricePublicly: service.show_price_publicly,
+            allowsOnlineBooking: service.allows_online_booking,
+            requiresPayment: service.requires_payment,
+            isActive: service.is_active,
+            isFeatured: service.is_featured,
+          },
+        }))}
         fields={FIELDS}
         action={saveService}
-        getId={(service) => service.id}
-        getValues={(service) => ({
-          name: service.name,
-          slug: service.slug,
-          summary: service.summary,
-          description: service.description,
-          durationMinutes: service.duration_minutes,
-          priceCents: service.price_cents,
-          sortOrder: service.sort_order,
-          imageUrl: service.image_url,
-          preparationNotes: service.preparation_notes,
-          showPricePublicly: service.show_price_publicly,
-          allowsOnlineBooking: service.allows_online_booking,
-          requiresPayment: service.requires_payment,
-          isActive: service.is_active,
-          isFeatured: service.is_featured,
-        })}
         createLabel="Novo serviço"
         editLabel="Editar serviço"
         emptyTitle="Nenhum serviço cadastrado"
         emptyDescription="Cadastre os serviços oferecidos para que apareçam no site e no agendamento."
-        renderItem={(service, onEdit) => (
-          <CrudRow
-            title={service.name}
-            subtitle={service.summary}
-            meta={`${formatDuration(service.duration_minutes)} · ${
-              service.price_cents === null
-                ? 'valor a combinar'
-                : formatCurrency(service.price_cents)
-            }${service.show_price_publicly ? ' (visível no site)' : ' (não exibido)'} · /${service.slug}`}
-            badges={
-              <>
-                {!service.is_active ? <Badge tone="danger">Inativo</Badge> : null}
-                {service.is_featured ? <Badge tone="sand">Destaque</Badge> : null}
-                {!service.allows_online_booking ? <Badge>Sem agendamento online</Badge> : null}
-              </>
-            }
-            onEdit={onEdit}
-            actions={
-              canManage ? (
-                <ActionButton
-                  action={toggleServiceActive}
-                  label={service.is_active ? 'Desativar' : 'Ativar'}
-                  variant="ghost"
-                  fields={{ serviceId: service.id, isActive: !service.is_active }}
-                />
-              ) : null
-            }
-          />
-        )}
       />
     </>
   );

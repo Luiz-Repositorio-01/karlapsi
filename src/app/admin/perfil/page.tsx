@@ -21,17 +21,15 @@ export default async function PerfilPage() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <Card>
           <ActionForm action={updateOwnProfile} submitLabel="Salvar perfil" pendingLabel="Salvando…">
-            {(state) => (
               <div className="grid gap-4 sm:grid-cols-2">
                 <FormField
                   label="Nome completo"
                   htmlFor="perfil-nome"
                   required
-                  error={state.fields?.fullName}
                   className="sm:col-span-2"
                 >
                   <input
-                    {...fieldAria('perfil-nome', { error: Boolean(state.fields?.fullName) })}
+                    {...fieldAria('perfil-nome', {})}
                     type="text"
                     name="fullName"
                     defaultValue={profile.full_name}
@@ -109,7 +107,6 @@ export default async function PerfilPage() {
                   </span>
                 </label>
               </div>
-            )}
           </ActionForm>
         </Card>
 

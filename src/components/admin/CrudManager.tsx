@@ -3,7 +3,9 @@
 import { useState, type ReactNode } from 'react';
 import { Pencil, Plus } from 'lucide-react';
 import {
+  Badge,
   Button,
+  ButtonLink,
   Card,
   EmptyState,
   FormField,
@@ -11,7 +13,7 @@ import {
   inputClasses,
 } from '@/components/ui';
 import { Modal } from '@/components/ui/interactive';
-import { ActionForm } from '@/components/admin/forms';
+import { ActionButton, ActionForm } from '@/components/admin/forms';
 import { CurrencyField } from '@/components/admin/CurrencyField';
 import { cn } from '@/lib/utils/cn';
 import { slugify } from '@/lib/utils/format';
@@ -52,14 +54,29 @@ export interface CrudField {
   rows?: number;
 }
 
-export interface CrudManagerProps<T> {
-  items: T[];
+export type CrudBadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'sand';
+
+export interface CrudListItem {
+  id: string;
+  title: string;
+  subtitle?: string | null;
+  meta?: string | null;
+  badges?: { label: string; tone?: CrudBadgeTone }[];
+  href?: string;
+  hrefLabel?: string;
+  values: Record<string, string | number | boolean | null | undefined>;
+  extraAction?: {
+    label: string;
+    action: (state: ActionState, formData: FormData) => Promise<ActionState>;
+    fields: Record<string, string | number | boolean>;
+  };
+}
+
+export interface CrudManagerProps {
+  items: CrudListItem[];
   fields: CrudField[];
   /** Server Action com o id como primeiro parâmetro (vinculado no cliente). */
   action: (id: string | null, state: ActionState, formData: FormData) => Promise<ActionState>;
-  getId: (item: T) => string;
-  getValues: (item: T) => Record<string, string | number | boolean | null | undefined>;
-  renderItem: (item: T, onEdit: () => void) => ReactNode;
   createLabel: string;
   editLabel: string;
   emptyTitle: string;
@@ -68,24 +85,21 @@ export interface CrudManagerProps<T> {
   extraActions?: ReactNode;
 }
 
-export function CrudManager<T>({
+export function CrudManager({
   items,
   fields,
   action,
-  getId,
-  getValues,
-  renderItem,
   createLabel,
   editLabel,
   emptyTitle,
   emptyDescription,
   modalSize = 'lg',
   extraActions,
-}: CrudManagerProps<T>) {
+}: CrudManagerProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
 
-  const editingItem = items.find((item) => getId(item) === editingId) ?? null;
+  const editingItem = items.find((item) => item.id === editingId) ?? null;
 
   return (
     <div>
@@ -110,7 +124,42 @@ export function CrudManager<T>({
       ) : (
         <ul className="space-y-3">
           {items.map((item) => (
-            <li key={getId(item)}>{renderItem(item, () => setEditingId(getId(item)))}</li>
+            <li key={item.id}>
+              <CrudRow
+                title={item.title}
+                subtitle={item.subtitle}
+                meta={item.meta}
+                badges={
+                  item.badges?.length ? (
+                    <>
+                      {item.badges.map((badge) => (
+                        <Badge key={badge.label} tone={badge.tone}>
+                          {badge.label}
+                        </Badge>
+                      ))}
+                    </>
+                  ) : null
+                }
+                onEdit={() => setEditingId(item.id)}
+                actions={
+                  <>
+                    {item.href ? (
+                      <ButtonLink href={item.href} external variant="ghost" size="sm">
+                        {item.hrefLabel ?? 'Ver no site'}
+                      </ButtonLink>
+                    ) : null}
+                    {item.extraAction ? (
+                      <ActionButton
+                        action={item.extraAction.action}
+                        label={item.extraAction.label}
+                        variant="ghost"
+                        fields={item.extraAction.fields}
+                      />
+                    ) : null}
+                  </>
+                }
+              />
+            </li>
           ))}
         </ul>
       )}
@@ -134,8 +183,8 @@ export function CrudManager<T>({
         {editingItem ? (
           <CrudForm
             fields={fields}
-            values={getValues(editingItem)}
-            action={action.bind(null, getId(editingItem))}
+            values={editingItem.values}
+            action={action.bind(null, editingItem.id)}
             submitLabel="Salvar alterações"
             onDone={() => setEditingId(null)}
           />

@@ -1,10 +1,9 @@
-import { Alert, Badge } from '@/components/ui';
+import { Alert } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
-import { CrudManager, CrudRow, type CrudField } from '@/components/admin/CrudManager';
+import { CrudManager, type CrudField } from '@/components/admin/CrudManager';
 import { requirePermission } from '@/lib/auth/session';
 import { listTestimonials } from '@/lib/data/admin';
 import { saveTestimonial } from '@/app/admin/_actions/content';
-import type { Testimonial } from '@/lib/types';
 
 const FIELDS: CrudField[] = [
   {
@@ -61,38 +60,30 @@ export default async function DepoimentosPage() {
         tela. Atenção às normas do conselho profissional sobre divulgação de depoimentos.
       </Alert>
 
-      <CrudManager<Testimonial>
-        items={result.data}
+      <CrudManager
+        items={result.data.map((testimonial) => ({
+          id: testimonial.id,
+          title: testimonial.author_display_name,
+          subtitle: testimonial.content,
+          meta: testimonial.author_context,
+          badges: testimonial.is_published
+            ? [{ label: 'Publicado', tone: 'success' as const }]
+            : [{ label: 'Não publicado' }],
+          values: {
+            authorDisplayName: testimonial.author_display_name,
+            authorContext: testimonial.author_context,
+            content: testimonial.content,
+            sortOrder: testimonial.sort_order,
+            isPublished: testimonial.is_published,
+          },
+        }))}
         fields={FIELDS}
         action={saveTestimonial}
-        getId={(testimonial) => testimonial.id}
-        getValues={(testimonial) => ({
-          authorDisplayName: testimonial.author_display_name,
-          authorContext: testimonial.author_context,
-          content: testimonial.content,
-          sortOrder: testimonial.sort_order,
-          isPublished: testimonial.is_published,
-        })}
         modalSize="md"
         createLabel="Novo depoimento"
         editLabel="Editar depoimento"
         emptyTitle="Nenhum depoimento cadastrado"
         emptyDescription="Enquanto não houver depoimento real publicado, a seção não aparece no site."
-        renderItem={(testimonial, onEdit) => (
-          <CrudRow
-            title={testimonial.author_display_name}
-            subtitle={testimonial.content}
-            meta={testimonial.author_context}
-            badges={
-              testimonial.is_published ? (
-                <Badge tone="success">Publicado</Badge>
-              ) : (
-                <Badge>Não publicado</Badge>
-              )
-            }
-            onEdit={onEdit}
-          />
-        )}
       />
     </>
   );

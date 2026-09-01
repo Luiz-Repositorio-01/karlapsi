@@ -1,12 +1,11 @@
-import { Alert, Badge } from '@/components/ui';
+import { Alert } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
-import { CrudManager, CrudRow, type CrudField } from '@/components/admin/CrudManager';
+import { CrudManager, type CrudField } from '@/components/admin/CrudManager';
 import { requirePermission } from '@/lib/auth/session';
 import { listAllProducts } from '@/lib/data/admin';
 import { saveProduct } from '@/app/admin/_actions/catalog';
 import { isMercadoPagoConfigured } from '@/lib/env';
 import { formatCurrency } from '@/lib/utils/format';
-import type { Product } from '@/lib/types';
 
 const FIELDS: CrudField[] = [
   { name: 'name', label: 'Nome', type: 'text', required: true },
@@ -66,45 +65,39 @@ export default async function ProdutosPage() {
         </Alert>
       ) : null}
 
-      <CrudManager<Product>
-        items={result.data}
+      <CrudManager
+        items={result.data.map((product) => ({
+          id: product.id,
+          title: product.name,
+          subtitle: product.summary,
+          meta: `${product.is_free ? 'Gratuito' : formatCurrency(product.price_cents)} · /materiais/${product.slug}`,
+          badges: [
+            ...(!product.is_active ? [{ label: 'Inativo', tone: 'danger' as const }] : []),
+            ...(product.is_featured ? [{ label: 'Destaque', tone: 'sand' as const }] : []),
+            { label: product.type },
+          ],
+          values: {
+            name: product.name,
+            slug: product.slug,
+            type: product.type,
+            priceCents: product.price_cents,
+            summary: product.summary,
+            description: product.description,
+            benefits: product.benefits.join('\n'),
+            audience: product.audience,
+            coverUrl: product.cover_url,
+            externalUrl: product.external_url,
+            isFree: product.is_free,
+            isActive: product.is_active,
+            isFeatured: product.is_featured,
+          },
+        }))}
         fields={FIELDS}
         action={saveProduct}
-        getId={(product) => product.id}
-        getValues={(product) => ({
-          name: product.name,
-          slug: product.slug,
-          type: product.type,
-          priceCents: product.price_cents,
-          summary: product.summary,
-          description: product.description,
-          benefits: product.benefits.join('\n'),
-          audience: product.audience,
-          coverUrl: product.cover_url,
-          externalUrl: product.external_url,
-          isFree: product.is_free,
-          isActive: product.is_active,
-          isFeatured: product.is_featured,
-        })}
         createLabel="Novo produto"
         editLabel="Editar produto"
         emptyTitle="Nenhum produto cadastrado"
         emptyDescription="Cadastre um material digital para exibi-lo na loja com página de vendas e checkout."
-        renderItem={(product, onEdit) => (
-          <CrudRow
-            title={product.name}
-            subtitle={product.summary}
-            meta={`${product.is_free ? 'Gratuito' : formatCurrency(product.price_cents)} · /materiais/${product.slug}`}
-            badges={
-              <>
-                {!product.is_active ? <Badge tone="danger">Inativo</Badge> : null}
-                {product.is_featured ? <Badge tone="sand">Destaque</Badge> : null}
-                <Badge>{product.type}</Badge>
-              </>
-            }
-            onEdit={onEdit}
-          />
-        )}
       />
     </>
   );
