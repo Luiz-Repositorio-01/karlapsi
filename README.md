@@ -197,9 +197,12 @@ Projeto atual: `oerlxsstjuyptnryhpyi`. Após o `db push`, o banco pode estar
 Passo a passo:
 
 1. Supabase → **Authentication → URL Configuration**
-   - Site URL: `https://karlaneuropsi.com.br` (ou `http://localhost:3000` em dev)
-   - Redirect URLs: `http://localhost:3000/auth/callback` e
-     `https://karlaneuropsi.com.br/auth/callback`
+   - Site URL: `https://karlaneuropsi.com.br`
+   - Redirect URLs (exatas):
+     - `http://localhost:3000/auth/callback`
+     - `https://karlaneuropsi.com.br/auth/callback`
+     - `https://www.karlaneuropsi.com.br/auth/callback`
+   - Evite curingas (`/**`) em produção.
 2. Supabase → **Authentication → Users → Invite user** com o e-mail da
    profissional (preferível a *Add user* com senha definida por outra pessoa).
 3. Aceite o convite, defina a senha e entre em `/login`.

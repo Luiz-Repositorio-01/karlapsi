@@ -11,9 +11,9 @@ Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`
 | Database | OK (remoto) |
 | Migrations `001`–`012` | OK (`db push`) |
 | RLS | OK (local + remoto: anon bloqueado em pacientes/pagamentos/documentos) |
-| Auth | OK (login/refresh; `/admin` → `/login`) |
-| OWNER | PENDENTE DE DADO REAL (banco sem usuário; próximo Invite vira OWNER) |
-| RBAC | OK (OWNER/ADMIN/ASSISTANT/PROFESSIONAL testados no remoto; DEMOs removidos) |
+| Auth | OK (redirects exatos + MFA/confirmations restaurados) |
+| OWNER | OK (profile ativo; sessão/refresh/logout + RLS admin testados sem senha inventada) |
+| RBAC | OK (OWNER acesso completo no remoto; anon sem escrita admin) |
 | Storage | OK (buckets + MIME; privado com signed URL; anon bloqueado) |
 | Pacientes | OK (CRUD DEMO remoto + limpeza) |
 | Serviços | OK (CRUD DEMO remoto + limpeza; seed público ativo) |
