@@ -153,6 +153,16 @@ begin
   select count(*) into v_count from public.audit_logs;
   perform pg_temp.expect(v_count = 0, 'ASSISTANT NÃO lê a trilha de auditoria');
 
+  select count(*) into v_count
+  from public.site_settings
+  where key like 'private_%';
+  perform pg_temp.expect(v_count = 0, 'ASSISTANT NÃO lê site_settings private_*');
+
+  select count(*) into v_count
+  from public.site_settings
+  where key = 'identity';
+  perform pg_temp.expect(v_count = 1, 'ASSISTANT lê site_settings públicos (identity)');
+
   begin
     update public.services set name = 'Alterado por assistant' where slug = 'entrevista-inicial';
     perform pg_temp.expect(
@@ -193,6 +203,11 @@ begin
   perform pg_temp.act_as(v_owner);
   select count(*) into v_count from public.payments;
   perform pg_temp.expect(v_count = 1, 'OWNER lê pagamentos');
+
+  select count(*) into v_count
+  from public.site_settings
+  where key like 'private_%';
+  perform pg_temp.expect(v_count >= 1, 'OWNER lê site_settings private_*');
   perform pg_temp.reset_role();
 end $$;
 

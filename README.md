@@ -102,6 +102,7 @@ As migrations ficam em `supabase/migrations/`, numeradas e idempotentes
 | `010_audit.sql` | Trilha de auditoria (tabela, triggers e função) |
 | `011_booking_functions.sql` | RPCs de escrita pública, reagendamento e métricas |
 | `012_defaults.sql` | Configuração inicial editável (sem conteúdo profissional inventado) |
+| `013_private_settings_rls.sql` | Restringe chaves `private_%` de `site_settings` a OWNER/ADMIN |
 
 **Projeto Supabase de produção (Karla Neuropsi):**
 
@@ -178,7 +179,7 @@ sudo apt-get install -y postgresql   # se necessário
 ```
 
 O script cria um banco temporário, aplica stubs mínimos do Supabase
-(`auth`/`storage`), roda todas as migrations e executa **38 asserções** de
+(`auth`/`storage`), roda todas as migrations e executa as asserções de
 RLS, RBAC, prevenção de double booking, agendamento público, limites
 anti-abuso e LGPD.
 
@@ -541,3 +542,13 @@ npm run verify
 | Conteúdo institucional padrão | `src/lib/content/defaults.ts` (ou registro em `site_pages`) |
 | Paleta, tipografia, espaçamento | `tailwind.config.ts` e `src/app/globals.css` |
 | Regras de permissão | `src/lib/auth/rbac.ts` **e** as policies em `009_rls.sql` |
+
+## 17. Status de go-live
+
+A plataforma está implementada e conectada ao Supabase remoto. O status
+objetivo por área (OK / pendências de credencial, arquivo, dado real ou
+operacional) fica em
+[`docs/PRODUCTION_CHECKLIST.md`](docs/PRODUCTION_CHECKLIST.md).
+
+Não declare produção 100% enquanto houver item pendente nesse checklist.
+

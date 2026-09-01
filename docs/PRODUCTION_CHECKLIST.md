@@ -2,34 +2,67 @@
 
 Status objetivo. **Não declare 100%** enquanto houver item pendente.
 
-Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`
+Projeto Supabase (ref): `oerlxsstjuyptnryhpyi`  
+Migrations aplicadas no remoto: `001`–`013`  
+Última auditoria contínua: 2026-09-01
 
-| Área | Resultado |
+## Status por área
+
+| Área | Status |
 | --- | --- |
-| Supabase | OK (conectado) |
-| CLI | OK |
-| Database | OK (remoto) |
-| Migrations `001`–`012` | OK (`db push`) |
-| RLS | OK (local + remoto: anon bloqueado em pacientes/pagamentos/documentos) |
-| Auth | OK (redirects exatos + MFA/confirmations restaurados) |
-| OWNER | OK (profile ativo; sessão/refresh/logout + RLS admin testados sem senha inventada) |
-| RBAC | OK (OWNER acesso completo no remoto; anon sem escrita admin) |
-| Storage | OK (buckets + MIME; privado com signed URL; anon bloqueado) |
-| Pacientes | OK (CRUD DEMO remoto + limpeza) |
-| Serviços | OK (CRUD DEMO remoto + limpeza; seed público ativo) |
-| Agenda | OK (RPC pública + `SLOT_TAKEN` em conflito; DEMO removido) |
-| Blog | OK (publish DEMO + limpeza) |
-| Configurações | OK (persistência + restore no remoto) |
-| Testes | OK |
-| Build | OK |
-| Legacy | PENDENTE DE ARQUIVO |
+| Site | OK |
+| Neuropsicologia | OK |
+| Agendamento | OK |
+| Agenda | OK |
+| Pacientes | OK |
+| Serviços | OK |
+| Financeiro | OK |
+| Blog | OK |
+| Infobooks | PENDENTE DE ARQUIVO |
+| PDF Online | PENDENTE DE ARQUIVO |
+| Landing Pages | PENDENTE DE ARQUIVO |
+| Supabase | OK |
+| RLS | OK |
+| Auth | OK |
+| OWNER | OK |
+| RBAC | OK |
+| Storage | OK |
+| LGPD | OK |
 | Mercado Pago | PENDENTE DE CREDENCIAL |
 | Email | PENDENTE DE CREDENCIAL |
 | Cron | PENDENTE DE CREDENCIAL |
-| Conteúdo profissional (CRP/bio/foto) | PENDENTE DE DADO REAL |
+| SEO | OK |
+| Acessibilidade | OK |
+| Performance | OK |
+| Segurança | OK |
+| Testes | OK |
+| Build | OK |
+| Domínio | PENDENTE OPERACIONAL |
+| Conteúdo profissional (CRP/bio/foto/preços reais) | PENDENTE DE DADO REAL |
+| Legacy (ZIP/assets originais) | PENDENTE DE ARQUIVO |
+
+## Evidências desta execução
+
+- Rotas públicas (`/`, `/sobre`, `/neuropsicologia`, `/servicos`, `/atendimentos`, `/blog`, `/infobooks`, `/landing-pages`, `/pdf-online`, `/agendamento`, `/contato`, legal, `/login`): HTTP 200.
+- `/admin/*` sem sessão → redirect `/login`.
+- 404 humano sem stack; CSP/HSTS/nosniff presentes.
+- CRUD remoto (paciente, serviço, blog, produto) + limpeza DEMO (0 resíduos).
+- Booking público + conflito `SLOT_TAKEN` (double booking impedido no banco).
+- Storage: upload público + documento privado com signed URL; anon bloqueado no bucket privado.
+- RBAC: ASSISTANT não altera settings/`private_*`, não lê pagamentos nem audit; OWNER lê/escreve.
+- Checkout Mercado Pago sem token → `503 MERCADOPAGO_NOT_CONFIGURED`.
+- Cron sem/`CRON_SECRET` inválido → `503`.
+- `npm audit`: 0 vulnerabilidades.
+- Migrations `001`–`013` no remoto (`013` restringe `private_%` a OWNER/ADMIN).
+
+## Pendências que exigem ação humana
+
+1. **Arquivos legacy** em `public/legacy/` (PDF Online, Infobooks, Landing Pages).
+2. **Credenciais:** `MERCADOPAGO_*`, `EMAIL_*`, `CRON_SECRET`.
+3. **Dados reais** em `/admin/configuracoes` (CRP, bio, foto, preços — sem inventar).
+4. **DNS/HTTPS** para `karlaneuropsi.com.br` / `www` (sem alterar DNS sem autorização).
 
 ## Próximo passo humano (OWNER)
 
-OWNER ativo com login confirmado (`last_sign_in` presente).
-Continue o go-live com dados reais em `/admin/configuracoes` e, quando houver,
-credenciais de Mercado Pago / e-mail / cron e arquivos em `public/legacy/`.
+OWNER ativo (`karladiaspsicologa@gmail.com`, login confirmado).  
+Go-live: preencher dados reais → enviar legacy → configurar MP/e-mail/cron → apontar DNS → smoke no domínio final.
