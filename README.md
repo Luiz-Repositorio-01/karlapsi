@@ -191,15 +191,20 @@ A autenticação é do **Supabase Auth** (e-mail + senha), com cookies `httpOnly
 automaticamente (trigger `app.handle_new_user`); os seguintes entram como
 `ASSISTANT` (menor privilégio) e são promovidos em `/admin/usuarios`.
 
+Projeto atual: `oerlxsstjuyptnryhpyi`. Após o `db push`, o banco pode estar
+**sem nenhum usuário** — o próximo cadastro/convite vira OWNER.
+
 Passo a passo:
 
-1. Supabase → **Authentication → Users → Add user** (ou *Invite*).
-2. Informe o e-mail da profissional. Prefira **Invite**: a senha é definida por
-   ela mesma, e ninguém mais a conhece.
-3. Acesse `/login` e entre. Confirme em `/admin/usuarios` que o papel é
-   *Proprietária*.
-4. Preencha `/admin/configuracoes` (identidade, contato, SEO) e
-   `/admin/disponibilidade` (grade de horários).
+1. Supabase → **Authentication → URL Configuration**
+   - Site URL: `https://karlaneuropsi.com.br` (ou `http://localhost:3000` em dev)
+   - Redirect URLs: `http://localhost:3000/auth/callback` e
+     `https://karlaneuropsi.com.br/auth/callback`
+2. Supabase → **Authentication → Users → Invite user** com o e-mail da
+   profissional (preferível a *Add user* com senha definida por outra pessoa).
+3. Aceite o convite, defina a senha e entre em `/login`.
+4. Confirme em `/admin/usuarios` que o papel é *Proprietária*.
+5. Preencha `/admin/configuracoes` e `/admin/disponibilidade`.
 
 Recuperação de senha: `/login` → “Esqueci minha senha”. O link do e-mail chega
 em `/auth/callback`, que troca o código por sessão e leva a `/nova-senha`

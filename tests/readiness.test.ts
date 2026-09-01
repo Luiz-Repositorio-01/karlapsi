@@ -66,11 +66,26 @@ describe('settings readiness', () => {
   });
 
   it('getProductionReadiness conta bloqueios de integração', () => {
-    const result = getProductionReadiness(DEFAULT_SETTINGS);
-    expect(result.blockedCount).toBeGreaterThan(0);
-    expect(result.items.some((item) => item.id === 'supabase' && item.status === 'blocked')).toBe(
-      true,
-    );
+    const keys = [
+      'NEXT_PUBLIC_SUPABASE_URL',
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+      'SUPABASE_SERVICE_ROLE_KEY',
+    ];
+    const backup = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+    for (const key of keys) delete process.env[key];
+
+    try {
+      const result = getProductionReadiness(DEFAULT_SETTINGS);
+      expect(result.blockedCount).toBeGreaterThan(0);
+      expect(result.items.some((item) => item.id === 'supabase' && item.status === 'blocked')).toBe(
+        true,
+      );
+    } finally {
+      for (const [key, value] of Object.entries(backup)) {
+        if (value === undefined) delete process.env[key];
+        else process.env[key] = value;
+      }
+    }
   });
 });
 

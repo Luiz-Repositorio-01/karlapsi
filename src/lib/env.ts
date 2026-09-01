@@ -49,24 +49,24 @@ export const env = {
 
 /** Supabase disponível para leitura pública (anon key). */
 export function isSupabaseConfigured(): boolean {
-  return Boolean(env.supabase.url && env.supabase.anonKey);
+  return Boolean(read('NEXT_PUBLIC_SUPABASE_URL') && read('NEXT_PUBLIC_SUPABASE_ANON_KEY'));
 }
 
 /** Operações privilegiadas de servidor (webhooks, conciliação). */
 export function isSupabaseAdminConfigured(): boolean {
-  return Boolean(env.supabase.url && env.supabase.serviceRoleKey);
+  return Boolean(read('NEXT_PUBLIC_SUPABASE_URL') && read('SUPABASE_SERVICE_ROLE_KEY'));
 }
 
 export function isMercadoPagoConfigured(): boolean {
-  return Boolean(env.mercadoPago.accessToken);
+  return Boolean(read('MERCADOPAGO_ACCESS_TOKEN'));
 }
 
 export function isEmailConfigured(): boolean {
-  return Boolean(env.email.apiKey && env.email.from);
+  return Boolean(read('EMAIL_API_KEY') && read('EMAIL_FROM'));
 }
 
 export function isWhatsAppApiConfigured(): boolean {
-  return Boolean(env.whatsapp.apiToken && env.whatsapp.phoneNumberId);
+  return Boolean(read('WHATSAPP_API_TOKEN') && read('WHATSAPP_PHONE_NUMBER_ID'));
 }
 
 /** Diagnóstico exibido em /admin/configuracoes (nunca mostra valores). */
