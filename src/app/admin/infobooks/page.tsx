@@ -1,12 +1,11 @@
-import { Alert, Badge, ButtonLink } from '@/components/ui';
+import { Alert } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
-import { CrudManager, CrudRow, type CrudField } from '@/components/admin/CrudManager';
+import { CrudManager, type CrudField } from '@/components/admin/CrudManager';
 import { requirePermission } from '@/lib/auth/session';
 import { listAllInfobooks } from '@/lib/data/admin';
 import { saveInfobook } from '@/app/admin/_actions/catalog';
 import { listLegacyLandingSlugs } from '@/lib/legacy';
 import { formatCurrency } from '@/lib/utils/format';
-import type { Infobook } from '@/lib/types';
 
 const FIELDS: CrudField[] = [
   { name: 'title', label: 'Título', type: 'text', required: true },
@@ -85,58 +84,47 @@ export default async function InfobooksAdminPage() {
         </Alert>
       ) : null}
 
-      <CrudManager<Infobook>
-        items={result.data}
+      <CrudManager
+        items={result.data.map((infobook) => ({
+          id: infobook.id,
+          title: infobook.title,
+          subtitle: infobook.description,
+          meta: `${infobook.is_free ? 'Gratuito' : formatCurrency(infobook.price_cents)} · /infobooks/${infobook.slug}${
+            infobook.legacy_path ? ` · original: ${infobook.legacy_path}` : ''
+          }`,
+          badges: [
+            ...(infobook.status !== 'published'
+              ? [{ label: infobook.status, tone: 'warning' as const }]
+              : []),
+            ...(infobook.legacy_path
+              ? [{ label: 'Original preservado', tone: 'success' as const }]
+              : []),
+          ],
+          href: `/infobooks/${infobook.slug}`,
+          values: {
+            title: infobook.title,
+            slug: infobook.slug,
+            category: infobook.category,
+            pages: infobook.pages,
+            description: infobook.description,
+            coverUrl: infobook.cover_url,
+            publicFileUrl: infobook.public_file_url,
+            previewUrl: infobook.preview_url,
+            legacyPath: infobook.legacy_path,
+            priceCents: infobook.price_cents,
+            status: infobook.status,
+            sortOrder: infobook.sort_order,
+            seoTitle: infobook.seo_title,
+            seoDescription: infobook.seo_description,
+            isFree: infobook.is_free,
+          },
+        }))}
         fields={FIELDS}
         action={saveInfobook}
-        getId={(infobook) => infobook.id}
-        getValues={(infobook) => ({
-          title: infobook.title,
-          slug: infobook.slug,
-          category: infobook.category,
-          pages: infobook.pages,
-          description: infobook.description,
-          coverUrl: infobook.cover_url,
-          publicFileUrl: infobook.public_file_url,
-          previewUrl: infobook.preview_url,
-          legacyPath: infobook.legacy_path,
-          priceCents: infobook.price_cents,
-          status: infobook.status,
-          sortOrder: infobook.sort_order,
-          seoTitle: infobook.seo_title,
-          seoDescription: infobook.seo_description,
-          isFree: infobook.is_free,
-        })}
         createLabel="Novo infobook"
         editLabel="Editar infobook"
         emptyTitle="Nenhum infobook cadastrado"
         emptyDescription="Clique em Novo infobook para vender um material: preencha título, descrição, capa, preço e o link da Hotmart ou do seu próprio produto. Com status Publicado, ele entra na vitrine."
-        renderItem={(infobook, onEdit) => (
-          <CrudRow
-            title={infobook.title}
-            subtitle={infobook.description}
-            meta={`${infobook.is_free ? 'Gratuito' : formatCurrency(infobook.price_cents)} · /infobooks/${infobook.slug}${
-              infobook.legacy_path ? ` · original: ${infobook.legacy_path}` : ''
-            }`}
-            badges={
-              <>
-                {infobook.status !== 'published' ? <Badge tone="warning">{infobook.status}</Badge> : null}
-                {infobook.legacy_path ? <Badge tone="success">Original preservado</Badge> : null}
-              </>
-            }
-            onEdit={onEdit}
-            actions={
-              <ButtonLink
-                href={`/infobooks/${infobook.slug}`}
-                external
-                variant="ghost"
-                size="sm"
-              >
-                Ver no site
-              </ButtonLink>
-            }
-          />
-        )}
       />
     </>
   );

@@ -1,12 +1,11 @@
-import { Alert, Badge, ButtonLink } from '@/components/ui';
+import { Alert } from '@/components/ui';
 import { AdminPageHeader } from '@/components/admin/AdminShell';
-import { CrudManager, CrudRow, type CrudField } from '@/components/admin/CrudManager';
+import { CrudManager, type CrudField } from '@/components/admin/CrudManager';
 import { requirePermission } from '@/lib/auth/session';
 import { listAllLandingPages } from '@/lib/data/admin';
 import { saveLandingPage } from '@/app/admin/_actions/catalog';
 import { listLegacyLandingSlugs } from '@/lib/legacy';
 import { formatCurrency } from '@/lib/utils/format';
-import type { LandingPage } from '@/lib/types';
 
 const FIELDS: CrudField[] = [
   { name: 'name', label: 'Nome', type: 'text', required: true },
@@ -78,53 +77,47 @@ export default async function LandingPagesAdminPage() {
         </Alert>
       ) : null}
 
-      <CrudManager<LandingPage>
-        items={result.data}
+      <CrudManager
+        items={result.data.map((page) => ({
+          id: page.id,
+          title: page.name,
+          subtitle: page.headline ?? page.description,
+          meta: `${page.price_cents === null ? 'Acesso livre' : formatCurrency(page.price_cents)} · /landing-pages/${page.slug}${
+            page.legacy_path ? ` · original: ${page.legacy_path}` : ''
+          }`,
+          badges: [
+            ...(page.status !== 'published'
+              ? [{ label: page.status, tone: 'warning' as const }]
+              : []),
+            ...(page.legacy_path
+              ? [{ label: 'Original preservada', tone: 'success' as const }]
+              : []),
+          ],
+          href: `/landing-pages/${page.slug}`,
+          values: {
+            name: page.name,
+            slug: page.slug,
+            headline: page.headline,
+            description: page.description,
+            benefits: page.benefits.join('\n'),
+            audience: page.audience,
+            coverUrl: page.cover_url,
+            priceCents: page.price_cents,
+            ctaLabel: page.cta_label,
+            ctaUrl: page.cta_url,
+            legacyPath: page.legacy_path,
+            status: page.status,
+            sortOrder: page.sort_order,
+            seoTitle: page.seo_title,
+            seoDescription: page.seo_description,
+          },
+        }))}
         fields={FIELDS}
         action={saveLandingPage}
-        getId={(page) => page.id}
-        getValues={(page) => ({
-          name: page.name,
-          slug: page.slug,
-          headline: page.headline,
-          description: page.description,
-          benefits: page.benefits.join('\n'),
-          audience: page.audience,
-          coverUrl: page.cover_url,
-          priceCents: page.price_cents,
-          ctaLabel: page.cta_label,
-          ctaUrl: page.cta_url,
-          legacyPath: page.legacy_path,
-          status: page.status,
-          sortOrder: page.sort_order,
-          seoTitle: page.seo_title,
-          seoDescription: page.seo_description,
-        })}
         createLabel="Nova landing page"
         editLabel="Editar landing page"
         emptyTitle="Nenhuma landing page cadastrada"
         emptyDescription="Cadastre uma página apontando para o arquivo original para exibi-la na vitrine comercial."
-        renderItem={(page, onEdit) => (
-          <CrudRow
-            title={page.name}
-            subtitle={page.headline ?? page.description}
-            meta={`${page.price_cents === null ? 'Acesso livre' : formatCurrency(page.price_cents)} · /landing-pages/${page.slug}${
-              page.legacy_path ? ` · original: ${page.legacy_path}` : ''
-            }`}
-            badges={
-              <>
-                {page.status !== 'published' ? <Badge tone="warning">{page.status}</Badge> : null}
-                {page.legacy_path ? <Badge tone="success">Original preservada</Badge> : null}
-              </>
-            }
-            onEdit={onEdit}
-            actions={
-              <ButtonLink href={`/landing-pages/${page.slug}`} external variant="ghost" size="sm">
-                Ver no site
-              </ButtonLink>
-            }
-          />
-        )}
       />
     </>
   );

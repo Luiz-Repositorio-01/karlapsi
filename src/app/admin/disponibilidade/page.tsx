@@ -116,8 +116,7 @@ export default async function DisponibilidadePage() {
               pendingLabel="Salvando…"
               className="mt-4"
             >
-              {(state) => (
-                <div className="grid gap-4">
+              <div className="grid gap-4">
                   <FormField label="Dia da semana" htmlFor="regra-dia" required>
                     <select
                       {...fieldAria('regra-dia', {})}
@@ -148,10 +147,9 @@ export default async function DisponibilidadePage() {
                       label="Fim"
                       htmlFor="regra-fim"
                       required
-                      error={state.fields?.endTime}
                     >
                       <input
-                        {...fieldAria('regra-fim', { error: Boolean(state.fields?.endTime) })}
+                        {...fieldAria('regra-fim', {})}
                         type="time"
                         name="endTime"
                         defaultValue="18:00"
@@ -193,12 +191,9 @@ export default async function DisponibilidadePage() {
                     <FormField
                       label="Pausa — fim"
                       htmlFor="regra-pausa-fim"
-                      error={state.fields?.breakEndTime}
                     >
                       <input
-                        {...fieldAria('regra-pausa-fim', {
-                          error: Boolean(state.fields?.breakEndTime),
-                        })}
+                        {...fieldAria('regra-pausa-fim', {})}
                         type="time"
                         name="breakEndTime"
                         defaultValue="13:00"
@@ -217,7 +212,6 @@ export default async function DisponibilidadePage() {
                     Faixa ativa
                   </label>
                 </div>
-              )}
             </ActionForm>
           </Card>
 
@@ -233,8 +227,7 @@ export default async function DisponibilidadePage() {
               pendingLabel="Salvando…"
               className="mt-4"
             >
-              {(state) => (
-                <div className="grid gap-4">
+              <div className="grid gap-4">
                   <FormField label="Data" htmlFor="excecao-data" required>
                     <input
                       {...fieldAria('excecao-data', {})}
@@ -263,12 +256,9 @@ export default async function DisponibilidadePage() {
                     <FormField
                       label="Início"
                       htmlFor="excecao-inicio"
-                      error={state.fields?.startTime}
                     >
                       <input
-                        {...fieldAria('excecao-inicio', {
-                          error: Boolean(state.fields?.startTime),
-                        })}
+                        {...fieldAria('excecao-inicio', {})}
                         type="time"
                         name="startTime"
                         className={inputClasses}
@@ -294,7 +284,6 @@ export default async function DisponibilidadePage() {
                     />
                   </FormField>
                 </div>
-              )}
             </ActionForm>
 
             <div className="mt-6 border-t border-petrol-100 pt-5">

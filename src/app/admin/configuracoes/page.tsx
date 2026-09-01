@@ -71,7 +71,6 @@ export default async function ConfiguracoesPage() {
           pendingLabel="Salvando…"
           className="space-y-6"
         >
-          {(state) => (
             <>
               <Card>
                 <h2 className="font-display text-lg text-ink">Identidade</h2>
@@ -145,13 +144,10 @@ export default async function ConfiguracoesPage() {
                     label="Título da Home"
                     htmlFor={field('identity.headline')}
                     required
-                    error={state.fields?.['identity.headline']}
                     className="sm:col-span-2"
                   >
                     <input
-                      {...fieldAria(field('identity.headline'), {
-                        error: Boolean(state.fields?.['identity.headline']),
-                      })}
+                      {...fieldAria(field('identity.headline'), {})}
                       type="text"
                       name="identity.headline"
                       defaultValue={settings.identity.headline}
@@ -512,12 +508,10 @@ export default async function ConfiguracoesPage() {
                     htmlFor={field('seo.default_title')}
                     required
                     hint="Até 60 caracteres"
-                    error={state.fields?.['seo.default_title']}
                   >
                     <input
                       {...fieldAria(field('seo.default_title'), {
                         hint: true,
-                        error: Boolean(state.fields?.['seo.default_title']),
                       })}
                       type="text"
                       name="seo.default_title"
@@ -626,7 +620,6 @@ export default async function ConfiguracoesPage() {
                 </div>
               </Card>
             </>
-          )}
         </ActionForm>
 
         <aside className="space-y-4">
