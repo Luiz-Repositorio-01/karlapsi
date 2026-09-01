@@ -92,12 +92,14 @@ Checkout e cron respondem `503` com erro claro (sem token no client).
 
 ## Evidências técnicas desta passagem
 
-- `npm test` · lint · typecheck · build · `db:validate` · `npm audit`
+- `npm test` **91 passed** · lint (0 errors) · typecheck · build · `db:validate` · `npm audit` **0**
 - RLS `013`: ASSISTANT não lê `private_*`; OWNER lê
-- Double booking remoto: segundo request → `SLOT_TAKEN`
+- Double booking remoto: segundo request → `SLOT_TAKEN` (passagem anterior)
 - DEMO = 0
 - Rotas públicas 200; `/admin/*` → 307 `/login`
+- Build inclui `/novidades` e produtos Hotmart `hotmart-u105876781j` / `hotmart-s105848508c`
 - `.env.local` gitignored
+- Deploy Vercel: **token ausente** nesta execução (não inventar credencial)
 
 ## Ações humanas restantes (bloqueiam go-live completo)
 

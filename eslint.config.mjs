@@ -4,7 +4,14 @@ import coreWebVitals from 'eslint-config-next/core-web-vitals';
 const config = [
   {
     // Os arquivos originais preservados em /public/legacy nunca são lintados.
-    ignores: ['.next/**', 'node_modules/**', 'out/**', 'public/legacy/**', 'next-env.d.ts'],
+    ignores: [
+      '.next/**',
+      '.vercel/**',
+      'node_modules/**',
+      'out/**',
+      'public/legacy/**',
+      'next-env.d.ts',
+    ],
   },
   ...next,
   ...coreWebVitals,

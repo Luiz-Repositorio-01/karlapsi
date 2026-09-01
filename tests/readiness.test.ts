@@ -9,9 +9,20 @@ import { settingsSchema } from '@/lib/validation/schemas';
 import { logger } from '@/lib/observability/logger';
 
 describe('settings readiness', () => {
-  it('marca dados profissionais vazios como pendentes', () => {
+  it('marca dados profissionais vazios como pendentes (exceto Instagram real)', () => {
     const items = getContentReadiness(DEFAULT_SETTINGS);
-    expect(items.every((item) => item.status === 'pending')).toBe(true);
+    const byId = Object.fromEntries(items.map((item) => [item.id, item.status]));
+
+    // Instagram oficial @karlaneuropsi já está no defaults; demais dados reais pendentes.
+    expect(byId.instagram).toBe('ok');
+    expect(byId.crp).toBe('pending');
+    expect(byId.bio).toBe('pending');
+    expect(byId.formation).toBe('pending');
+    expect(byId.specializations).toBe('pending');
+    expect(byId.photo).toBe('pending');
+    expect(byId.email).toBe('pending');
+    expect(byId.address).toBe('pending');
+    expect(byId.og).toBe('pending');
   });
 
   it('marca CRP e bio como ok quando preenchidos', () => {
