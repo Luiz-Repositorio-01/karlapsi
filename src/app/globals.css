@@ -71,6 +71,10 @@
       focus:font-medium focus:text-white;
   }
 
+  .skip-link:nth-of-type(2):focus {
+    top: 4.25rem;
+  }
+
   .eyebrow {
     @apply text-eyebrow font-semibold uppercase text-petrol-600;
   }

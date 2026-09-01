@@ -50,6 +50,7 @@ export function Header({
 
   return (
     <header
+      id="navegacao"
       className={cn(
         'sticky top-0 z-40 transition-shadow duration-300',
         scrolled ? 'shadow-[0_1px_0_rgba(20,33,30,0.08)]' : '',
@@ -121,6 +122,7 @@ export function Header({
                     <button
                       type="button"
                       aria-expanded={openGroup === item.label}
+                      aria-haspopup="true"
                       onClick={() => setOpenGroup(openGroup === item.label ? null : item.label)}
                       className={cn(
                         'flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors',
@@ -181,7 +183,10 @@ export function Header({
               </a>
             ) : null}
 
-            <Link href="/agendamento" className={buttonClasses('primary', 'sm', 'hidden sm:inline-flex')}>
+            <Link
+              href="/agendamento"
+              className={buttonClasses('primary', 'sm', 'hidden shrink-0 sm:inline-flex')}
+            >
               Agendar atendimento
             </Link>
 
@@ -264,6 +269,7 @@ export function Header({
             >
               <MessageCircle aria-hidden="true" className="h-4 w-4" />
               Falar pelo WhatsApp
+              <span className="sr-only"> (abre em nova aba)</span>
             </a>
           ) : null}
           <Link href="/login" className={buttonClasses('ghost', 'sm', 'w-full')}>

@@ -162,7 +162,7 @@ export const DEFAULT_INFOBOOKS: Infobook[] = [
     cover_url: '/images/infobooks/autismo.jpg',
     product_id: null,
     is_free: false,
-    price_cents: null,
+    price_cents: 3790,
     file_path: null,
     public_file_url: 'https://go.hotmart.com/U105876781J',
     preview_url: null,
@@ -178,8 +178,7 @@ export const DEFAULT_INFOBOOKS: Infobook[] = [
     id: 'default-infobook-cuidar',
     title: 'Cuidar, Ensinar e Acompanhar',
     slug: 'cuidar',
-    description:
-      'Um material moderno e baseado em ciência para famílias que desejam fortalecer vínculos, melhorar a comunicação emocional e construir uma parentalidade mais consciente.',
+    description: 'Um programa parental baseado na ciência e na prática clínica.',
     category: 'Programa parental',
     cover_url: '/images/infobooks/cuidar.jpg',
     product_id: null,

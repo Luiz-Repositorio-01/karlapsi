@@ -126,22 +126,23 @@ export function SectionHeader({
 // Botões e links de ação
 // -----------------------------------------------------------------------------
 const buttonBase =
-  'inline-flex touch-target items-center justify-center gap-2 rounded-full text-sm font-semibold ' +
-  'transition-all duration-200 ease-soft disabled:pointer-events-none disabled:opacity-55';
+  'inline-flex h-auto min-h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full text-center text-sm font-semibold leading-none transition-all duration-200 ease-soft hover:-translate-y-px hover:shadow-lift active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55 motion-reduce:transition-none motion-reduce:hover:translate-y-0';
 
 const buttonVariants = {
-  primary: 'bg-petrol-700 text-white shadow-card hover:bg-petrol-800 hover:shadow-lift active:scale-[0.98]',
+  primary: 'bg-petrol-700 text-white shadow-card hover:bg-petrol-800',
   secondary: 'bg-white text-petrol-800 ring-1 ring-inset ring-petrol-200 hover:bg-petrol-50 hover:ring-petrol-300',
   outline: 'bg-transparent text-petrol-800 ring-1 ring-inset ring-petrol-300 hover:bg-petrol-50',
-  ghost: 'bg-transparent text-petrol-800 hover:bg-petrol-50',
-  onDark: 'bg-white text-petrol-900 shadow-lift hover:bg-sand-100 active:scale-[0.98]',
+  ghost: 'bg-transparent text-petrol-800 hover:bg-petrol-50 hover:shadow-none',
+  onDark: 'bg-white text-petrol-900 shadow-lift hover:bg-sand-100',
+  outlineOnDark:
+    'bg-transparent text-white ring-1 ring-inset ring-white/45 hover:bg-white/10 hover:ring-white/80 hover:shadow-none',
   danger: 'bg-red-600 text-white hover:bg-red-700',
 } as const;
 
 const buttonSizes = {
-  sm: 'px-4 py-2 text-[0.8125rem]',
-  md: 'px-5 py-2.5',
-  lg: 'px-7 py-3.5 text-base',
+  sm: 'h-11 px-5 text-[0.8125rem]',
+  md: 'h-12 px-6',
+  lg: 'h-12 px-7 text-[0.9375rem] sm:h-[3.25rem] sm:px-8',
 } as const;
 
 export type ButtonVariant = keyof typeof buttonVariants;
@@ -170,6 +171,7 @@ export function ButtonLink({
   className,
   href,
   external,
+  children,
   ...props
 }: Omit<ComponentProps<typeof Link>, 'href'> & {
   href: string;
@@ -177,19 +179,33 @@ export function ButtonLink({
   size?: ButtonSize;
   external?: boolean;
 }) {
+  const classes = buttonClasses(variant, size, className);
+  const label = (
+    <>
+      {children}
+      {external ? <span className="sr-only"> (abre em nova aba)</span> : null}
+    </>
+  );
+
   if (external) {
     return (
       <a
         href={href}
-        className={buttonClasses(variant, size, className)}
+        className={classes}
         target="_blank"
         rel="noopener noreferrer"
         {...(props as ComponentProps<'a'>)}
-      />
+      >
+        {label}
+      </a>
     );
   }
 
-  return <Link href={href} className={buttonClasses(variant, size, className)} {...props} />;
+  return (
+    <Link href={href} className={classes} {...props}>
+      {label}
+    </Link>
+  );
 }
 
 // -----------------------------------------------------------------------------

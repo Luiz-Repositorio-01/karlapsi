@@ -296,7 +296,7 @@ const infobookSchema = z.object({
   description: z.string().trim().max(2000).optional(),
   category: z.string().trim().max(80).optional(),
   coverUrl: z.string().trim().max(500).optional(),
-  isFree: z.boolean().default(true),
+  isFree: z.boolean().default(false),
   priceCents: z.coerce.number().int().min(0).optional(),
   publicFileUrl: z.string().trim().max(500).optional(),
   previewUrl: z.string().trim().max(500).optional(),
@@ -357,6 +357,8 @@ export async function saveInfobook(
 
     revalidatePath('/admin/infobooks');
     revalidatePath('/infobooks');
+    revalidatePath(`/infobooks/${input.slug}`);
+    revalidatePath('/');
     return successState(infobookId ? 'Infobook atualizado.' : 'Infobook criado.');
   });
 }

@@ -12,6 +12,7 @@ describe('DEFAULT_INFOBOOKS', () => {
     expect(autismo?.title).toBe('Desenvolvimento Infantil e Autismo');
     expect(autismo?.public_file_url).toBe('https://go.hotmart.com/U105876781J');
     expect(autismo?.is_free).toBe(false);
+    expect(autismo?.price_cents).toBe(3790);
     expect(autismo?.cover_url).toMatch(/autismo/);
 
     expect(cuidar?.title).toBe('Cuidar, Ensinar e Acompanhar');

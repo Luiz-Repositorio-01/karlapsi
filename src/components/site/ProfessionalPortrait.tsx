@@ -17,6 +17,7 @@ export function ProfessionalPortrait({
   logoUrl,
   registrationLabel,
   registrationValue,
+  priority = false,
   className,
 }: {
   name: string;
@@ -43,10 +44,12 @@ export function ProfessionalPortrait({
         // eslint-disable-next-line @next/next/no-img-element -- arquivo local em /public; precisa renderizar sem o otimizador
         <img
           src={photo}
-          alt={`Retrato de ${name}`}
-          width={1086}
-          height={1448}
-          className="absolute inset-0 z-[2] h-full w-full object-cover object-[center_12%]"
+          alt={`Retrato de ${name}, psicóloga e neuropsicóloga, sorrindo ao ar livre`}
+          width={640}
+          height={800}
+          decoding={priority ? 'sync' : 'async'}
+          fetchPriority={priority ? 'high' : 'auto'}
+          className="absolute inset-0 z-[2] h-full w-full object-cover object-[center_18%]"
         />
       ) : (
         <div className="relative z-[2] flex h-full flex-col justify-between p-8 text-petrol-50">

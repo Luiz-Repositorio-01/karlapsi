@@ -251,7 +251,18 @@ export async function getInfobooks(): Promise<Infobook[]> {
       .order('sort_order', { ascending: true });
     if (error) throw error;
     const items = (data ?? []) as Infobook[];
-    return items.length > 0 ? items : DEFAULT_INFOBOOKS;
+    if (items.length === 0) return DEFAULT_INFOBOOKS;
+    return items.map((item) => {
+      const fallback = DEFAULT_INFOBOOKS.find((entry) => entry.slug === item.slug);
+      if (!fallback) return item;
+      return {
+        ...item,
+        description: item.description || fallback.description,
+        cover_url: item.cover_url || fallback.cover_url,
+        public_file_url: item.public_file_url || fallback.public_file_url,
+        price_cents: item.is_free ? null : (item.price_cents ?? fallback.price_cents),
+      };
+    });
   }, DEFAULT_INFOBOOKS);
 }
 

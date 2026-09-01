@@ -21,11 +21,14 @@ const connectSrc = [
   .filter(Boolean)
   .join(' ');
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   // Next.js injeta scripts inline para hidratação/streaming do App Router.
+  // Em desenvolvimento o React precisa de eval para reconstruir stacks.
   // O editor interno (admin) carrega mammoth/pdf.js/jspdf do jsDelivr.
-  "script-src 'self' 'unsafe-inline' https://sdk.mercadopago.com https://www.mercadopago.com https://cdn.jsdelivr.net",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://sdk.mercadopago.com https://www.mercadopago.com https://cdn.jsdelivr.net`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
   "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
   "img-src 'self' data: blob: https:",

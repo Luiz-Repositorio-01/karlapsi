@@ -10,7 +10,7 @@ export function WhatsAppFloat({ number }: { number: string }) {
       href={whatsappLink(number, 'Olá! Vim pelo site e gostaria de informações.')}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Falar pelo WhatsApp"
+      aria-label="Conversar pelo WhatsApp (abre em nova aba)"
       className="fixed bottom-5 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-petrol-700 text-white shadow-lift transition-all duration-300 ease-soft hover:scale-105 hover:bg-petrol-800 focus-visible:scale-105 sm:bottom-7 sm:right-7"
     >
       <MessageCircle aria-hidden="true" className="h-6 w-6" />

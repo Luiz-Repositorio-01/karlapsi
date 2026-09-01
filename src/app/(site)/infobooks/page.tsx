@@ -1,6 +1,5 @@
 import { BookOpen } from 'lucide-react';
 import { Alert, ButtonLink, Container, EmptyState, Section } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero } from '@/components/site/sections';
 import { InfobookCard } from '@/components/site/cards';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -41,12 +40,12 @@ export default async function InfobooksPage() {
 
       <Section tone="default">
         <Container>
-          {infobooks.length > 0 ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {infobooks.map((infobook, index) => (
-                <Reveal as="li" key={infobook.id} delay={index * 50}>
-                  <InfobookCard infobook={infobook} />
-                </Reveal>
+            {infobooks.length > 0 ? (
+            <ul className="grid gap-6 lg:grid-cols-2">
+              {infobooks.map((infobook) => (
+                <li key={infobook.id}>
+                  <InfobookCard infobook={infobook} featured />
+                </li>
               ))}
             </ul>
           ) : (

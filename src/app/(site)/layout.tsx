@@ -13,6 +13,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo
       </a>
+      <a href="#navegacao" className="skip-link">
+        Pular para o menu
+      </a>
 
       <Header
         brandName={settings.identity.brand_name}
@@ -21,7 +24,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         logoUrl={settings.identity.logo_url || undefined}
       />
 
-      <main id="conteudo" className="min-h-[60vh] bg-surface">
+      <main id="conteudo" tabIndex={-1} className="min-h-[60vh] bg-surface outline-none">
         {children}
       </main>
 
