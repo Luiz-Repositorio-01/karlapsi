@@ -3,6 +3,7 @@ import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/interactive';
 import { A11yInitScript, AccessibilityWidget } from '@/components/site/AccessibilityWidget';
+import { MotionInitScript } from '@/components/motion/MotionProvider';
 import { getSiteSettings } from '@/lib/data/public';
 import { env } from '@/lib/env';
 
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${sans.variable} ${display.variable}`}>
       <head>
+        <MotionInitScript />
         <A11yInitScript />
       </head>
       <body className="min-h-dvh font-sans">

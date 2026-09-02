@@ -270,35 +270,35 @@
     }
   }
 
-  /* Revelação base — só após motion-active para evitar flash na hidratação */
-  html.motion-ready.motion-active .motion-reveal:not(.motion-visible) {
+  /* Revelação base — oculta assim que motion-ready está ativo */
+  html.motion-ready .motion-reveal:not(.motion-visible) {
     opacity: 0;
     will-change: transform, opacity;
   }
 
-  html.motion-ready.motion-active .motion-reveal--fade-up:not(.motion-visible) {
-    transform: translate3d(0, var(--motion-distance, 20px), 0);
+  html.motion-ready .motion-reveal--fade-up:not(.motion-visible) {
+    transform: translate3d(0, var(--motion-distance, 32px), 0);
   }
 
-  html.motion-ready.motion-active .motion-reveal--fade-down:not(.motion-visible) {
-    transform: translate3d(0, calc(var(--motion-distance, 20px) * -1), 0);
+  html.motion-ready .motion-reveal--fade-down:not(.motion-visible) {
+    transform: translate3d(0, calc(var(--motion-distance, 32px) * -1), 0);
   }
 
-  html.motion-ready.motion-active .motion-reveal--slide-left:not(.motion-visible) {
-    transform: translate3d(var(--motion-distance, 20px), 0, 0);
+  html.motion-ready .motion-reveal--slide-left:not(.motion-visible) {
+    transform: translate3d(var(--motion-distance, 32px), 0, 0);
   }
 
-  html.motion-ready.motion-active .motion-reveal--slide-right:not(.motion-visible) {
-    transform: translate3d(calc(var(--motion-distance, 20px) * -1), 0, 0);
+  html.motion-ready .motion-reveal--slide-right:not(.motion-visible) {
+    transform: translate3d(calc(var(--motion-distance, 32px) * -1), 0, 0);
   }
 
-  html.motion-ready.motion-active .motion-reveal--scale:not(.motion-visible) {
-    transform: scale(0.96) translate3d(0, 8px, 0);
+  html.motion-ready .motion-reveal--scale:not(.motion-visible) {
+    transform: scale(0.94) translate3d(0, 12px, 0);
   }
 
-  html.motion-ready.motion-active .motion-reveal--blur-up:not(.motion-visible) {
-    transform: translate3d(0, var(--motion-distance, 16px), 0);
-    filter: blur(6px);
+  html.motion-ready .motion-reveal--blur-up:not(.motion-visible) {
+    transform: translate3d(0, var(--motion-distance, 28px), 0);
+    filter: blur(8px);
   }
 
   html.motion-ready.motion-active .motion-reveal.motion-visible {
@@ -306,9 +306,9 @@
     transform: none;
     filter: none;
     transition:
-      opacity var(--motion-duration, 0.6s) cubic-bezier(0.22, 1, 0.36, 1),
-      transform var(--motion-duration, 0.6s) cubic-bezier(0.22, 1, 0.36, 1),
-      filter var(--motion-duration, 0.6s) cubic-bezier(0.22, 1, 0.36, 1);
+      opacity var(--motion-duration, 0.75s) cubic-bezier(0.22, 1, 0.36, 1),
+      transform var(--motion-duration, 0.75s) cubic-bezier(0.22, 1, 0.36, 1),
+      filter var(--motion-duration, 0.75s) cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--motion-delay, 0ms);
     will-change: auto;
   }
@@ -349,10 +349,10 @@
   html.motion-ready.motion-active .motion-text-part:not(.motion-visible) {
     display: inline-block;
     opacity: 0;
-    transform: translate3d(0, 0.75em, 0);
+    transform: translate3d(0, 1em, 0);
   }
 
-  html.motion-ready.motion-active .motion-text-part.motion-visible {
+  html.motion-ready .motion-text-part.motion-visible {
     opacity: 1;
     transform: translate3d(0, 0, 0);
     transition:
@@ -390,14 +390,15 @@
 
   html.motion-ready.motion-active .motion-hero-item {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
-    animation: motion-hero-item-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform: translate3d(0, 28px, 0);
+    animation: motion-hero-item-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: var(--motion-delay, 0ms);
   }
 
   html.motion-ready.motion-active .motion-hero-portrait {
-    transform: scale(1.04) translate3d(0, 20px, 0);
-    animation: motion-hero-portrait-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    opacity: 0;
+    transform: scale(1.05) translate3d(0, 24px, 0);
+    animation: motion-hero-portrait-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: var(--motion-delay, 300ms);
   }
 

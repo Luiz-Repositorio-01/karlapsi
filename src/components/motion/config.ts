@@ -2,15 +2,15 @@
 export const MOTION = {
   easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
   duration: {
-    fast: 0.35,
-    base: 0.6,
-    slow: 0.85,
-    hero: 1.1,
+    fast: 0.45,
+    base: 0.75,
+    slow: 1,
+    hero: 1.2,
   },
   distance: {
-    sm: 12,
-    md: 20,
-    lg: 28,
+    sm: 16,
+    md: 32,
+    lg: 48,
   },
   stagger: {
     sm: 60,

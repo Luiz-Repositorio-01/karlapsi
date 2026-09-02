@@ -1,34 +1,37 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { MOTION } from './config';
 
 const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
 const POINTER_FINE = '(pointer: fine)';
 const MOBILE_QUERY = '(max-width: 767px)';
 
+function subscribeReducedMotion(onChange: () => void) {
+  if (typeof window === 'undefined' || !window.matchMedia) return () => {};
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener('change', onChange);
+
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+  return () => {
+    query.removeEventListener('change', onChange);
+    observer.disconnect();
+  };
+}
+
+function getReducedMotionSnapshot(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    document.documentElement.classList.contains('a11y-reduce-motion') ||
+    document.documentElement.classList.contains('motion-reduced') ||
+    window.matchMedia(REDUCED_QUERY).matches
+  );
+}
+
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia(REDUCED_QUERY);
-    const check = () => {
-      const forced =
-        document.documentElement.classList.contains('a11y-reduce-motion') ||
-        document.documentElement.classList.contains('motion-reduced');
-      setReduced(forced || mq.matches);
-    };
-    check();
-    mq.addEventListener('change', check);
-    const observer = new MutationObserver(check);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => {
-      mq.removeEventListener('change', check);
-      observer.disconnect();
-    };
-  }, []);
-
-  return reduced;
+  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
 }
 
 export function useFinePointer(): boolean {
@@ -59,78 +62,80 @@ export function useIsMobile(): boolean {
   return mobile;
 }
 
-function scheduleReveal(callback: () => void) {
-  const run = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(callback);
-    });
+export function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+  return (node: T | null) => {
+    for (const ref of refs) {
+      if (!ref) continue;
+      if (typeof ref === 'function') ref(node);
+      else (ref as React.MutableRefObject<T | null>).current = node;
+    }
   };
+}
 
+function waitForMotionActive(callback: () => void) {
   if (document.documentElement.classList.contains('motion-active')) {
-    run();
+    requestAnimationFrame(() => requestAnimationFrame(callback));
     return;
   }
 
   const observer = new MutationObserver(() => {
     if (!document.documentElement.classList.contains('motion-active')) return;
     observer.disconnect();
-    run();
+    requestAnimationFrame(() => requestAnimationFrame(callback));
   });
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
   window.setTimeout(() => {
     observer.disconnect();
-    run();
-  }, 120);
-}
-const observerCallbacks = new WeakMap<Element, () => void>();
-let sharedObserver: IntersectionObserver | null = null;
-
-function getSharedObserver() {
-  if (sharedObserver) return sharedObserver;
-  sharedObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        const cb = observerCallbacks.get(entry.target);
-        cb?.();
-        sharedObserver?.unobserve(entry.target);
-        observerCallbacks.delete(entry.target);
-      }
-    },
-    { rootMargin: '0px 0px -2% 0px', threshold: 0.01 },
-  );
-  return sharedObserver;
+    callback();
+  }, 600);
 }
 
+/**
+ * Revela o elemento uma vez ao entrar na viewport.
+ * Sempre usa IntersectionObserver para animação ao rolar.
+ */
 export function useInViewOnce<T extends HTMLElement>(
   disabled = false,
 ): [React.RefObject<T | null>, boolean] {
   const ref = useRef<T | null>(null);
-  const [visible, setVisible] = useState(
-    () => disabled || typeof IntersectionObserver === 'undefined',
-  );
+  const [visible, setVisible] = useState(disabled);
 
   useEffect(() => {
-    if (disabled) return;
-    const el = ref.current;
-    if (!el) return;
-
-    if (typeof IntersectionObserver === 'undefined') return;
-
-    const rect = el.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
-    if (inView) {
-      scheduleReveal(() => setVisible(true));
+    if (disabled) {
+      setVisible(true);
       return;
     }
 
-    const show = () => scheduleReveal(() => setVisible(true));
-    observerCallbacks.set(el, show);
-    getSharedObserver().observe(el);
+    const el = ref.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.disconnect();
+          waitForMotionActive(() => {
+            if (!cancelled) setVisible(true);
+          });
+          break;
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+    );
+
+    observer.observe(el);
 
     return () => {
-      observerCallbacks.delete(el);
-      sharedObserver?.unobserve(el);
+      cancelled = true;
+      observer.disconnect();
     };
   }, [disabled]);
 

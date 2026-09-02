@@ -10,7 +10,7 @@ export { NumberReveal } from './NumberReveal';
 export { ScrollProgress } from './ScrollProgress';
 export { PageTransition } from './PageTransition';
 export { ScrollIndicator } from './ScrollIndicator';
-export { MotionProvider, applyA11yPrefs, readA11yPrefs, saveA11yPrefs, type A11yPrefs } from './MotionProvider';
+export { MotionProvider, MotionInitScript, applyA11yPrefs, readA11yPrefs, saveA11yPrefs, type A11yPrefs } from './MotionProvider';
 export {
   useFinePointer,
   useInViewOnce,
@@ -18,4 +18,5 @@ export {
   useMagnetic,
   useParallaxOffset,
   useReducedMotion,
+  mergeRefs,
 } from './hooks';

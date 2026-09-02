@@ -4,7 +4,45 @@ import type { ReactElement, ReactNode } from 'react';
 import { Children, cloneElement, isValidElement } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { MOTION } from './config';
-import { useInViewOnce, useReducedMotion } from './hooks';
+import { mergeRefs, useInViewOnce, useReducedMotion } from './hooks';
+
+type StaggerChild = ReactElement<{
+  className?: string;
+  style?: React.CSSProperties;
+  ref?: React.Ref<HTMLElement>;
+}>;
+
+function StaggerRevealItem({
+  child,
+  delay,
+  variant,
+  itemClassName,
+  disabled,
+}: {
+  child: StaggerChild;
+  delay: number;
+  variant: string;
+  itemClassName?: string;
+  disabled: boolean;
+}) {
+  const [ref, visible] = useInViewOnce<HTMLElement>(disabled);
+
+  return cloneElement(child, {
+    ref: mergeRefs(ref, child.props.ref),
+    className: cn(
+      'motion-reveal',
+      `motion-reveal--${variant}`,
+      'h-full',
+      visible && 'motion-visible',
+      itemClassName,
+      child.props.className,
+    ),
+    style: {
+      ...child.props.style,
+      '--motion-delay': `${delay}ms`,
+    } as React.CSSProperties,
+  });
+}
 
 export function Stagger({
   children,
@@ -22,34 +60,29 @@ export function Stagger({
   variant?: 'fade-up' | 'fade-in' | 'scale';
 }) {
   const reduced = useReducedMotion();
-  const [ref, visible] = useInViewOnce<HTMLDivElement>(reduced);
   const items = Children.toArray(children);
 
   return (
-    <div ref={ref} className={className}>
+    <div className={className}>
       {items.map((child, index) => {
         const itemDelay = delay + Math.min(index, cap) * stagger;
         if (!isValidElement(child)) return child;
 
-        const el = child as ReactElement<{ className?: string; style?: React.CSSProperties }>;
-        return cloneElement(el, {
-          className: cn(
-            'motion-reveal',
-            `motion-reveal--${variant}`,
-            visible && 'motion-visible',
-            el.props.className,
-          ),
-          style: {
-            ...el.props.style,
-            '--motion-delay': `${itemDelay}ms`,
-          } as React.CSSProperties,
-        });
+        return (
+          <StaggerRevealItem
+            key={child.key ?? index}
+            child={child as StaggerChild}
+            delay={itemDelay}
+            variant={variant}
+            disabled={reduced}
+          />
+        );
       })}
     </div>
   );
 }
 
-/** Envolve <li> dentro de <ul> com stagger automático. */
+/** Cada filho revela individualmente ao entrar na viewport, com stagger. */
 export function StaggerList({
   children,
   className,
@@ -66,31 +99,25 @@ export function StaggerList({
   as?: 'ul' | 'ol' | 'div';
 }) {
   const reduced = useReducedMotion();
-  const [ref, visible] = useInViewOnce<HTMLDivElement>(reduced);
   const items = Children.toArray(children);
 
   return (
-    <div ref={ref}>
-      <Tag className={className}>
+    <Tag className={className}>
       {items.map((child, index) => {
         const itemDelay = delay + Math.min(index, MOTION.staggerCap) * stagger;
         if (!isValidElement(child)) return child;
 
-        const el = child as ReactElement<{ className?: string; style?: React.CSSProperties }>;
-        return cloneElement(el, {
-          className: cn(
-            'motion-reveal motion-reveal--fade-up h-full',
-            visible && 'motion-visible',
-            itemClassName,
-            el.props.className,
-          ),
-          style: {
-            ...el.props.style,
-            '--motion-delay': `${itemDelay}ms`,
-          } as React.CSSProperties,
-        });
+        return (
+          <StaggerRevealItem
+            key={child.key ?? index}
+            child={child as StaggerChild}
+            delay={itemDelay}
+            variant="fade-up"
+            itemClassName={itemClassName}
+            disabled={reduced}
+          />
+        );
       })}
-      </Tag>
-    </div>
+    </Tag>
   );
 }
