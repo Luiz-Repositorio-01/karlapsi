@@ -1,6 +1,7 @@
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
 import { WhatsAppFloat } from '@/components/site/WhatsAppFloat';
+import { SiteMotion } from '@/components/site/SiteMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSiteSettings } from '@/lib/data/public';
 import { organizationSchema, websiteSchema } from '@/lib/seo/jsonld';
@@ -25,7 +26,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       />
 
       <main id="conteudo" tabIndex={-1} className="min-h-[60vh] bg-surface outline-none">
-        {children}
+        <SiteMotion>{children}</SiteMotion>
       </main>
 
       <Footer settings={settings} />

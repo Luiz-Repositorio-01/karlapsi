@@ -63,13 +63,17 @@ export function ServiceCard({
 
 export function BlogCard({
   post,
+  authorName,
   className,
   featured = false,
 }: {
   post: BlogPostWithRelations;
+  /** Nome exibido quando o perfil do autor não está público. */
+  authorName?: string;
   className?: string;
   featured?: boolean;
 }) {
+  const byline = post.author?.full_name || authorName;
   return (
     <Card
       as="article"
@@ -116,6 +120,10 @@ export function BlogCard({
               </>
             ) : null}
           </div>
+
+          {byline ? (
+            <p className="mt-2 text-xs font-medium text-ink-soft">Por {byline}</p>
+          ) : null}
 
           <h3
             className={cn(

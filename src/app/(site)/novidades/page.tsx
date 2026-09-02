@@ -1,7 +1,8 @@
 import { ArrowRight } from 'lucide-react';
 import { ButtonLink, Container, EmptyState, Section, SectionHeader } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero } from '@/components/site/sections';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { BlogCard, ProductCard } from '@/components/site/cards';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getProducts, getPublishedPosts, getSiteSettings } from '@/lib/data/public';
@@ -40,15 +41,17 @@ export default async function NovidadesPage() {
       {!hasContent ? (
         <Section tone="default">
           <Container>
-            <EmptyState
-              title="Nenhuma novidade publicada ainda"
-              description="Quando houver artigos ou produtos publicados, eles aparecem nesta página."
-              action={
-                <ButtonLink href="/blog" variant="secondary" size="sm">
-                  Ir ao blog
-                </ButtonLink>
-              }
-            />
+            <MotionBlock>
+              <EmptyState
+                title="Nenhuma novidade publicada ainda"
+                description="Quando houver artigos ou produtos publicados, eles aparecem nesta página."
+                action={
+                  <ButtonLink href="/blog" variant="secondary" size="sm">
+                    Ir ao blog
+                  </ButtonLink>
+                }
+              />
+            </MotionBlock>
           </Container>
         </Section>
       ) : null}
@@ -56,20 +59,22 @@ export default async function NovidadesPage() {
       {posts.length > 0 ? (
         <Section tone="default">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader eyebrow="Blog" title="Artigos recentes" />
-              <ButtonLink href="/blog" variant="ghost">
-                Ver todos
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-            <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post, index) => (
-                <Reveal as="li" key={post.id} delay={index * 50}>
+            <MotionBlock>
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeader eyebrow="Blog" title="Artigos recentes" />
+                <ButtonLink href="/blog" variant="ghost">
+                  Ver todos
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </MotionBlock>
+            <StaggerList className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={90}>
+              {posts.map((post) => (
+                <li key={post.id}>
                   <BlogCard post={post} />
-                </Reveal>
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}
@@ -77,20 +82,22 @@ export default async function NovidadesPage() {
       {recentProducts.length > 0 ? (
         <Section tone="muted">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader eyebrow="Materiais" title="Produtos em destaque" />
-              <ButtonLink href="/materiais" variant="ghost">
-                Ver catálogo
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {recentProducts.map((product, index) => (
-                <Reveal as="li" key={product.id} delay={index * 50}>
+            <MotionBlock>
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeader eyebrow="Materiais" title="Produtos em destaque" />
+                <ButtonLink href="/materiais" variant="ghost">
+                  Ver catálogo
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </MotionBlock>
+            <StaggerList className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={90}>
+              {recentProducts.map((product) => (
+                <li key={product.id}>
                   <ProductCard product={product} />
-                </Reveal>
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { ButtonLink, Card, Container, Section, SectionHeader } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero, SitePageSections } from '@/components/site/sections';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getServices, getSitePage, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -42,15 +43,17 @@ export default async function AtendimentosPage() {
 
       <Section tone="sunken">
         <Container>
-          <SectionHeader
-            eyebrow="Duração"
-            title="Tempo reservado por tipo de encontro"
-            description="Cada atendimento tem duração definida — o horário fica exclusivo na agenda."
-          />
+          <MotionBlock>
+            <SectionHeader
+              eyebrow="Duração"
+              title="Tempo reservado por tipo de encontro"
+              description="Cada atendimento tem duração definida — o horário fica exclusivo na agenda."
+            />
+          </MotionBlock>
 
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <Reveal as="li" key={service.id} delay={index * 50}>
+          <StaggerList className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={80}>
+            {services.map((service) => (
+              <li key={service.id}>
                 <Card className="flex h-full items-start justify-between gap-4">
                   <div>
                     <p className="font-display text-lg text-ink">{service.name}</p>
@@ -64,9 +67,9 @@ export default async function AtendimentosPage() {
                     {formatDuration(service.duration_minutes)}
                   </span>
                 </Card>
-              </Reveal>
+              </li>
             ))}
-          </ul>
+          </StaggerList>
         </Container>
       </Section>
 

@@ -149,6 +149,13 @@ export function initials(name: string): string {
   return (first + last).toUpperCase();
 }
 
+/** Recorta texto corrido para cards e assinaturas, sem cortar no meio de palavras. */
+export function truncateText(text: string, maxLength = 280): string {
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength).replace(/\s+\S*$/, '')}…`;
+}
+
 export function slugify(value: string): string {
   return value
     .normalize('NFD')

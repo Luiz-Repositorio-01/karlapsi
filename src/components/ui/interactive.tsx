@@ -13,9 +13,9 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { AlertCircle, CheckCircle2, ChevronDown, Info, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ChevronDown, Eye, EyeOff, Info, X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { Button, buttonClasses } from '@/components/ui';
+import { Button, buttonClasses, fieldAria, inputClasses } from '@/components/ui';
 
 /** Componentes que precisam de estado no navegador. */
 
@@ -515,5 +515,66 @@ export function SubmitButton({
         children
       )}
     </button>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Campo de senha com alternar visibilidade
+// -----------------------------------------------------------------------------
+
+export function PasswordInput({
+  id,
+  name,
+  autoComplete,
+  required,
+  minLength,
+  className,
+  error,
+  hint,
+  defaultValue,
+}: {
+  id: string;
+  name: string;
+  autoComplete?: string;
+  required?: boolean;
+  minLength?: number;
+  className?: string;
+  error?: boolean;
+  hint?: boolean;
+  defaultValue?: string;
+}) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div className="relative">
+      <input
+        {...fieldAria(id, { hint, error })}
+        id={id}
+        type={visible ? 'text' : 'password'}
+        name={name}
+        autoComplete={autoComplete}
+        required={required}
+        minLength={minLength}
+        defaultValue={defaultValue}
+        className={cn(inputClasses, 'pr-11', className)}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        className={cn(
+          'absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1',
+          'text-ink-faint/60 transition-colors hover:text-ink-muted',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-petrol-500',
+        )}
+        aria-label={visible ? 'Ocultar senha' : 'Mostrar senha'}
+        aria-pressed={visible}
+      >
+        {visible ? (
+          <EyeOff aria-hidden="true" className="h-4 w-4" />
+        ) : (
+          <Eye aria-hidden="true" className="h-4 w-4" />
+        )}
+      </button>
+    </div>
   );
 }

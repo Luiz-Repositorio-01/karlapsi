@@ -7,7 +7,7 @@
  * camada de dados (`src/lib/data`).
  */
 
-export type UserRole = 'OWNER' | 'ADMIN' | 'ASSISTANT' | 'PROFESSIONAL';
+export type UserRole = 'OWNER' | 'ADMIN' | 'ASSISTANT' | 'PROFESSIONAL' | 'DEVELOPER';
 
 export type AppointmentStatus =
   | 'requested'

@@ -227,7 +227,7 @@ export function Card({
       className={cn(
         'rounded-2xl bg-surface p-6 ring-1 ring-petrol-100/80',
         interactive &&
-          'shadow-card transition-all duration-300 ease-soft hover:-translate-y-0.5 hover:shadow-lift hover:ring-petrol-200',
+          'card-premium-hover shadow-card hover:ring-petrol-200',
         className,
       )}
     >
@@ -375,7 +375,8 @@ export function Alert({
 // -----------------------------------------------------------------------------
 export const inputClasses =
   'w-full rounded-xl border-0 bg-surface px-4 py-3 text-sm text-ink ring-1 ring-inset ring-petrol-200 ' +
-  'placeholder:text-ink-faint transition focus:ring-2 focus:ring-petrol-500 disabled:bg-surface-sunken disabled:text-ink-faint';
+  'placeholder:text-ink-faint transition-[box-shadow,ring-color,transform] duration-200 ease-soft ' +
+  'hover:ring-petrol-300 focus:ring-2 focus:ring-petrol-500 focus:shadow-focus disabled:bg-surface-sunken disabled:text-ink-faint';
 
 export function FormField({
   label,

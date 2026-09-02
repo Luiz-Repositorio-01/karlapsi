@@ -2,6 +2,7 @@ import { CalendarCheck, Instagram, Mail, MapPin, MessageCircle, Phone } from 'lu
 import { ButtonLink, Card, Container, Section } from '@/components/ui';
 import { PageHero } from '@/components/site/sections';
 import { ContactForm } from '@/components/site/ContactForm';
+import { MotionBlock } from '@/components/site/MotionBlock';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -75,6 +76,7 @@ export default async function ContatoPage() {
       <Section tone="default">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
+            <MotionBlock variant="slide-right">
             <div>
               <h2 className="font-display text-xl text-ink">Envie uma mensagem</h2>
               <p className="mt-2 max-w-prose text-sm text-ink-muted">
@@ -85,7 +87,9 @@ export default async function ContatoPage() {
                 <ContactForm consentVersion={settings.booking.consent_version} />
               </div>
             </div>
+            </MotionBlock>
 
+            <MotionBlock variant="slide-left" delay={120}>
             <aside className="space-y-4">
               <Card>
                 <h2 className="font-display text-lg text-ink">Canais diretos</h2>
@@ -118,8 +122,8 @@ export default async function ContatoPage() {
                   </ul>
                 ) : (
                   <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-                    Os canais de contato são cadastrados no painel administrativo, em
-                    Configurações. Enquanto isso, use o formulário ao lado.
+                    Em breve você encontrará aqui telefone, e-mail e WhatsApp. Use o formulário ao
+                    lado para enviar sua mensagem.
                   </p>
                 )}
 
@@ -179,6 +183,7 @@ export default async function ContatoPage() {
                 médico ou ligue para o serviço de emergência local.
               </p>
             </aside>
+            </MotionBlock>
           </div>
         </Container>
       </Section>

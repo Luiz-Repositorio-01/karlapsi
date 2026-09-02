@@ -2,6 +2,12 @@ import { notFound } from 'next/navigation';
 import { AlertTriangle, CheckCircle2, Clock, XCircle } from 'lucide-react';
 import { Alert, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { PageHero } from '@/components/site/sections';
+import {
+  PaymentStatusActions,
+  PaymentStatusAlert,
+  PaymentStatusCard,
+  PaymentStatusMotion,
+} from '@/components/site/PaymentStatusMotion';
 import { createSupabaseAdminClient } from '@/lib/supabase/server';
 import { getSiteSettings } from '@/lib/data/public';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -116,6 +122,8 @@ export default async function PagamentoPage({
 
       <Section tone="default">
         <Container size="narrow">
+          <PaymentStatusMotion>
+            <PaymentStatusCard>
           <Card>
             <div className="flex items-start gap-4">
               <Icon
@@ -157,8 +165,10 @@ export default async function PagamentoPage({
               </div>
             </div>
           </Card>
+            </PaymentStatusCard>
 
           {status === 'sucesso' && !isConfirmed ? (
+            <PaymentStatusAlert>
             <Alert tone="info" title="Confirmação em processamento" className="mt-6">
               <p>
                 O acesso é liberado somente quando o pagamento é confirmado pelo Mercado Pago —
@@ -170,16 +180,20 @@ export default async function PagamentoPage({
                 novamente.
               </p>
             </Alert>
+            </PaymentStatusAlert>
           ) : null}
 
           {isConfirmed ? (
+            <PaymentStatusAlert>
             <Alert tone="success" title="Pagamento confirmado" className="mt-6">
               O pagamento foi confirmado e o acesso ao material será enviado ao e-mail informado na
               compra.
             </Alert>
+            </PaymentStatusAlert>
           ) : null}
 
           {status === 'erro' ? (
+            <PaymentStatusAlert>
             <Alert tone="warning" title="Nada foi cobrado" className="mt-6">
               <span className="flex items-start gap-2">
                 <AlertTriangle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
@@ -187,8 +201,10 @@ export default async function PagamentoPage({
                 para verificação.
               </span>
             </Alert>
+            </PaymentStatusAlert>
           ) : null}
 
+          <PaymentStatusActions>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/materiais">Voltar aos materiais</ButtonLink>
             {settings.contact.whatsapp ? (
@@ -208,6 +224,8 @@ export default async function PagamentoPage({
               </ButtonLink>
             )}
           </div>
+          </PaymentStatusActions>
+          </PaymentStatusMotion>
         </Container>
       </Section>
     </>

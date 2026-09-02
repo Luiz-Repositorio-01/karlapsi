@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { blogPostSchema } from '@/lib/validation/schemas';
 import { estimateReadingMinutes } from '@/lib/utils/format';
@@ -97,16 +98,24 @@ export async function saveBlogPost(
         .single();
 
       if (error) return databaseErrorState(error);
-      await audit(context, 'create', 'blog_posts', (data as { id: string }).id, {
+
+      const createdId = (data as { id: string }).id;
+      await audit(context, 'create', 'blog_posts', createdId, {
         status: input.status,
       });
+
+      revalidatePath('/admin/blog');
+      revalidatePath('/blog');
+      revalidatePath(`/blog/${input.slug}`);
+      revalidatePath('/');
+      redirect(`/admin/blog/${createdId}?created=1`);
     }
 
     revalidatePath('/admin/blog');
     revalidatePath('/blog');
     revalidatePath(`/blog/${input.slug}`);
     revalidatePath('/');
-    return successState(postId ? 'Artigo atualizado.' : 'Artigo criado.');
+    return successState('Artigo atualizado.');
   });
 }
 

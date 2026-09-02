@@ -1,8 +1,9 @@
 import { FileText } from 'lucide-react';
 import { ButtonLink, Container, EmptyState, Section } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero } from '@/components/site/sections';
 import { BlogCard } from '@/components/site/cards';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getBlogCategories, getPublishedPosts, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -31,11 +32,15 @@ export default async function BlogPage({
     getSiteSettings(),
   ]);
 
+  const authorName = settings.identity.professional_name;
+
   const filtered = categoria
     ? posts.filter((post) => post.category?.slug === categoria)
     : posts;
 
-  const [featured, ...rest] = filtered;
+  const useFeaturedLayout = filtered.length > 1;
+  const featuredPost = useFeaturedLayout ? filtered[0] : null;
+  const gridPosts = useFeaturedLayout ? filtered.slice(1) : filtered;
 
   return (
     <>
@@ -83,7 +88,7 @@ export default async function BlogPage({
                   ? 'Nenhum artigo nesta categoria ainda'
                   : 'Os primeiros artigos estão sendo preparados'
               }
-              description="Assim que um artigo é publicado no painel administrativo, ele aparece aqui automaticamente."
+              description="Novos textos serão publicados em breve. Enquanto isso, explore os conteúdos sobre neuropsicologia."
               action={
                 categoria ? (
                   <ButtonLink href="/blog" variant="secondary" size="sm">
@@ -98,20 +103,20 @@ export default async function BlogPage({
             />
           ) : (
             <div className="space-y-10">
-              {featured ? (
-                <Reveal>
-                  <BlogCard post={featured} featured />
-                </Reveal>
+              {featuredPost ? (
+                <MotionBlock variant="scale">
+                  <BlogCard post={featuredPost} authorName={authorName} featured />
+                </MotionBlock>
               ) : null}
 
-              {rest.length > 0 ? (
-                <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {rest.map((post, index) => (
-                    <Reveal as="li" key={post.id} delay={index * 50}>
-                      <BlogCard post={post} />
-                    </Reveal>
+              {gridPosts.length > 0 ? (
+                <StaggerList className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={90}>
+                  {gridPosts.map((post) => (
+                    <li key={post.id}>
+                      <BlogCard post={post} authorName={authorName} />
+                    </li>
                   ))}
-                </ul>
+                </StaggerList>
               ) : null}
             </div>
           )}

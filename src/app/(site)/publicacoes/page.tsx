@@ -1,8 +1,10 @@
 import { ArrowRight, BookOpen, FileText, ShoppingBag } from 'lucide-react';
 import { ButtonLink, Card, Container, Section, SectionHeader } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero } from '@/components/site/sections';
-import { BlogCard, InfobookCard, ProductCard } from '@/components/site/cards';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
+import { BlogCard, ProductCard } from '@/components/site/cards';
+import { InfobookCardMotion } from '@/components/site/InfobookCardMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
   getInfobooks,
@@ -67,9 +69,9 @@ export default async function PublicacoesPage() {
 
       <Section tone="default">
         <Container>
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {areas.map((area, index) => (
-              <Reveal as="li" key={area.href} delay={index * 50}>
+          <StaggerList className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={90}>
+            {areas.map((area) => (
+              <li key={area.href}>
                 <Card interactive className="flex h-full flex-col">
                   <area.icon aria-hidden="true" className="h-5 w-5 text-petrol-600" />
                   <p className="mt-4 font-display text-lg text-ink">{area.title}</p>
@@ -84,29 +86,31 @@ export default async function PublicacoesPage() {
                     <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
                   </ButtonLink>
                 </Card>
-              </Reveal>
+              </li>
             ))}
-          </ul>
+          </StaggerList>
         </Container>
       </Section>
 
       {posts.length > 0 ? (
         <Section tone="muted">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader eyebrow="Blog" title="Artigos recentes" />
-              <ButtonLink href="/blog" variant="ghost">
-                Ver todos
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-            <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post, index) => (
-                <Reveal as="li" key={post.id} delay={index * 50}>
+            <MotionBlock>
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeader eyebrow="Blog" title="Artigos recentes" />
+                <ButtonLink href="/blog" variant="ghost">
+                  Ver todos
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </MotionBlock>
+            <StaggerList className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={90}>
+              {posts.map((post) => (
+                <li key={post.id}>
                   <BlogCard post={post} />
-                </Reveal>
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}
@@ -114,20 +118,22 @@ export default async function PublicacoesPage() {
       {infobooks.length > 0 ? (
         <Section tone="default">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader eyebrow="Infobooks" title="Materiais para aprofundar" />
-              <ButtonLink href="/infobooks" variant="ghost">
-                Ver todos
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <MotionBlock>
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeader eyebrow="Infobooks" title="Materiais para aprofundar" />
+                <ButtonLink href="/infobooks" variant="ghost">
+                  Ver todos
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </MotionBlock>
+            <StaggerList className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={100}>
               {infobooks.slice(0, 4).map((infobook, index) => (
-                <Reveal as="li" key={infobook.id} delay={index * 50}>
-                  <InfobookCard infobook={infobook} />
-                </Reveal>
+                <li key={infobook.id}>
+                  <InfobookCardMotion infobook={infobook} featured={index === 0} />
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}
@@ -135,20 +141,22 @@ export default async function PublicacoesPage() {
       {products.length > 0 ? (
         <Section tone="muted">
           <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader eyebrow="Materiais" title="Produtos digitais" />
-              <ButtonLink href="/materiais" variant="ghost">
-                Ver catálogo
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {products.slice(0, 3).map((product, index) => (
-                <Reveal as="li" key={product.id} delay={index * 50}>
+            <MotionBlock>
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeader eyebrow="Materiais" title="Produtos digitais" />
+                <ButtonLink href="/materiais" variant="ghost">
+                  Ver catálogo
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </MotionBlock>
+            <StaggerList className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={90}>
+              {products.slice(0, 3).map((product) => (
+                <li key={product.id}>
                   <ProductCard product={product} />
-                </Reveal>
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}

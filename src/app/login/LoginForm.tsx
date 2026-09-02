@@ -1,24 +1,64 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, KeyRound, Lock, Mail } from 'lucide-react';
 import { Alert, Button, FormField, fieldAria, inputClasses } from '@/components/ui';
-import { SubmitButton } from '@/components/ui/interactive';
-import { requestPasswordReset, signIn } from '@/app/login/_actions';
+import { PasswordInput, SubmitButton } from '@/components/ui/interactive';
+import { requestPasswordReset } from '@/app/login/_actions';
 import { IDLE_STATE, type ActionState } from '@/lib/actions/state';
 
 /** Formulário de acesso à área profissional, com recuperação de senha. */
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
   const [mode, setMode] = useState<'signin' | 'reset'>('signin');
-  const [signInState, signInAction, signInPending] = useActionState<ActionState, FormData>(
-    signIn,
-    IDLE_STATE,
-  );
+  const [signInError, setSignInError] = useState<string | null>(null);
+  const [signInPending, startSignIn] = useTransition();
   const [resetState, resetAction, resetPending] = useActionState<ActionState, FormData>(
     requestPasswordReset,
     IDLE_STATE,
   );
+
+  const handleSignIn = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSignInError(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get('email') ?? '')
+      .trim()
+      .toLowerCase();
+    const password = String(formData.get('password') ?? '').trim();
+
+    if (!email.includes('@') || password.length < 8) {
+      setSignInError('Verifique os campos informados.');
+      return;
+    }
+
+    const remember = formData.get('remember') === 'on';
+
+    startSignIn(async () => {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ email, password, remember }),
+      });
+
+      if (response.status === 429) {
+        setSignInError(
+          'Muitas tentativas em sequência. Aguarde 1–2 minutos ou use o link abaixo para limpar a sessão.',
+        );
+        return;
+      }
+
+      if (!response.ok) {
+        setSignInError('E-mail ou senha incorretos.');
+        return;
+      }
+
+      window.location.assign(redirectTo);
+    });
+  };
 
   if (mode === 'reset') {
     return (
@@ -74,45 +114,56 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
     <div>
       <h1 className="font-display text-2xl text-ink">Área profissional</h1>
       <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-        Acesso restrito à equipe. Use suas credenciais individuais.
+        Acesso restrito à equipe. Use o e-mail completo cadastrado (ex.:{' '}
+        <span className="font-medium text-ink-soft">nome@dominio.com</span>).
       </p>
 
-      {signInState.status === 'error' ? (
+      {signInError ? (
         <Alert tone="danger" className="mt-6">
-          {signInState.message}
+          {signInError}
         </Alert>
       ) : null}
 
-      <form action={signInAction} className="mt-6 space-y-4">
-        <input type="hidden" name="redirectTo" value={redirectTo} />
-
-        <FormField label="E-mail" htmlFor="login-email" required error={signInState.fields?.email}>
+      <form onSubmit={handleSignIn} className="mt-6 space-y-4">
+        <FormField label="E-mail" htmlFor="login-email" required>
           <input
-            {...fieldAria('login-email', { error: Boolean(signInState.fields?.email) })}
+            {...fieldAria('login-email', {})}
             type="email"
             name="email"
-            autoComplete="email"
+            autoComplete="username email"
             inputMode="email"
+            spellCheck={false}
             className={inputClasses}
             required
           />
         </FormField>
 
-        <FormField
-          label="Senha"
-          htmlFor="login-password"
-          required
-          error={signInState.fields?.password}
-        >
-          <input
-            {...fieldAria('login-password', { error: Boolean(signInState.fields?.password) })}
-            type="password"
+        <FormField label="Senha" htmlFor="login-password" required>
+          <PasswordInput
+            id="login-password"
             name="password"
             autoComplete="current-password"
-            className={inputClasses}
             required
           />
         </FormField>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <label className="inline-flex cursor-pointer select-none items-center gap-2.5 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              name="remember"
+              value="on"
+              defaultChecked
+              className="h-4 w-4 rounded border-petrol-300 text-petrol-700 focus:ring-petrol-500"
+            />
+            Manter conectado
+          </label>
+
+          <Button type="button" variant="ghost" size="sm" onClick={() => setMode('reset')}>
+            <KeyRound aria-hidden="true" className="h-3.5 w-3.5" />
+            Esqueci minha senha
+          </Button>
+        </div>
 
         <SubmitButton pending={signInPending} pendingLabel="Entrando…" size="lg" className="w-full">
           <Lock aria-hidden="true" className="h-4 w-4" />
@@ -120,11 +171,17 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         </SubmitButton>
       </form>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-petrol-100 pt-5">
-        <Button type="button" variant="ghost" size="sm" onClick={() => setMode('reset')}>
-          <KeyRound aria-hidden="true" className="h-3.5 w-3.5" />
-          Esqueci minha senha
-        </Button>
+      <p className="mt-4 text-center text-xs text-ink-faint">
+        Problemas para entrar?{' '}
+        <a
+          href="/api/auth/clear-session"
+          className="font-medium text-petrol-700 underline-offset-2 hover:underline"
+        >
+          Limpar sessão e tentar de novo
+        </a>
+      </p>
+
+      <div className="mt-6 border-t border-petrol-100 pt-5 text-center">
         <Link
           href="/"
           className="text-sm font-medium text-ink-muted transition-colors hover:text-petrol-700"

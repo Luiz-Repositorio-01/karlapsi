@@ -27,6 +27,9 @@ export default async function LoginPage({
 
   return (
     <main className="flex min-h-dvh items-center surface-warm py-12">
+      <a href="#login-form" className="skip-link">
+        Pular para o formulário de login
+      </a>
       <Container size="narrow">
         <div className="mx-auto max-w-md">
           <Link href="/" className="flex flex-col items-center text-center">
@@ -41,6 +44,7 @@ export default async function LoginPage({
             </span>
           </Link>
 
+          <div id="login-form" tabIndex={-1} className="outline-none">
           <Card className="mt-8 shadow-card">
             {!isSupabaseConfigured() ? (
               <Alert tone="warning" title="Autenticação não configurada" className="mb-6">
@@ -52,6 +56,7 @@ export default async function LoginPage({
 
             <LoginForm redirectTo={safeRedirect} />
           </Card>
+          </div>
 
           <p className="mt-6 flex items-start justify-center gap-2 px-4 text-center text-xs leading-relaxed text-ink-faint">
             <ShieldCheck aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />

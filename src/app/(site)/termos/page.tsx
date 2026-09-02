@@ -1,5 +1,6 @@
 import { Container, Section } from '@/components/ui';
 import { PageHero } from '@/components/site/sections';
+import { LegalPageMotion } from '@/components/site/LegalPageMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -31,6 +32,8 @@ export default async function TermosPage() {
 
       <Section tone="default">
         <Container size="narrow">
+          <LegalPageMotion
+            content={
           <div className="article-body">
             <h2>1. Objeto</h2>
             <p>
@@ -158,6 +161,8 @@ export default async function TermosPage() {
               .
             </p>
           </div>
+            }
+          />
         </Container>
       </Section>
 

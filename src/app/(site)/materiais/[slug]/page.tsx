@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Check, Download, ExternalLink } from 'lucide-react';
 import { Badge, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { CTASection, FaqSection, PageHero } from '@/components/site/sections';
+import { DetailPageMotion } from '@/components/site/DetailPageMotion';
 import { CheckoutForm } from '@/components/store/CheckoutForm';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getFaqs, getProductBySlug, getProducts, getSiteSettings } from '@/lib/data/public';
@@ -58,10 +59,10 @@ export default async function MaterialPage({ params }: { params: Promise<{ slug:
 
       <Section tone="default">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
-            <div>
-              {product.cover_url ? (
-                <div className="relative mb-8 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-surface-sunken">
+          <DetailPageMotion
+            image={
+              product.cover_url ? (
+                <div className="relative aspect-[16/10] w-full bg-surface-sunken">
                   <Image
                     src={product.cover_url}
                     alt={`Imagem de ${product.name}`}
@@ -71,8 +72,10 @@ export default async function MaterialPage({ params }: { params: Promise<{ slug:
                     className="object-cover"
                   />
                 </div>
-              ) : null}
-
+              ) : undefined
+            }
+            content={
+              <>
               {product.description ? (
                 <div className="article-body max-w-prose">
                   {product.description.split('\n\n').map((paragraph) => (
@@ -110,10 +113,10 @@ export default async function MaterialPage({ params }: { params: Promise<{ slug:
                   </ButtonLink>
                 </div>
               ) : null}
-            </div>
-
-            <aside>
-              <Card className="lg:sticky lg:top-28">
+              </>
+            }
+            sidebar={
+            <Card className="lg:sticky lg:top-28">
                 <div className="flex items-baseline gap-2">
                   <span className="font-display text-3xl text-ink">
                     {product.is_free ? 'Gratuito' : formatCurrency(product.price_cents)}
@@ -154,8 +157,8 @@ export default async function MaterialPage({ params }: { params: Promise<{ slug:
                   )}
                 </div>
               </Card>
-            </aside>
-          </div>
+            }
+          />
         </Container>
       </Section>
 

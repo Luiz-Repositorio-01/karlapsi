@@ -2,10 +2,9 @@ import { Brain } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 const DEFAULT_PHOTO = '/images/karla-dias.jpg';
-const DEFAULT_LOGO = '/images/logo-kd.jpg';
 
 /**
- * Retrato na moldura petrol + logo KD.
+ * Retrato na moldura petrol, sem selo sobre a foto.
  * Usa <img> nativo para a foto local sempre aparecer (sem depender do
  * otimizador do Next nem de animação de scroll).
  */
@@ -14,7 +13,6 @@ export function ProfessionalPortrait({
   positioning,
   headline,
   photoUrl,
-  logoUrl,
   registrationLabel,
   registrationValue,
   priority = false,
@@ -24,14 +22,12 @@ export function ProfessionalPortrait({
   positioning?: string;
   headline?: string;
   photoUrl?: string | null;
-  logoUrl?: string | null;
   registrationLabel?: string;
   registrationValue?: string;
   priority?: boolean;
   className?: string;
 }) {
   const photo = photoUrl?.trim() || DEFAULT_PHOTO;
-  const logo = logoUrl?.trim() || DEFAULT_LOGO;
 
   return (
     <div
@@ -74,13 +70,6 @@ export function ProfessionalPortrait({
           </div>
         </div>
       )}
-
-      {logo ? (
-        <div className="absolute left-4 top-4 z-[3] h-[4.25rem] w-[4.25rem] overflow-hidden rounded-full bg-white shadow-lift ring-2 ring-white/90 sm:h-[4.75rem] sm:w-[4.75rem]">
-          {/* eslint-disable-next-line @next/next/no-img-element -- mesmo motivo da foto */}
-          <img src={logo} alt="" width={80} height={80} className="h-full w-full object-cover" />
-        </div>
-      ) : null}
     </div>
   );
 }

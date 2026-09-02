@@ -1,8 +1,8 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Alert, FormField, fieldAria, inputClasses } from '@/components/ui';
-import { SubmitButton } from '@/components/ui/interactive';
+import { Alert, FormField } from '@/components/ui';
+import { PasswordInput, SubmitButton } from '@/components/ui/interactive';
 import { setNewPassword } from '@/app/login/_actions';
 import { IDLE_STATE, type ActionState } from '@/lib/actions/state';
 
@@ -23,14 +23,14 @@ export function NewPasswordForm() {
         hint="Mínimo de 10 caracteres, com maiúscula, minúscula e número"
         error={state.fields?.password}
       >
-        <input
-          {...fieldAria('nova-senha', { hint: true, error: Boolean(state.fields?.password) })}
-          type="password"
+        <PasswordInput
+          id="nova-senha"
           name="password"
           autoComplete="new-password"
-          className={inputClasses}
           required
           minLength={10}
+          hint
+          error={Boolean(state.fields?.password)}
         />
       </FormField>
 
@@ -40,14 +40,13 @@ export function NewPasswordForm() {
         required
         error={state.fields?.confirmPassword}
       >
-        <input
-          {...fieldAria('confirmar-senha', { error: Boolean(state.fields?.confirmPassword) })}
-          type="password"
+        <PasswordInput
+          id="confirmar-senha"
           name="confirmPassword"
           autoComplete="new-password"
-          className={inputClasses}
           required
           minLength={10}
+          error={Boolean(state.fields?.confirmPassword)}
         />
       </FormField>
 

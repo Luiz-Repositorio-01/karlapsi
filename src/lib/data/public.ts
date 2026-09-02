@@ -167,13 +167,52 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 // -----------------------------------------------------------------------------
 // Blog
 // -----------------------------------------------------------------------------
+const BLOG_POST_SELECT = '*, category:blog_categories(*)';
+
+type PublicAuthor = NonNullable<BlogPostWithRelations['author']>;
+
+async function attachPublicAuthors(
+  client: NonNullable<ReturnType<typeof createSupabasePublicClient>>,
+  posts: BlogPostWithRelations[],
+): Promise<BlogPostWithRelations[]> {
+  const authorIds = [...new Set(posts.map((post) => post.author_id).filter(Boolean))] as string[];
+
+  let byId = new Map<string, PublicAuthor>();
+  if (authorIds.length > 0) {
+    const { data: authors } = await client
+      .from('profiles')
+      .select('id, full_name, avatar_url, bio, specialty')
+      .in('id', authorIds)
+      .eq('is_public_author', true)
+      .eq('is_active', true);
+
+    byId = new Map((authors ?? []).map((author) => [author.id, author as PublicAuthor]));
+  }
+
+  const { data: publicAuthorRow } = await client
+    .from('profiles')
+    .select('id, full_name, avatar_url, bio, specialty')
+    .eq('is_public_author', true)
+    .eq('is_active', true)
+    .limit(1)
+    .maybeSingle();
+
+  const publicAuthor = (publicAuthorRow as PublicAuthor | null) ?? null;
+
+  return posts.map((post) => {
+    const matched = post.author_id ? byId.get(post.author_id) : null;
+    const author =
+      matched ??
+      (publicAuthor && (!post.author_id || publicAuthor.id === post.author_id) ? publicAuthor : null);
+    return { ...post, author };
+  });
+}
+
 export async function getPublishedPosts(limit?: number): Promise<BlogPostWithRelations[]> {
   return query(async (client) => {
     let builder = client
       .from('blog_posts')
-      .select(
-        '*, category:blog_categories(*), author:profiles(id, full_name, avatar_url, bio, specialty)',
-      )
+      .select(BLOG_POST_SELECT)
       .eq('status', 'published')
       .lte('published_at', new Date().toISOString())
       .order('published_at', { ascending: false });
@@ -181,7 +220,7 @@ export async function getPublishedPosts(limit?: number): Promise<BlogPostWithRel
 
     const { data, error } = await builder;
     if (error) throw error;
-    return (data ?? []) as BlogPostWithRelations[];
+    return attachPublicAuthors(client, (data ?? []) as BlogPostWithRelations[]);
   }, []);
 }
 
@@ -189,15 +228,16 @@ export async function getPostBySlug(slug: string): Promise<BlogPostWithRelations
   return query(async (client) => {
     const { data, error } = await client
       .from('blog_posts')
-      .select(
-        '*, category:blog_categories(*), author:profiles(id, full_name, avatar_url, bio, specialty)',
-      )
+      .select(BLOG_POST_SELECT)
       .eq('slug', slug)
       .eq('status', 'published')
       .lte('published_at', new Date().toISOString())
       .maybeSingle();
     if (error) throw error;
-    return (data as BlogPostWithRelations | null) ?? null;
+    if (!data) return null;
+
+    const [post] = await attachPublicAuthors(client, [data as BlogPostWithRelations]);
+    return post ?? null;
   }, null);
 }
 

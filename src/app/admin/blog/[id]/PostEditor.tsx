@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Eye, PencilLine } from 'lucide-react';
 import { Alert, Badge, Button, Card, FormField, fieldAria, inputClasses } from '@/components/ui';
 import { ActionForm } from '@/components/admin/forms';
+import { BlogCoverGenerator } from '@/components/admin/BlogCoverGenerator';
 import { cn } from '@/lib/utils/cn';
 import { renderMarkdown } from '@/lib/content/markdown';
 import { estimateReadingMinutes, slugify } from '@/lib/utils/format';
@@ -34,6 +35,9 @@ export function PostEditor({
   const [slug, setSlug] = useState(post?.slug ?? '');
   const [slugTouched, setSlugTouched] = useState(Boolean(post?.slug));
   const [content, setContent] = useState(post?.content ?? '');
+  const [excerpt, setExcerpt] = useState(post?.excerpt ?? '');
+  const [coverUrl, setCoverUrl] = useState(post?.cover_url ?? '');
+  const [coverAlt, setCoverAlt] = useState(post?.cover_alt ?? '');
   const [status, setStatus] = useState(post?.status ?? 'draft');
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? '');
   const [tab, setTab] = useState<'editar' | 'preview'>('editar');
@@ -95,7 +99,8 @@ export function PostEditor({
                 {...fieldAria('post-resumo', { hint: true, error: Boolean(state.fields?.excerpt) })}
                 name="excerpt"
                 rows={2}
-                defaultValue={post?.excerpt ?? ''}
+                value={excerpt}
+                onChange={(event) => setExcerpt(event.target.value)}
                 className={cn(inputClasses, 'resize-y')}
               />
             </FormField>
@@ -291,34 +296,17 @@ export function PostEditor({
 
             <Card>
               <h2 className="font-display text-base text-ink">Imagem de capa</h2>
-              <div className="mt-4 space-y-4">
-                <FormField
-                  label="URL da imagem"
-                  htmlFor="post-capa"
-                  hint="Use uma URL do Supabase Storage (bucket public-assets)"
-                >
-                  <input
-                    {...fieldAria('post-capa', { hint: true })}
-                    type="url"
-                    name="coverUrl"
-                    defaultValue={post?.cover_url ?? ''}
-                    className={inputClasses}
-                  />
-                </FormField>
-
-                <FormField
-                  label="Texto alternativo"
-                  htmlFor="post-capa-alt"
-                  hint="Descreva a imagem para leitores de tela"
-                >
-                  <input
-                    {...fieldAria('post-capa-alt', { hint: true })}
-                    type="text"
-                    name="coverAlt"
-                    defaultValue={post?.cover_alt ?? ''}
-                    className={inputClasses}
-                  />
-                </FormField>
+              <div className="mt-4">
+                <BlogCoverGenerator
+                  title={title}
+                  content={content}
+                  excerpt={excerpt}
+                  slug={slug}
+                  coverUrl={coverUrl}
+                  coverAlt={coverAlt}
+                  onCoverUrlChange={setCoverUrl}
+                  onCoverAltChange={setCoverAlt}
+                />
               </div>
             </Card>
 

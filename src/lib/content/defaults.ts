@@ -280,11 +280,6 @@ export const DEFAULT_SITE_PAGES: Record<string, SitePage> = {
     subtitle: 'Psicóloga e Neuropsicóloga. Especialista em Transtornos do Neurodesenvolvimento.',
     sections: [
       {
-        id: 'apresentacao',
-        heading: 'Apresentação',
-        body: 'Este espaço é dedicado à neuropsicologia: à investigação cuidadosa do funcionamento cognitivo e à tradução desses achados em orientações úteis para a vida cotidiana. A biografia profissional completa é publicada somente quando preenchida no painel administrativo — para que cada informação divulgada seja exatamente a que a profissional deseja comunicar.',
-      },
-      {
         id: 'como-trabalho',
         heading: 'Como o trabalho é conduzido',
         items: [

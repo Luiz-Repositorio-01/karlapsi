@@ -116,7 +116,7 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
 // -----------------------------------------------------------------------------
 const roleSchema = z.object({
   profileId: z.string().uuid(),
-  role: z.enum(['OWNER', 'ADMIN', 'ASSISTANT', 'PROFESSIONAL']),
+  role: z.enum(['OWNER', 'ADMIN', 'ASSISTANT', 'PROFESSIONAL', 'DEVELOPER']),
 });
 
 /**

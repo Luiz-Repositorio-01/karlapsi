@@ -1,14 +1,26 @@
 import { BookOpen } from 'lucide-react';
 import { Alert, ButtonLink, Container, EmptyState, Section } from '@/components/ui';
 import { CTASection, PageHero } from '@/components/site/sections';
-import { InfobookCard } from '@/components/site/cards';
+import { InfobookCardMotion } from '@/components/site/InfobookCardMotion';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { DEFAULT_INFOBOOKS } from '@/lib/content/defaults';
 import { getInfobooks, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { listLegacyLandingSlugs } from '@/lib/legacy';
 
 export const revalidate = 60;
+
+function legacyInfobookTitle(slug: string): string {
+  const known = DEFAULT_INFOBOOKS.find((item) => item.slug === slug);
+  if (known) return known.title;
+  return slug
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
 
 export async function generateMetadata() {
   return buildMetadata({
@@ -23,8 +35,6 @@ export default async function InfobooksPage() {
   const [infobooks, settings] = await Promise.all([getInfobooks(), getSiteSettings()]);
   const legacySlugs = listLegacyLandingSlugs();
 
-  // Módulos originais publicados em /public/legacy que ainda não têm registro
-  // no banco continuam acessíveis — a vitrine os lista sem alterar os arquivos.
   const unregisteredLegacy = legacySlugs.filter(
     (slug) => !infobooks.some((infobook) => infobook.slug === slug),
   );
@@ -40,19 +50,19 @@ export default async function InfobooksPage() {
 
       <Section tone="default">
         <Container>
-            {infobooks.length > 0 ? (
-            <ul className="grid gap-6 lg:grid-cols-2">
-              {infobooks.map((infobook) => (
+          {infobooks.length > 0 ? (
+            <StaggerList className="grid gap-6 md:grid-cols-2" stagger={100}>
+              {infobooks.map((infobook, index) => (
                 <li key={infobook.id}>
-                  <InfobookCard infobook={infobook} featured />
+                  <InfobookCardMotion infobook={infobook} featured={index === 0} />
                 </li>
               ))}
-            </ul>
+            </StaggerList>
           ) : (
             <EmptyState
               icon={<BookOpen aria-hidden="true" className="h-5 w-5" />}
-              title="Nenhum infobook cadastrado ainda"
-              description="Ao cadastrar um infobook no painel administrativo — inclusive apontando para um arquivo já existente — ele aparece nesta vitrine com capa, descrição, preço e botão de acesso."
+              title="Nenhum infobook publicado ainda"
+              description="Novos materiais digitais aparecerão aqui em breve."
               action={
                 <ButtonLink href="/materiais" variant="secondary" size="sm">
                   Ver materiais disponíveis
@@ -62,21 +72,20 @@ export default async function InfobooksPage() {
           )}
 
           {unregisteredLegacy.length > 0 ? (
-            <Alert tone="info" title="Materiais originais disponíveis" className="mt-8">
-              <p>
-                Estes módulos originais estão publicados e acessíveis, mas ainda não têm cadastro no
-                painel (capa, descrição e preço):
-              </p>
+            <MotionBlock delay={120}>
+            <Alert tone="info" title="Materiais complementares" className="mt-8">
+              <p>Estes conteúdos também estão disponíveis para leitura:</p>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {unregisteredLegacy.map((slug) => (
                   <li key={slug}>
                     <ButtonLink href={`/infobooks/${slug}`} variant="secondary" size="sm">
-                      {slug}
+                      {legacyInfobookTitle(slug)}
                     </ButtonLink>
                   </li>
                 ))}
               </ul>
             </Alert>
+            </MotionBlock>
           ) : null}
         </Container>
       </Section>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Check, ExternalLink, ShoppingBag } from 'lucide-react';
 import { Alert, Badge, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { CTASection, PageHero } from '@/components/site/sections';
+import { DetailPageMotion } from '@/components/site/DetailPageMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getLandingPageBySlug, getLandingPages, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -76,10 +77,10 @@ export default async function LandingPageDetail({ params }: { params: Promise<{ 
 
       <Section tone="default">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
-            <div>
-              {page?.cover_url ? (
-                <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-surface-sunken">
+          <DetailPageMotion
+            image={
+              page?.cover_url ? (
+                <div className="relative aspect-[16/9] w-full bg-surface-sunken">
                   <Image
                     src={page.cover_url}
                     alt={`Capa de ${title}`}
@@ -89,8 +90,10 @@ export default async function LandingPageDetail({ params }: { params: Promise<{ 
                     className="object-cover"
                   />
                 </div>
-              ) : null}
-
+              ) : undefined
+            }
+            content={
+              <>
               {page?.description ? (
                 <div className="article-body max-w-prose">
                   {page.description.split('\n\n').map((paragraph) => (
@@ -138,9 +141,9 @@ export default async function LandingPageDetail({ params }: { params: Promise<{ 
                   publicar o arquivo, ele passa a ser exibido aqui automaticamente.
                 </Alert>
               ) : null}
-            </div>
-
-            <aside>
+              </>
+            }
+            sidebar={
               <Card className="lg:sticky lg:top-28">
                 <dl className="space-y-3 text-sm">
                   <div>
@@ -180,8 +183,8 @@ export default async function LandingPageDetail({ params }: { params: Promise<{ 
                   </ButtonLink>
                 ) : null}
               </Card>
-            </aside>
-          </div>
+            }
+          />
         </Container>
       </Section>
 

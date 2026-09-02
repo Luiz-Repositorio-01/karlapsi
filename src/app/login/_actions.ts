@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { env } from '@/lib/env';
 import {
@@ -29,6 +29,23 @@ import type { ActionState } from '@/lib/actions/state';
 async function clientIp(): Promise<string> {
   const headerList = await headers();
   return headerList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'desconhecido';
+}
+
+/** Ajusta duração dos cookies de sessão conforme "Manter conectado". */
+async function applyRememberMePreference(remember: boolean) {
+  const store = await cookies();
+  const maxAge = remember ? 60 * 60 * 24 * 30 : 60 * 60 * 12; // 30 dias ou 12 horas
+
+  for (const cookie of store.getAll()) {
+    if (!cookie.name.includes('auth-token')) continue;
+    store.set(cookie.name, cookie.value, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge,
+    });
+  }
 }
 
 export async function signIn(_prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -78,6 +95,9 @@ export async function signIn(_prev: ActionState, formData: FormData): Promise<Ac
     // desativada — evita enumeração de contas.
     return { status: 'error', message: 'E-mail ou senha incorretos.' };
   }
+
+  const remember = formData.get('remember') === 'on';
+  await applyRememberMePreference(remember);
 
   const redirectTo = String(formData.get('redirectTo') ?? '/admin');
   // Só aceita destino interno, para impedir open redirect.

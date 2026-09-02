@@ -1,7 +1,8 @@
 import { Container, Section } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, FaqSection, PageHero } from '@/components/site/sections';
 import { ServiceCard } from '@/components/site/cards';
+import { StaggerList } from '@/components/motion';
+import { MotionBlock } from '@/components/site/MotionBlock';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getFaqs, getServices, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -36,13 +37,15 @@ export default async function ServicosPage() {
 
       <Section tone="default">
         <Container>
-          <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <Reveal as="li" key={service.id} delay={index * 50}>
-                <ServiceCard service={service} showPrice={settings.booking.show_prices_publicly} />
-              </Reveal>
-            ))}
-          </ul>
+          <MotionBlock>
+            <StaggerList className="grid gap-5 md:grid-cols-2 lg:grid-cols-3" stagger={100}>
+              {services.map((service) => (
+                <li key={service.id}>
+                  <ServiceCard service={service} showPrice={settings.booking.show_prices_publicly} />
+                </li>
+              ))}
+            </StaggerList>
+          </MotionBlock>
         </Container>
       </Section>
 

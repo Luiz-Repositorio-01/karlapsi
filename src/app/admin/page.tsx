@@ -27,15 +27,17 @@ import { integrationStatus } from '@/lib/env';
 
 export default async function AdminDashboard() {
   const session = await requirePermission('dashboard:view');
+  const showClinical = can(session.profile.role, 'agenda:view');
+  const showFinance = can(session.profile.role, 'finance:view');
+
   const [metricsResult, upcomingResult, pendingResult, settings] = await Promise.all([
     getDashboardMetrics(),
-    listUpcomingAppointments(6),
-    listPendingRequests(6),
+    showClinical ? listUpcomingAppointments(6) : Promise.resolve({ data: [] }),
+    showClinical ? listPendingRequests(6) : Promise.resolve({ data: [] }),
     getSiteSettings(),
   ]);
 
   const metrics = metricsResult.data;
-  const showFinance = can(session.profile.role, 'finance:view');
   const timezone = settings.booking.timezone;
   const pendingIntegrations = integrationStatus().filter(
     (item) => item.required && !item.configured,
@@ -45,16 +47,31 @@ export default async function AdminDashboard() {
     <>
       <AdminPageHeader
         title={`Olá, ${session.profile.full_name.split(' ')[0] || 'bem-vinda'}`}
-        description="Visão geral do dia: atendimentos, solicitações pendentes e indicadores da operação."
+        description={
+          showClinical
+            ? 'Visão geral do dia: atendimentos, solicitações pendentes e indicadores da operação.'
+            : 'Visão técnica do site: conteúdo, configurações e integrações — sem dados clínicos ou financeiros.'
+        }
         actions={
-          <>
-            <ButtonLink href="/admin/agenda?novo=1" size="sm">
-              Novo atendimento
-            </ButtonLink>
-            <ButtonLink href="/admin/pacientes?novo=1" variant="secondary" size="sm">
-              Novo paciente
-            </ButtonLink>
-          </>
+          showClinical ? (
+            <>
+              <ButtonLink href="/admin/agenda?novo=1" size="sm">
+                Novo atendimento
+              </ButtonLink>
+              <ButtonLink href="/admin/pacientes?novo=1" variant="secondary" size="sm">
+                Novo paciente
+              </ButtonLink>
+            </>
+          ) : (
+            <>
+              <ButtonLink href="/admin/blog" size="sm">
+                Conteúdo
+              </ButtonLink>
+              <ButtonLink href="/admin/configuracoes" variant="secondary" size="sm">
+                Configurações
+              </ButtonLink>
+            </>
+          )
         }
       />
 
@@ -73,35 +90,70 @@ export default async function AdminDashboard() {
       ) : null}
 
       <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard
-          label="Atendimentos hoje"
-          value={metrics?.appointments_today ?? 0}
-          hint="Confirmados, pagos ou realizados"
-          href="/admin/agenda"
-          icon={<CalendarDays aria-hidden="true" className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Próximos atendimentos"
-          value={metrics?.upcoming_appointments ?? 0}
-          hint="A partir de agora"
-          href="/admin/agenda?visao=lista"
-          icon={<CalendarClock aria-hidden="true" className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Solicitações pendentes"
-          value={metrics?.pending_requests ?? 0}
-          hint="Aguardando confirmação"
-          tone={(metrics?.pending_requests ?? 0) > 0 ? 'attention' : 'neutral'}
-          href="/admin/agenda?status=requested"
-          icon={<AlertCircle aria-hidden="true" className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Pacientes ativos"
-          value={metrics?.active_patients ?? 0}
-          hint="Cadastros não arquivados"
-          href="/admin/pacientes"
-          icon={<Users aria-hidden="true" className="h-4 w-4" />}
-        />
+        {showClinical ? (
+          <>
+            <StatCard
+              label="Atendimentos hoje"
+              value={metrics?.appointments_today ?? 0}
+              hint="Confirmados, pagos ou realizados"
+              href="/admin/agenda"
+              icon={<CalendarDays aria-hidden="true" className="h-4 w-4" />}
+            />
+            <StatCard
+              label="Próximos atendimentos"
+              value={metrics?.upcoming_appointments ?? 0}
+              hint="A partir de agora"
+              href="/admin/agenda?visao=lista"
+              icon={<CalendarClock aria-hidden="true" className="h-4 w-4" />}
+            />
+            <StatCard
+              label="Solicitações pendentes"
+              value={metrics?.pending_requests ?? 0}
+              hint="Aguardando confirmação"
+              tone={(metrics?.pending_requests ?? 0) > 0 ? 'attention' : 'neutral'}
+              href="/admin/agenda?status=requested"
+              icon={<AlertCircle aria-hidden="true" className="h-4 w-4" />}
+            />
+            <StatCard
+              label="Pacientes ativos"
+              value={metrics?.active_patients ?? 0}
+              hint="Cadastros não arquivados"
+              href="/admin/pacientes"
+              icon={<Users aria-hidden="true" className="h-4 w-4" />}
+            />
+          </>
+        ) : (
+          <>
+            <StatCard
+              label="Conteúdos publicados"
+              value={metrics?.published_posts ?? 0}
+              hint="Artigos no ar"
+              href="/admin/blog"
+              icon={<FileText aria-hidden="true" className="h-4 w-4" />}
+            />
+            <StatCard
+              label="Notificações não lidas"
+              value={metrics?.unread_notifications ?? 0}
+              hint="Avisos internos"
+              href="/admin/notificacoes"
+            />
+            <StatCard
+              label="Integrações pendentes"
+              value={pendingIntegrations.length}
+              hint="Variáveis de ambiente"
+              tone={pendingIntegrations.length > 0 ? 'attention' : 'neutral'}
+              href="/admin/configuracoes"
+              icon={<AlertCircle aria-hidden="true" className="h-4 w-4" />}
+            />
+            <StatCard
+              label="Site"
+              value="Online"
+              hint={settings.identity.brand_name}
+              href="/"
+              icon={<CheckCircle2 aria-hidden="true" className="h-4 w-4" />}
+            />
+          </>
+        )}
       </section>
 
       {showFinance ? (
@@ -137,6 +189,7 @@ export default async function AdminDashboard() {
         </section>
       ) : null}
 
+      {showClinical ? (
       <div className="mt-8 grid gap-6 xl:grid-cols-2">
         {/* ------------------------------------------ solicitações pendentes */}
         <section aria-labelledby="solicitacoes-title">
@@ -273,6 +326,7 @@ export default async function AdminDashboard() {
           )}
         </section>
       </div>
+      ) : null}
     </>
   );
 }

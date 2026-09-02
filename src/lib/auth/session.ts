@@ -3,7 +3,7 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { can, type Permission } from '@/lib/auth/rbac';
+import { can, resolveEffectiveRole, type Permission } from '@/lib/auth/rbac';
 import type { Profile } from '@/lib/types';
 
 export interface SessionUser {
@@ -39,7 +39,13 @@ export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
   const typedProfile = profile as Profile;
   if (!typedProfile.is_active) return null;
 
-  return { id: user.id, email: user.email ?? typedProfile.email, profile: typedProfile };
+  const effectiveRole = resolveEffectiveRole(typedProfile, user.user_metadata);
+  const sessionProfile =
+    effectiveRole === typedProfile.role
+      ? typedProfile
+      : { ...typedProfile, role: effectiveRole };
+
+  return { id: user.id, email: user.email ?? typedProfile.email, profile: sessionProfile };
 });
 
 /** Exige sessão válida; caso contrário volta para o login. */

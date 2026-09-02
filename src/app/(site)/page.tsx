@@ -25,8 +25,12 @@ import {
   HighlightGrid,
   StepList,
 } from '@/components/site/sections';
-import { BlogCard, InfobookCard, ServiceCard } from '@/components/site/cards';
-import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
+import { BlogCard, ServiceCard } from '@/components/site/cards';
+import { InfobookCardMotion } from '@/components/site/InfobookCardMotion';
+import { HomeHero } from '@/components/site/motion';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { NeuroAmbient } from '@/components/site/NeuroAmbient';
+import { StaggerList } from '@/components/motion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
   AUDIENCE_ITEMS,
@@ -92,68 +96,29 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ----------------------------------------------------------------- HERO */}
-      <section className="relative overflow-hidden surface-warm" aria-labelledby="hero-title">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(30,67,59,0.07),transparent_55%),radial-gradient(ellipse_at_90%_20%,rgba(196,164,132,0.12),transparent_45%)]"
-        />
-        <Container className="relative py-16 sm:py-20 lg:py-28">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14">
-            <div className="flex max-w-xl flex-col justify-center">
-              <p className="font-display text-display-xl leading-none text-petrol-800">
-                {displayName}
-              </p>
-              <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-petrol-600">
-                {identity.positioning}
-              </p>
-              <h1
-                id="hero-title"
-                className="mt-6 text-display-sm text-ink-soft sm:text-display-md"
-              >
-                {identity.headline}
-              </h1>
-              <p className="mt-5 text-base leading-relaxed text-ink-muted sm:text-lg">
-                {identity.short_bio
-                  ? identity.short_bio.split('\n\n')[0]
-                  : identity.subheadline}
-              </p>
-              <div className="mt-9 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap">
-                <ButtonLink href="/agendamento" size="lg" className="w-full sm:w-auto">
-                  <CalendarCheck aria-hidden="true" className="h-4 w-4" />
-                  Agendar atendimento
-                </ButtonLink>
-                <ButtonLink href="/sobre" variant="secondary" size="lg" className="w-full sm:w-auto">
-                  Conheça meu trabalho
-                </ButtonLink>
-              </div>
-            </div>
-
-            <ProfessionalPortrait
-              name={displayName}
-              positioning={identity.positioning}
-              headline={identity.headline}
-              photoUrl={identity.photo_url}
-              logoUrl={identity.logo_url}
-              registrationLabel={identity.professional_registration_label}
-              registrationValue={identity.professional_registration_value}
-              priority
-              className="w-full max-w-none"
-            />
-          </div>
-        </Container>
-      </section>
+      <HomeHero
+        displayName={displayName}
+        positioning={identity.positioning}
+        headline={identity.headline}
+        shortBio={identity.short_bio}
+        subheadline={identity.subheadline}
+        photoUrl={identity.photo_url}
+        registrationLabel={identity.professional_registration_label}
+        registrationValue={identity.professional_registration_value}
+      />
 
       {/* -------------------------------------------------- APRESENTAÇÃO */}
       <Section tone="default" ariaLabelledBy="apresentacao-title">
         <Container>
-          <SectionHeader
-            id="apresentacao-title"
-            eyebrow="Conheça"
-            title={`Conheça ${displayName}`}
-            description={identity.positioning}
-          />
-          <div className="article-body mt-8 max-w-3xl">
+          <MotionBlock>
+            <SectionHeader
+              id="apresentacao-title"
+              eyebrow="Conheça"
+              title={`Conheça ${displayName}`}
+              description={identity.positioning}
+            />
+          </MotionBlock>
+          <MotionBlock delay={120} className="article-body mt-8 max-w-3xl">
             <p>
               O foco deste consultório é a <strong>neuropsicologia</strong> e o cuidado com
               demandas relacionadas ao <strong>neurodesenvolvimento</strong>: entender como cada
@@ -172,20 +137,24 @@ export default async function HomePage() {
               </p>
             )}
             <p>
-              <Link href="/sobre">Conhecer a proposta de trabalho</Link>
+              <Link href="/sobre" className="link-premium">
+                Conhecer a proposta de trabalho
+              </Link>
             </p>
-          </div>
+          </MotionBlock>
         </Container>
       </Section>
 
       {/* --------------------------------------------- NEUROPSICOLOGIA */}
-      <Section tone="deep" id="neuropsicologia" ariaLabelledBy="neuro-title">
-        <Container>
-          <p className="eyebrow text-petrol-200">Eixo principal</p>
-          <h2 id="neuro-title" className="mt-3 max-w-3xl text-display-md text-white">
-            Neuropsicologia
-          </h2>
-          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-petrol-100">
+      <Section tone="deep" id="neuropsicologia" ariaLabelledBy="neuro-title" className="relative overflow-hidden">
+        <NeuroAmbient />
+        <Container className="relative">
+          <MotionBlock variant="blur-up">
+            <p className="eyebrow text-petrol-200">Eixo principal</p>
+            <h2 id="neuro-title" className="mt-3 max-w-3xl text-display-md text-white">
+              Neuropsicologia
+            </h2>
+            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-petrol-100">
             {neuroPage?.subtitle ??
               'A área que estuda a relação entre funcionamento cerebral, cognição e comportamento. A avaliação descreve como a pessoa pensa, aprende e se organiza — e entrega isso em linguagem que a família consegue usar.'}
           </p>
@@ -198,9 +167,11 @@ export default async function HomePage() {
               Ver a avaliação em detalhe
             </ButtonLink>
           </div>
+          </MotionBlock>
 
+          <MotionBlock delay={160}>
           <h3 className="mt-12 font-display text-xl text-white">Etapas da avaliação</h3>
-          <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerList className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={90}>
             {evaluationSteps.map((item, index) => {
               const title = item.title.replace(/^\d+\.\s*/, '');
               const step = String(index + 1).padStart(2, '0');
@@ -225,20 +196,23 @@ export default async function HomePage() {
                 </li>
               );
             })}
-          </ol>
+          </StaggerList>
+          </MotionBlock>
         </Container>
       </Section>
 
       {/* -------------------------------- NEURODESENVOLVIMENTO */}
       <Section tone="muted" ariaLabelledBy="neurodev-title">
         <Container>
-          <SectionHeader
-            id="neurodev-title"
-            eyebrow="Área de atuação"
-            title="Transtornos do Neurodesenvolvimento"
-            description="Conteúdo informativo — não substitui avaliação profissional."
-          />
-          <div className="article-body mt-8 max-w-3xl">
+          <MotionBlock>
+            <SectionHeader
+              id="neurodev-title"
+              eyebrow="Área de atuação"
+              title="Transtornos do Neurodesenvolvimento"
+              description="Conteúdo informativo — não substitui avaliação profissional."
+            />
+          </MotionBlock>
+          <MotionBlock delay={120} className="article-body mt-8 max-w-3xl">
             <p>
               A avaliação neuropsicológica pode contribuir para compreender demandas relacionadas a
               atenção, aprendizagem, linguagem, funções executivas, comportamento e desenvolvimento
@@ -252,18 +226,20 @@ export default async function HomePage() {
             <p>
               <Link href="/neuropsicologia">Saiba mais sobre neuropsicologia</Link>
             </p>
-          </div>
+          </MotionBlock>
         </Container>
       </Section>
 
       {/* ------------------------------------------------------------ PARA QUEM */}
       <Section tone="default" ariaLabelledBy="para-quem-title">
         <Container>
-          <SectionHeader
-            id="para-quem-title"
-            eyebrow="Indicações"
-            title="Para quem a avaliação pode ser indicada"
-          />
+          <MotionBlock>
+            <SectionHeader
+              id="para-quem-title"
+              eyebrow="Indicações"
+              title="Para quem a avaliação pode ser indicada"
+            />
+          </MotionBlock>
           <div className="mt-10">
             <HighlightGrid items={AUDIENCE_ITEMS} columns={2} />
           </div>
@@ -273,14 +249,16 @@ export default async function HomePage() {
       {/* ------------------------------------------------ ONLINE / PRESENCIAL */}
       <Section tone="sunken" ariaLabelledBy="modalidade-title">
         <Container>
-          <SectionHeader
-            id="modalidade-title"
-            eyebrow="Atendimento"
-            title="Online e presencial"
-            description="O formato é definido na entrevista inicial, conforme o objetivo e a viabilidade."
-            align="center"
-          />
-          <ul className="mt-12 grid gap-5 md:grid-cols-2">
+          <MotionBlock>
+            <SectionHeader
+              id="modalidade-title"
+              eyebrow="Atendimento"
+              title="Online e presencial"
+              description="O formato é definido na entrevista inicial, conforme o objetivo e a viabilidade."
+              align="center"
+            />
+          </MotionBlock>
+          <StaggerList className="mt-12 grid gap-5 md:grid-cols-2" stagger={100}>
             {MODALITY_ITEMS.map((item) => (
               <li key={item.title}>
                 <Card className="h-full">
@@ -297,19 +275,20 @@ export default async function HomePage() {
                 </Card>
               </li>
             ))}
-          </ul>
-          <div className="mt-8 flex justify-center">
+          </StaggerList>
+          <MotionBlock delay={160} className="mt-8 flex justify-center">
             <ButtonLink href="/atendimentos" variant="ghost">
               Ver detalhes dos atendimentos
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </ButtonLink>
-          </div>
+          </MotionBlock>
         </Container>
       </Section>
 
       {/* ------------------------------------------------------------ SERVIÇOS */}
       <Section tone="default" id="servicos" ariaLabelledBy="servicos-title">
         <Container>
+          <MotionBlock>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeader
               id="servicos-title"
@@ -322,27 +301,30 @@ export default async function HomePage() {
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </ButtonLink>
           </div>
+          </MotionBlock>
 
-          <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <StaggerList className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3" stagger={100}>
             {homeServices.map((service) => (
               <li key={service.id}>
                 <ServiceCard service={service} showPrice={booking.show_prices_publicly} />
               </li>
             ))}
-          </ul>
+          </StaggerList>
         </Container>
       </Section>
 
       {/* -------------------------------------------------------- COMO FUNCIONA */}
       <Section tone="muted" ariaLabelledBy="como-funciona-title">
         <Container>
-          <SectionHeader
-            id="como-funciona-title"
-            eyebrow="Como funciona"
-            title="Do primeiro contato à devolutiva"
-            description="Quatro passos, sem surpresa em nenhum deles."
-            align="center"
-          />
+          <MotionBlock>
+            <SectionHeader
+              id="como-funciona-title"
+              eyebrow="Como funciona"
+              title="Do primeiro contato à devolutiva"
+              description="Quatro passos, sem surpresa em nenhum deles."
+              align="center"
+            />
+          </MotionBlock>
           <div className="mt-12">
             <StepList steps={HOW_IT_WORKS_STEPS} />
           </div>
@@ -352,65 +334,26 @@ export default async function HomePage() {
       {/* -------------------------------------------------------- DIFERENCIAIS */}
       <Section tone="default" ariaLabelledBy="diferenciais-title">
         <Container>
-          <SectionHeader
-            id="diferenciais-title"
-            eyebrow="Diferenciais"
-            title="O que caracteriza o processo"
-            description="Compromissos de método e de comunicação — não promessas de resultado."
-            align="center"
-          />
+          <MotionBlock>
+            <SectionHeader
+              id="diferenciais-title"
+              eyebrow="Diferenciais"
+              title="O que caracteriza o processo"
+              description="Compromissos de método e de comunicação — não promessas de resultado."
+              align="center"
+            />
+          </MotionBlock>
           <div className="mt-12">
             <HighlightGrid items={PROCESS_HIGHLIGHTS} />
           </div>
         </Container>
       </Section>
 
-      {/* ------------------------------------------------------------- BLOG */}
-      {features.enable_blog ? (
-        <Section tone="muted" ariaLabelledBy="conteudos-title">
-          <Container>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeader
-                id="conteudos-title"
-                eyebrow="Conteúdos"
-                title="Central de conteúdo"
-                description="Artigos para entender o processo antes de decidir."
-              />
-              <ButtonLink href="/blog" variant="ghost">
-                Ver o blog
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </ButtonLink>
-            </div>
-
-            {posts.length > 0 ? (
-              <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {posts.map((post) => (
-                  <li key={post.id}>
-                    <BlogCard post={post} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyState
-                className="mt-10"
-                icon={<FileText aria-hidden="true" className="h-5 w-5" />}
-                title="Os primeiros artigos estão sendo preparados"
-                description="Assim que publicados no painel, eles aparecem aqui automaticamente."
-                action={
-                  <ButtonLink href="/neuropsicologia" variant="secondary" size="sm">
-                    Ler sobre neuropsicologia
-                  </ButtonLink>
-                }
-              />
-            )}
-          </Container>
-        </Section>
-      ) : null}
-
       {/* ------------------------------------------------------------ INFOBOOKS */}
       {features.enable_store ? (
         <Section tone="warm" ariaLabelledBy="infobooks-title">
           <Container>
+            <MotionBlock>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeader
                 id="infobooks-title"
@@ -423,24 +366,69 @@ export default async function HomePage() {
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </ButtonLink>
             </div>
+            </MotionBlock>
 
             {infobooks.length > 0 ? (
-              <ul className="mt-10 grid gap-6 lg:grid-cols-2">
-                {infobooks.slice(0, 2).map((infobook) => (
+              <StaggerList className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={110}>
+                {infobooks.slice(0, 3).map((infobook, index) => (
                   <li key={infobook.id}>
-                    <InfobookCard infobook={infobook} featured />
+                    <InfobookCardMotion infobook={infobook} featured={index === 0 && infobooks.length > 1} />
                   </li>
                 ))}
-              </ul>
+              </StaggerList>
             ) : (
               <EmptyState
                 className="mt-10"
                 icon={<BookOpen aria-hidden="true" className="h-5 w-5" />}
-                title="Infobooks em preparação"
-                description="Quando as capas e arquivos reais forem publicados no painel, eles aparecem nesta vitrine."
+                title="Infobooks em breve"
+                description="Novos materiais digitais serão publicados nesta vitrine em breve."
                 action={
                   <ButtonLink href="/infobooks" variant="secondary" size="sm">
                     Ver a área de Infobooks
+                  </ButtonLink>
+                }
+              />
+            )}
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* ------------------------------------------------------------- BLOG */}
+      {features.enable_blog ? (
+        <Section tone="muted" ariaLabelledBy="conteudos-title">
+          <Container>
+            <MotionBlock>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeader
+                id="conteudos-title"
+                eyebrow="Conteúdos"
+                title="Central de conteúdo"
+                description="Artigos para entender o processo antes de decidir."
+              />
+              <ButtonLink href="/blog" variant="ghost">
+                Ver o blog
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </ButtonLink>
+            </div>
+            </MotionBlock>
+
+            {posts.length > 0 ? (
+              <StaggerList className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={90}>
+                {posts.map((post) => (
+                  <li key={post.id}>
+                    <BlogCard post={post} authorName={identity.professional_name} />
+                  </li>
+                ))}
+              </StaggerList>
+            ) : (
+              <EmptyState
+                className="mt-10"
+                icon={<FileText aria-hidden="true" className="h-5 w-5" />}
+                title="Os primeiros artigos estão sendo preparados"
+                description="Novos textos serão publicados em breve."
+                action={
+                  <ButtonLink href="/neuropsicologia" variant="secondary" size="sm">
+                    Ler sobre neuropsicologia
                   </ButtonLink>
                 }
               />
@@ -453,20 +441,22 @@ export default async function HomePage() {
       {features.enable_store && hotmartProducts.length > 0 ? (
         <Section tone="muted" ariaLabelledBy="produtos-title">
           <Container>
+            <MotionBlock>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeader
                 id="produtos-title"
                 eyebrow="Conteúdos e materiais"
                 title="Produtos digitais"
-                description="Acesso direto aos materiais disponíveis na Hotmart. Nome, preço e descrição completos são editáveis no painel."
+                description="Acesso direto aos materiais disponíveis na Hotmart."
               />
               <ButtonLink href="/materiais" variant="ghost">
                 Ver materiais
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </ButtonLink>
             </div>
+            </MotionBlock>
 
-            <ul className="mt-10 grid gap-5 md:grid-cols-2">
+            <StaggerList className="mt-10 grid gap-5 md:grid-cols-2" stagger={90}>
               {hotmartProducts.map((product) => (
                 <li key={product.id}>
                   <Card className="flex h-full flex-col">
@@ -495,7 +485,7 @@ export default async function HomePage() {
                   </Card>
                 </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}
@@ -504,13 +494,15 @@ export default async function HomePage() {
       {features.show_testimonials && testimonials.length > 0 ? (
         <Section tone="default" ariaLabelledBy="depoimentos-title">
           <Container>
-            <SectionHeader
-              id="depoimentos-title"
-              eyebrow="Depoimentos"
-              title="O que dizem sobre o processo"
-              align="center"
-            />
-            <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <MotionBlock>
+              <SectionHeader
+                id="depoimentos-title"
+                eyebrow="Depoimentos"
+                title="O que dizem sobre o processo"
+                align="center"
+              />
+            </MotionBlock>
+            <StaggerList className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3" stagger={90}>
               {testimonials.map((testimonial) => (
                 <li key={testimonial.id}>
                   <Card className="h-full">
@@ -529,7 +521,7 @@ export default async function HomePage() {
                   </Card>
                 </li>
               ))}
-            </ul>
+            </StaggerList>
           </Container>
         </Section>
       ) : null}
@@ -554,15 +546,18 @@ export default async function HomePage() {
       {/* ------------------------------------------------------------ CONTATO */}
       <Section tone="default" id="contato" ariaLabelledBy="contato-title">
         <Container>
-          <SectionHeader
-            id="contato-title"
-            eyebrow="Contato"
-            title="Fale diretamente"
-            description="Prefere conversar antes de agendar? Escolha o canal mais confortável."
-          />
+          <MotionBlock>
+            <SectionHeader
+              id="contato-title"
+              eyebrow="Contato"
+              title="Fale diretamente"
+              description="Prefere conversar antes de agendar? Escolha o canal mais confortável."
+            />
+          </MotionBlock>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          <StaggerList className="mt-10 grid gap-4 sm:grid-cols-2" stagger={80}>
               {contact.whatsapp ? (
+                <li>
                 <Card interactive className="flex flex-col">
                   <MessageCircle aria-hidden="true" className="h-5 w-5 text-petrol-600" />
                   <p className="mt-4 font-display text-lg text-ink">WhatsApp</p>
@@ -579,8 +574,10 @@ export default async function HomePage() {
                     Abrir conversa
                   </ButtonLink>
                 </Card>
+                </li>
               ) : null}
 
+              <li>
               <Card interactive className="flex flex-col">
                 <CalendarCheck aria-hidden="true" className="h-5 w-5 text-petrol-600" />
                 <p className="mt-4 font-display text-lg text-ink">Agendamento online</p>
@@ -591,8 +588,10 @@ export default async function HomePage() {
                   Agendar atendimento
                 </ButtonLink>
               </Card>
+              </li>
 
-              <Card interactive className="flex flex-col sm:col-span-2">
+              <li className="sm:col-span-2">
+              <Card interactive className="flex flex-col">
                 <FileText aria-hidden="true" className="h-5 w-5 text-petrol-600" />
                 <p className="mt-4 font-display text-lg text-ink">Formulário de contato</p>
                 <p className="mt-1.5 text-sm text-ink-muted">
@@ -603,7 +602,8 @@ export default async function HomePage() {
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </ButtonLink>
               </Card>
-            </div>
+              </li>
+          </StaggerList>
         </Container>
       </Section>
 

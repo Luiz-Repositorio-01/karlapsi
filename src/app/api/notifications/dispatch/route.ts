@@ -11,19 +11,27 @@ import { isSupabaseAdminConfigured } from '@/lib/env';
  * Projetado para ser chamado por um agendador (cron do provedor de hospedagem,
  * Supabase Scheduled Function ou similar), não por navegador.
  *
- * Segurança: exige o header `x-cron-secret` igual a `CRON_SECRET`. Sem essa
- * variável configurada, o endpoint responde 503 e não processa nada — assim não
- * existe endpoint aberto capaz de disparar e-mails.
+ * Segurança: exige `x-cron-secret` ou `Authorization: Bearer` igual a
+ * `CRON_SECRET`. Sem essa variável, o endpoint responde 503 e não processa
+ * nada — assim não existe endpoint aberto capaz de disparar e-mails.
  */
 export const dynamic = 'force-dynamic';
 
 const MAX_BATCH = 25;
 
+function providedSecret(request: Request): string {
+  const header = request.headers.get('x-cron-secret');
+  if (header) return header;
+  const auth = request.headers.get('authorization');
+  if (auth?.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
+  return '';
+}
+
 function isAuthorized(request: Request): boolean {
   const expected = process.env.CRON_SECRET;
   if (!expected) return false;
 
-  const provided = request.headers.get('x-cron-secret') ?? '';
+  const provided = providedSecret(request);
   const expectedBuffer = Buffer.from(expected);
   const providedBuffer = Buffer.from(provided);
 
@@ -31,7 +39,7 @@ function isAuthorized(request: Request): boolean {
   return timingSafeEqual(expectedBuffer, providedBuffer);
 }
 
-export async function POST(request: Request) {
+async function handleDispatch(request: Request) {
   if (!process.env.CRON_SECRET) {
     return NextResponse.json(
       {
@@ -114,4 +122,13 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ ok: true, processed: queue.length, sent, failed, skipped });
+}
+
+/** O cron da Vercel chama GET com Authorization: Bearer CRON_SECRET. */
+export async function GET(request: Request) {
+  return handleDispatch(request);
+}
+
+export async function POST(request: Request) {
+  return handleDispatch(request);
 }

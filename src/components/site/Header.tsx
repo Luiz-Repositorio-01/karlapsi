@@ -52,20 +52,22 @@ export function Header({
     <header
       id="navegacao"
       className={cn(
-        'sticky top-0 z-40 transition-shadow duration-300',
-        scrolled ? 'shadow-[0_1px_0_rgba(20,33,30,0.08)]' : '',
+        'sticky top-0 z-40 transition-[box-shadow,background-color,backdrop-filter] duration-500 ease-soft',
+        scrolled
+          ? 'shadow-[0_1px_0_rgba(20,33,30,0.08)]'
+          : '',
       )}
     >
       <div
         className={cn(
-          'transition-colors duration-300',
-          scrolled ? 'bg-surface/95 backdrop-blur-md' : 'bg-surface-muted/80 backdrop-blur-sm',
+          'transition-[background-color,backdrop-filter] duration-500 ease-soft',
+          scrolled ? 'border-b border-petrol-100/80 bg-surface/96 backdrop-blur-lg' : 'bg-surface-muted/80 backdrop-blur-sm',
         )}
       >
         <div className="mx-auto flex h-[var(--header-height)] max-w-container items-center justify-between gap-4 px-5 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="group flex items-center gap-3"
+            className="group motion-header-brand flex items-center gap-3"
             aria-label={`${brandName} — página inicial`}
           >
             {logoUrl ? (
@@ -90,15 +92,15 @@ export function Header({
 
           <nav aria-label="Navegação principal" className="hidden lg:block">
             <ul className="flex items-center gap-1">
-              {PRIMARY_NAV.map((item) => {
+              {PRIMARY_NAV.map((item, index) => {
                 if (!isNavGroup(item)) {
                   return (
-                    <li key={item.href}>
+                    <li key={item.href} style={{ '--nav-index': index } as React.CSSProperties}>
                       <Link
                         href={item.href}
                         aria-current={isActive(item.href) ? 'page' : undefined}
                         className={cn(
-                          'rounded-full px-3.5 py-2 text-sm font-medium transition-colors',
+                          'motion-header-link rounded-full px-3.5 py-2 text-sm font-medium transition-colors',
                           isActive(item.href)
                             ? 'bg-petrol-50 text-petrol-800'
                             : 'text-ink-soft hover:bg-petrol-50/70 hover:text-petrol-800',

@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { ButtonLink, Card, Container, Section, SectionHeader } from '@/components/ui';
 import { Accordion } from '@/components/ui/interactive';
+import { PageHeroMotion } from '@/components/site/PageHeroMotion';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { cn } from '@/lib/utils/cn';
 import { whatsappLink } from '@/lib/utils/format';
 import type { Faq, SitePage, SitePageSection } from '@/lib/types';
@@ -21,7 +24,7 @@ export function PageHero({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="surface-warm border-b border-sand-200/70">
+    <PageHeroMotion>
       <Container className="pb-14 pt-12 sm:pb-16 sm:pt-16">
         {breadcrumb && breadcrumb.length > 0 ? (
           <nav aria-label="Você está aqui" className="mb-6">
@@ -58,7 +61,7 @@ export function PageHero({
         ) : null}
         {actions ? <div className="mt-8 flex flex-wrap gap-3">{actions}</div> : null}
       </Container>
-    </header>
+    </PageHeroMotion>
   );
 }
 
@@ -69,7 +72,9 @@ export function SitePageSections({ page }: { page: SitePage }) {
       {page.sections.map((section, index) => (
         <Section key={section.id} tone={index % 2 === 1 ? 'muted' : 'default'} id={section.id}>
           <Container>
-            <SitePageSectionBlock section={section} />
+            <MotionBlock delay={index > 0 ? 60 : 0}>
+              <SitePageSectionBlock section={section} />
+            </MotionBlock>
           </Container>
         </Section>
       ))}
@@ -77,20 +82,36 @@ export function SitePageSections({ page }: { page: SitePage }) {
   );
 }
 
-export function SitePageSectionBlock({ section }: { section: SitePageSection }) {
+export function SitePageSectionBlock({
+  section,
+  compact = false,
+}: {
+  section: SitePageSection;
+  /** Em colunas estreitas (ex.: página Sobre), usa grade de 2 colunas no máximo. */
+  compact?: boolean;
+}) {
   return (
     <div>
       <h2 className="text-display-sm">{section.heading}</h2>
       {section.body ? (
-        <p className="article-body mt-4 max-w-3xl">{section.body}</p>
+        <div className="article-body mt-4 max-w-3xl space-y-4">
+          {section.body.split('\n\n').map((paragraph) => (
+            <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+          ))}
+        </div>
       ) : null}
 
       {section.items && section.items.length > 0 ? (
-        <ul
+        <StaggerList
           className={cn(
-            'mt-8 grid gap-4',
-            section.items.length > 2 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2',
+            'mt-6 grid gap-4',
+            compact
+              ? 'sm:grid-cols-2'
+              : section.items.length > 2
+                ? 'sm:grid-cols-2 lg:grid-cols-3'
+                : 'sm:grid-cols-2',
           )}
+          stagger={80}
         >
           {section.items.map((item) => (
             <li key={item.title}>
@@ -102,7 +123,7 @@ export function SitePageSectionBlock({ section }: { section: SitePageSection }) 
               </Card>
             </li>
           ))}
-        </ul>
+        </StaggerList>
       ) : null}
     </div>
   );
@@ -127,19 +148,23 @@ export function FaqSection({
     <Section tone={tone} id={id} ariaLabelledBy={`${id}-title`}>
       <Container>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
-          <SectionHeader
-            id={`${id}-title`}
-            eyebrow="Dúvidas"
-            title={title}
-            description={description}
-          />
-          <Accordion
-            items={faqs.map((faq) => ({
-              id: faq.id,
-              question: faq.question,
-              answer: faq.answer,
-            }))}
-          />
+          <MotionBlock>
+            <SectionHeader
+              id={`${id}-title`}
+              eyebrow="Dúvidas"
+              title={title}
+              description={description}
+            />
+          </MotionBlock>
+          <MotionBlock delay={120}>
+            <Accordion
+              items={faqs.map((faq) => ({
+                id: faq.id,
+                question: faq.question,
+                answer: faq.answer,
+              }))}
+            />
+          </MotionBlock>
         </div>
       </Container>
     </Section>
@@ -166,7 +191,8 @@ export function CTASection({
   return (
     <Section tone="deep" ariaLabelledBy="cta-title">
       <Container>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,20rem)]">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,20rem)]">
+          <MotionBlock variant="slide-right">
           <div>
             <h2 id="cta-title" className="text-display-md text-white">
               {title}
@@ -175,7 +201,9 @@ export function CTASection({
               <p className="mt-4 max-w-xl text-lg leading-relaxed text-petrol-100">{description}</p>
             ) : null}
           </div>
+          </MotionBlock>
 
+          <MotionBlock variant="slide-left" delay={120}>
           <div className="flex flex-col gap-3">
             <ButtonLink href={primaryHref} variant="onDark" size="lg" className="w-full">
               {primaryLabel}
@@ -201,6 +229,7 @@ export function CTASection({
               </ButtonLink>
             ) : null}
           </div>
+          </MotionBlock>
         </div>
       </Container>
     </Section>
@@ -216,11 +245,12 @@ export function HighlightGrid({
   columns?: 2 | 3;
 }) {
   return (
-    <ul
+    <StaggerList
       className={cn(
         'grid gap-5',
         columns === 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2',
       )}
+      stagger={90}
     >
       {items.map((item) => (
         <li key={item.title}>
@@ -230,7 +260,7 @@ export function HighlightGrid({
           </Card>
         </li>
       ))}
-    </ul>
+    </StaggerList>
   );
 }
 
@@ -240,7 +270,11 @@ export function StepList({
   steps: { step: string; title: string; description: string }[];
 }) {
   return (
-    <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <StaggerList
+      as="ol"
+      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+      stagger={100}
+    >
       {steps.map((item) => (
         <li key={item.step}>
           <div className="relative h-full rounded-2xl bg-surface p-6 ring-1 ring-petrol-100">
@@ -250,6 +284,6 @@ export function StepList({
           </div>
         </li>
       ))}
-    </ol>
+    </StaggerList>
   );
 }

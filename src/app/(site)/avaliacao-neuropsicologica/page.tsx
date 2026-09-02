@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { ButtonLink, Container, Section, SectionHeader } from '@/components/ui';
 import { CTASection, FaqSection, PageHero, SitePageSections, StepList } from '@/components/site/sections';
+import { MotionBlock } from '@/components/site/MotionBlock';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getFaqs, getServiceBySlug, getSitePage, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema, faqSchema, serviceSchema } from '@/lib/seo/jsonld';
@@ -54,12 +55,14 @@ export default async function AvaliacaoPage() {
 
       <Section tone="sunken">
         <Container>
-          <SectionHeader
-            eyebrow="Percurso"
-            title="Do agendamento à devolutiva"
-            description="O que acontece em cada momento do processo."
-            align="center"
-          />
+          <MotionBlock>
+            <SectionHeader
+              eyebrow="Percurso"
+              title="Do agendamento à devolutiva"
+              description="O que acontece em cada momento do processo."
+              align="center"
+            />
+          </MotionBlock>
           <div className="mt-12">
             <StepList steps={HOW_IT_WORKS_STEPS} />
           </div>

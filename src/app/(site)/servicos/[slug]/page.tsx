@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { Clock, Info } from 'lucide-react';
 import { Alert, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { CTASection, PageHero } from '@/components/site/sections';
+import { ServicoDetailMotion } from '@/components/site/ServicoDetailMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getServiceBySlug, getServices, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema, serviceSchema } from '@/lib/seo/jsonld';
@@ -66,24 +68,38 @@ export default async function ServicoPage({ params }: { params: Promise<{ slug: 
 
       <Section tone="default">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
-            <div className="article-body max-w-prose">
-              {service.description ? (
-                service.description.split('\n\n').map((paragraph) => (
-                  <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                ))
-              ) : (
-                <p>{service.summary}</p>
-              )}
+          <ServicoDetailMotion
+            image={
+              service.image_url ? (
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                  <Image
+                    src={service.image_url}
+                    alt={service.name}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 42rem"
+                    className="object-cover"
+                  />
+                </div>
+              ) : undefined
+            }
+            content={
+              <div className="article-body max-w-prose">
+                {service.description ? (
+                  service.description.split('\n\n').map((paragraph) => (
+                    <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                  ))
+                ) : (
+                  <p>{service.summary}</p>
+                )}
 
-              {service.preparation_notes ? (
-                <Alert tone="info" title="Como se preparar" className="mt-8">
-                  {service.preparation_notes}
-                </Alert>
-              ) : null}
-            </div>
-
-            <aside>
+                {service.preparation_notes ? (
+                  <Alert tone="info" title="Como se preparar" className="mt-8">
+                    {service.preparation_notes}
+                  </Alert>
+                ) : null}
+              </div>
+            }
+            sidebar={
               <Card className="lg:sticky lg:top-28">
                 <dl className="space-y-4 text-sm">
                   <div className="flex items-center gap-2">
@@ -134,8 +150,8 @@ export default async function ServicoPage({ params }: { params: Promise<{ slug: 
                   confirmação após a checagem da agenda.
                 </p>
               </Card>
-            </aside>
-          </div>
+            }
+          />
         </Container>
       </Section>
 

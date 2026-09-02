@@ -92,8 +92,8 @@ describe('formatDuration', () => {
 
 describe('formatAge', () => {
   it('calcula a idade considerando o aniversário do ano', () => {
-    expect(formatAge('2015-04-10', new Date('2026-04-09'))).toBe('10 anos');
-    expect(formatAge('2015-04-10', new Date('2026-04-10'))).toBe('11 anos');
+    expect(formatAge('2015-04-10', new Date(2026, 3, 9))).toBe('10 anos');
+    expect(formatAge('2015-04-10', new Date(2026, 3, 10))).toBe('11 anos');
   });
 
   it('devolve vazio sem data de nascimento', () => {

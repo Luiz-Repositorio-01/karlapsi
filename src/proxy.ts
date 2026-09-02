@@ -77,10 +77,10 @@ export default async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Roda em navegações de página, ignorando assets estáticos e os infobooks
+     * Roda em navegações de página, ignorando assets estáticos, APIs e os infobooks
      * públicos em /legacy. O editor PDF Online é a exceção: exige sessão.
      */
-    '/((?!_next/static|_next/image|legacy/|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|pdf)$).*)',
+    '/((?!_next/static|_next/image|api/|legacy/|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|pdf)$).*)',
     '/legacy/pdf-online/:path*',
   ],
 };

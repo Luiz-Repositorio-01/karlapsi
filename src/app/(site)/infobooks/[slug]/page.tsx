@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { BookOpen, Download, ExternalLink, ShoppingBag } from 'lucide-react';
 import { Alert, Badge, ButtonLink, Card, Container, Section } from '@/components/ui';
 import { CTASection, PageHero } from '@/components/site/sections';
+import { DetailPageMotion } from '@/components/site/DetailPageMotion';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getInfobookBySlug, getInfobooks, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema } from '@/lib/seo/jsonld';
@@ -100,8 +101,9 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
 
       <Section tone="default">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
-            <div>
+          <DetailPageMotion
+            content={
+              <>
               {legacyEntry ? (
                 <>
                   <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -135,9 +137,9 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
                   o conteúdo completo.
                 </Alert>
               )}
-            </div>
-
-            <aside>
+              </>
+            }
+            sidebar={
               <Card className="lg:sticky lg:top-28">
                 {infobook?.cover_url ? (
                   <div className="relative mb-5 aspect-[4/5] w-full overflow-hidden rounded-xl bg-surface-sunken">
@@ -188,8 +190,8 @@ export default async function InfobookPage({ params }: { params: Promise<{ slug:
                   </ButtonLink>
                 ) : null}
               </Card>
-            </aside>
-          </div>
+            }
+          />
         </Container>
       </Section>
 

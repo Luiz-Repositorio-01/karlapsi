@@ -1,14 +1,25 @@
 import { notFound } from 'next/navigation';
-import { Alert, ButtonLink, Card, Container, Section } from '@/components/ui';
-import { CTASection, PageHero, SitePageSections } from '@/components/site/sections';
+import { ButtonLink, Card, Container, Section } from '@/components/ui';
+import { CTASection, PageHero, SitePageSectionBlock } from '@/components/site/sections';
 import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
+import { SobreMotionLayout } from '@/components/site/SobreMotionLayout';
+import { MotionBlock } from '@/components/site/MotionBlock';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSitePage, getSiteSettings } from '@/lib/data/public';
 import { breadcrumbSchema, personSchema } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { parseSpecializations } from '@/lib/settings/readiness';
+import type { SitePageSection } from '@/lib/types';
 
 export const revalidate = 300;
+
+/** Texto padrão do painel — não deve aparecer no site quando já há biografia real. */
+function isPlaceholderPresentation(section: SitePageSection) {
+  return (
+    section.id === 'apresentacao' ||
+    (section.heading === 'Apresentação' && section.body?.includes('painel administrativo'))
+  );
+}
 
 export async function generateMetadata() {
   const page = await getSitePage('sobre');
@@ -21,16 +32,14 @@ export async function generateMetadata() {
 
 export default async function SobrePage() {
   const [page, settings] = await Promise.all([getSitePage('sobre'), getSiteSettings()]);
+
   if (!page) notFound();
 
   const { identity, contact } = settings;
   const hasRegistration = Boolean(identity.professional_registration_value);
   const specializations = parseSpecializations(identity.specializations);
-  const hasProfessionalCopy =
-    Boolean(identity.short_bio) ||
-    Boolean(identity.formation) ||
-    specializations.length > 0 ||
-    hasRegistration;
+  const extraSections = page.sections.filter((section) => !isPlaceholderPresentation(section));
+  const hasBio = Boolean(identity.short_bio || identity.formation);
 
   return (
     <>
@@ -43,8 +52,9 @@ export default async function SobrePage() {
 
       <Section tone="default">
         <Container>
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
-              <div>
+          <SobreMotionLayout
+            sidebar={
+              <div className="lg:sticky lg:top-28">
                 <ProfessionalPortrait
                   name={identity.professional_name}
                   positioning={identity.positioning}
@@ -53,17 +63,19 @@ export default async function SobrePage() {
                 />
 
                 <Card className="mt-5">
-                  <dl className="space-y-3 text-sm">
+                  <dl className="space-y-4 text-sm">
                     <div>
                       <dt className="text-xs uppercase tracking-wide text-ink-faint">Atuação</dt>
-                      <dd className="mt-0.5 font-medium text-ink">{identity.positioning}</dd>
+                      <dd className="mt-1 font-medium leading-relaxed text-ink">
+                        {identity.positioning}
+                      </dd>
                     </div>
                     {hasRegistration ? (
                       <div>
                         <dt className="text-xs uppercase tracking-wide text-ink-faint">
                           {identity.professional_registration_label || 'Registro profissional'}
                         </dt>
-                        <dd className="mt-0.5 font-medium text-ink">
+                        <dd className="mt-1 font-medium text-ink">
                           {identity.professional_registration_value}
                         </dd>
                       </div>
@@ -73,8 +85,8 @@ export default async function SobrePage() {
                         <dt className="text-xs uppercase tracking-wide text-ink-faint">
                           Especializações
                         </dt>
-                        <dd className="mt-0.5">
-                          <ul className="space-y-1 font-medium text-ink">
+                        <dd className="mt-1">
+                          <ul className="space-y-1.5 font-medium leading-relaxed text-ink">
                             {specializations.map((item) => (
                               <li key={item}>{item}</li>
                             ))}
@@ -86,52 +98,75 @@ export default async function SobrePage() {
                       <dt className="text-xs uppercase tracking-wide text-ink-faint">
                         Modalidades
                       </dt>
-                      <dd className="mt-0.5 font-medium text-ink">{contact.service_area}</dd>
+                      <dd className="mt-1 font-medium text-ink">{contact.service_area}</dd>
                     </div>
                   </dl>
                 </Card>
-              </div>
 
-              <div>
-                {hasProfessionalCopy ? (
-                  <div className="article-body max-w-prose space-y-6">
+                <div className="mt-5 hidden flex-col gap-3 lg:flex">
+                  <ButtonLink href="/agendamento" className="w-full">
+                    Agendar atendimento
+                  </ButtonLink>
+                  <ButtonLink href="/neuropsicologia" variant="secondary" className="w-full">
+                    Conhecer a Neuropsicologia
+                  </ButtonLink>
+                </div>
+              </div>
+            }
+            main={
+              <>
+                {hasBio ? (
+                  <div className="article-body max-w-none space-y-8">
                     {identity.short_bio
                       ? identity.short_bio.split('\n\n').map((paragraph) => (
-                          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                          <p key={paragraph.slice(0, 32)} className="text-base leading-relaxed">
+                            {paragraph}
+                          </p>
                         ))
                       : null}
+
                     {identity.formation ? (
                       <div>
-                        <h2 className="font-display text-xl text-ink">Formação</h2>
-                        <div className="mt-3 space-y-3">
+                        <h2 className="font-display text-2xl text-ink">Formação</h2>
+                        <div className="mt-4 space-y-4">
                           {identity.formation.split('\n\n').map((paragraph) => (
-                            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                            <p key={paragraph.slice(0, 32)} className="text-base leading-relaxed">
+                              {paragraph}
+                            </p>
                           ))}
                         </div>
                       </div>
                     ) : null}
                   </div>
-                ) : (
-                  <Alert tone="info" title="Apresentação profissional a ser preenchida">
-                    O texto de apresentação, a formação, as especializações e os registros
-                    profissionais são cadastrados pela própria profissional em{' '}
-                    <strong>Configurações</strong> no painel administrativo. Nada é publicado aqui
-                    sem essa confirmação — o site não presume nem gera informação profissional.
-                  </Alert>
-                )}
+                ) : page.subtitle ? (
+                  <p className="text-base leading-relaxed text-ink-muted">{page.subtitle}</p>
+                ) : null}
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                {extraSections.map((section, index) => (
+                  <MotionBlock
+                    key={section.id}
+                    delay={index * 80}
+                    className={
+                      index > 0 || hasBio || page.subtitle
+                        ? 'border-t border-petrol-100/80 pt-10'
+                        : undefined
+                    }
+                  >
+                    <SitePageSectionBlock section={section} compact />
+                  </MotionBlock>
+                ))}
+
+                <div className="flex flex-wrap gap-3 border-t border-petrol-100/80 pt-10 lg:hidden">
                   <ButtonLink href="/agendamento">Agendar atendimento</ButtonLink>
                   <ButtonLink href="/neuropsicologia" variant="secondary">
                     Conhecer a Neuropsicologia
                   </ButtonLink>
                 </div>
-              </div>
-            </div>
+              </>
+            }
+          />
         </Container>
       </Section>
-
-      <SitePageSections page={page} />
 
       <CTASection
         title="Vamos conversar sobre o seu caso"

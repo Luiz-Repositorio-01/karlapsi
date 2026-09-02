@@ -1,7 +1,8 @@
 import { FileText } from 'lucide-react';
 import { Alert, ButtonLink, Container, EmptyState, Section } from '@/components/ui';
-import { Reveal } from '@/components/ui/interactive';
 import { CTASection, PageHero } from '@/components/site/sections';
+import { MotionBlock } from '@/components/site/MotionBlock';
+import { StaggerList } from '@/components/motion';
 import { LandingPageCard } from '@/components/site/cards';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getLandingPages, getSiteSettings } from '@/lib/data/public';
@@ -40,41 +41,45 @@ export default async function LandingPagesPage() {
       <Section tone="default">
         <Container>
           {pages.length > 0 ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {pages.map((page, index) => (
-                <Reveal as="li" key={page.id} delay={index * 50}>
+            <StaggerList className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={90}>
+              {pages.map((page) => (
+                <li key={page.id}>
                   <LandingPageCard page={page} />
-                </Reveal>
+                </li>
               ))}
-            </ul>
+            </StaggerList>
           ) : (
-            <EmptyState
-              icon={<FileText aria-hidden="true" className="h-5 w-5" />}
-              title="Nenhuma landing page cadastrada ainda"
-              description="Cadastre no painel apontando para a página original (campo Caminho legado) para exibi-la aqui com capa, benefícios e CTA — sem alterar o arquivo original."
-              action={
-                <ButtonLink href="/materiais" variant="secondary" size="sm">
-                  Ver materiais
-                </ButtonLink>
-              }
-            />
+            <MotionBlock>
+              <EmptyState
+                icon={<FileText aria-hidden="true" className="h-5 w-5" />}
+                title="Nenhuma landing page cadastrada ainda"
+                description="Cadastre no painel apontando para a página original (campo Caminho legado) para exibi-la aqui com capa, benefícios e CTA — sem alterar o arquivo original."
+                action={
+                  <ButtonLink href="/materiais" variant="secondary" size="sm">
+                    Ver materiais
+                  </ButtonLink>
+                }
+              />
+            </MotionBlock>
           )}
 
           {unregisteredLegacy.length > 0 ? (
-            <Alert tone="info" title="Páginas originais publicadas" className="mt-8">
-              <p>
-                Estas páginas originais estão acessíveis e ainda não têm cadastro na vitrine:
-              </p>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {unregisteredLegacy.map((slug) => (
-                  <li key={slug}>
-                    <ButtonLink href={`/landing-pages/${slug}`} variant="secondary" size="sm">
-                      {slug}
-                    </ButtonLink>
-                  </li>
-                ))}
-              </ul>
-            </Alert>
+            <MotionBlock delay={120}>
+              <Alert tone="info" title="Páginas originais publicadas" className="mt-8">
+                <p>
+                  Estas páginas originais estão acessíveis e ainda não têm cadastro na vitrine:
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {unregisteredLegacy.map((slug) => (
+                    <li key={slug}>
+                      <ButtonLink href={`/landing-pages/${slug}`} variant="secondary" size="sm">
+                        {slug}
+                      </ButtonLink>
+                    </li>
+                  ))}
+                </ul>
+              </Alert>
+            </MotionBlock>
           ) : null}
         </Container>
       </Section>

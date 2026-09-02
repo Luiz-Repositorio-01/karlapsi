@@ -10,7 +10,7 @@ import { ROLE_DESCRIPTIONS, ROLE_LABELS } from '@/lib/auth/rbac';
 import { formatDateTime } from '@/lib/utils/format';
 import type { UserRole } from '@/lib/types';
 
-const ROLES: UserRole[] = ['OWNER', 'ADMIN', 'PROFESSIONAL', 'ASSISTANT'];
+const ROLES: UserRole[] = ['OWNER', 'ADMIN', 'DEVELOPER', 'PROFESSIONAL', 'ASSISTANT'];
 
 export default async function UsuariosPage() {
   const session = await requirePermission('users:manage', '/admin/usuarios');

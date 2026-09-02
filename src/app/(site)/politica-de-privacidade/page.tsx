@@ -1,5 +1,6 @@
 import { Container, Section } from '@/components/ui';
 import { PageHero } from '@/components/site/sections';
+import { LegalPageMotion } from '@/components/site/LegalPageMotion';
 import { DataSubjectRequestForm } from '@/components/site/DataSubjectRequestForm';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getSiteSettings } from '@/lib/data/public';
@@ -33,7 +34,8 @@ export default async function PoliticaPage() {
 
       <Section tone="default">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
+          <LegalPageMotion
+            content={
             <div className="article-body max-w-prose">
               <h2>1. Quem é o controlador dos dados</h2>
               <p>
@@ -170,7 +172,8 @@ export default async function PoliticaPage() {
                 consulta periódica.
               </p>
             </div>
-
+            }
+            aside={
             <aside className="space-y-4">
               <DataSubjectRequestForm />
               <p className="px-1 text-xs leading-relaxed text-ink-faint">
@@ -178,7 +181,8 @@ export default async function PoliticaPage() {
                 que deseja exercer.
               </p>
             </aside>
-          </div>
+            }
+          />
         </Container>
       </Section>
 
