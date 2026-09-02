@@ -49,23 +49,25 @@ export function saveA11yPrefs(prefs: A11yPrefs) {
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.add('motion-ready');
+    root.classList.add('motion-ready', 'motion-active');
     applyA11yPrefs(readA11yPrefs());
 
-    const frame = window.requestAnimationFrame(() => {
-      root.classList.add('motion-active');
-    });
-
-    // Fallback: se animações/observers falharem, garante conteúdo visível.
+    // Só força visibilidade em itens presos na viewport — não mata animações ao rolar.
     const fallback = window.setTimeout(() => {
-      root.classList.add('motion-fallback');
-      document.querySelectorAll('.motion-reveal, .motion-hero-item, .motion-text-part').forEach((el) => {
-        el.classList.add('motion-visible');
-      });
-    }, 1800);
+      const viewportBottom = window.innerHeight;
+      document
+        .querySelectorAll(
+          '.motion-reveal:not(.motion-visible), .motion-hero-item:not(.motion-visible), .motion-text-part:not(.motion-visible)',
+        )
+        .forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < viewportBottom && rect.bottom > 0) {
+            el.classList.add('motion-visible');
+          }
+        });
+    }, 2800);
 
     return () => {
-      window.cancelAnimationFrame(frame);
       window.clearTimeout(fallback);
     };
   }, []);

@@ -51,10 +51,10 @@ export default async function InfobooksPage() {
       <Section tone="default">
         <Container>
           {infobooks.length > 0 ? (
-            <StaggerList className="grid gap-6 md:grid-cols-2" stagger={100}>
-              {infobooks.map((infobook, index) => (
-                <li key={infobook.id}>
-                  <InfobookCardMotion infobook={infobook} featured={index === 0} />
+            <StaggerList className="grid items-stretch gap-6 md:grid-cols-2" stagger={100}>
+              {infobooks.map((infobook) => (
+                <li key={infobook.id} className="h-full">
+                  <InfobookCardMotion infobook={infobook} />
                 </li>
               ))}
             </StaggerList>

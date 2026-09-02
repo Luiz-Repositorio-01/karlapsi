@@ -4,16 +4,10 @@ import { TiltCard } from '@/components/motion';
 import type { Infobook } from '@/lib/types';
 import { InfobookCard } from './cards';
 
-export function InfobookCardMotion({
-  infobook,
-  featured = false,
-}: {
-  infobook: Infobook;
-  featured?: boolean;
-}) {
+export function InfobookCardMotion({ infobook }: { infobook: Infobook }) {
   return (
-    <TiltCard>
-      <InfobookCard infobook={infobook} featured={featured} />
+    <TiltCard className="h-full">
+      <InfobookCard infobook={infobook} />
     </TiltCard>
   );
 }

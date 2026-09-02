@@ -127,10 +127,10 @@ export default async function PublicacoesPage() {
                 </ButtonLink>
               </div>
             </MotionBlock>
-            <StaggerList className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={100}>
-              {infobooks.slice(0, 4).map((infobook, index) => (
-                <li key={infobook.id}>
-                  <InfobookCardMotion infobook={infobook} featured={index === 0} />
+            <StaggerList className="mt-8 grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={100}>
+              {infobooks.slice(0, 4).map((infobook) => (
+                <li key={infobook.id} className="h-full">
+                  <InfobookCardMotion infobook={infobook} />
                 </li>
               ))}
             </StaggerList>

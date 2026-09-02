@@ -59,7 +59,29 @@ export function useIsMobile(): boolean {
   return mobile;
 }
 
-/** Observer compartilhado — um callback por elemento, sem duplicar observers. */
+function scheduleReveal(callback: () => void) {
+  const run = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(callback);
+    });
+  };
+
+  if (document.documentElement.classList.contains('motion-active')) {
+    run();
+    return;
+  }
+
+  const observer = new MutationObserver(() => {
+    if (!document.documentElement.classList.contains('motion-active')) return;
+    observer.disconnect();
+    run();
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  window.setTimeout(() => {
+    observer.disconnect();
+    run();
+  }, 120);
+}
 const observerCallbacks = new WeakMap<Element, () => void>();
 let sharedObserver: IntersectionObserver | null = null;
 
@@ -98,11 +120,11 @@ export function useInViewOnce<T extends HTMLElement>(
     const rect = el.getBoundingClientRect();
     const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
     if (inView) {
-      setVisible(true);
+      scheduleReveal(() => setVisible(true));
       return;
     }
 
-    const show = () => setVisible(true);
+    const show = () => scheduleReveal(() => setVisible(true));
     observerCallbacks.set(el, show);
     getSharedObserver().observe(el);
 

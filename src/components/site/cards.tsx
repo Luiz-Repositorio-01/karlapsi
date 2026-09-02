@@ -153,9 +153,9 @@ export function BlogCard({
 
 export function InfobookCard({
   infobook,
-  featured = false,
 }: {
   infobook: Infobook;
+  /** @deprecated Todos os cards usam o mesmo layout vertical. */
   featured?: boolean;
 }) {
   const isFree = infobook.is_free;
@@ -164,31 +164,15 @@ export function InfobookCard({
   const actionLabel = isFree ? 'Baixar' : 'Comprar';
 
   return (
-    <Card
-      as="article"
-      interactive
-      className={cn(
-        'flex h-full overflow-hidden p-0',
-        featured ? 'flex-col md:flex-row' : 'flex-col',
-      )}
-    >
-      <div
-        className={cn(
-          'relative w-full shrink-0 overflow-hidden bg-surface-sunken',
-          featured ? 'aspect-[4/5] md:w-[42%] md:max-w-sm' : 'aspect-[4/5]',
-        )}
-      >
+    <Card as="article" interactive className="flex h-full flex-col overflow-hidden p-0">
+      <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-surface-sunken">
         {infobook.cover_url ? (
           <Image
             src={infobook.cover_url}
             alt={`Capa do infobook ${infobook.title}`}
             fill
-            sizes={
-              featured
-                ? '(max-width: 768px) 100vw, 50vw'
-                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw'
-            }
-            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 ease-soft group-hover:scale-[1.02]"
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-sand-100">
@@ -200,41 +184,35 @@ export function InfobookCard({
         </div>
       </div>
 
-      <div className={cn('flex flex-1 flex-col', featured ? 'p-6 sm:p-8' : 'p-5')}>
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
         {infobook.category ? (
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-petrol-600">
             {infobook.category}
           </p>
         ) : null}
-        <h3 className={cn('mt-2 font-display text-ink', featured ? 'text-2xl sm:text-3xl' : 'text-lg')}>
-          {infobook.title}
-        </h3>
+        <h3 className="mt-2 line-clamp-2 font-display text-lg text-ink">{infobook.title}</h3>
         {infobook.description ? (
-          <p
-            className={cn(
-              'mt-3 flex-1 leading-relaxed text-ink-muted',
-              featured ? 'text-base' : 'text-sm',
-            )}
-          >
+          <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-ink-muted">
             {infobook.description}
           </p>
-        ) : null}
+        ) : (
+          <div className="flex-1" />
+        )}
 
-        <p
-          className={cn('mt-5 font-display text-petrol-800', featured ? 'text-3xl' : 'text-xl')}
-          aria-label={`Preço: ${priceLabel}`}
-        >
-          {priceLabel}
-        </p>
-        {infobook.pages ? (
-          <p className="mt-1 text-xs text-ink-faint">{infobook.pages} páginas</p>
-        ) : null}
+        <div className="mt-5">
+          <p className="font-display text-xl text-petrol-800" aria-label={`Preço: ${priceLabel}`}>
+            {priceLabel}
+          </p>
+          {infobook.pages ? (
+            <p className="mt-1 text-xs text-ink-faint">{infobook.pages} páginas</p>
+          ) : null}
+        </div>
 
-        <div className={cn('mt-6', featured ? '' : 'mt-4')}>
+        <div className="mt-5">
           <ButtonLink
             href={`/infobooks/${infobook.slug}`}
-            size={featured ? 'lg' : 'sm'}
-            className={featured ? 'w-full sm:w-auto' : 'w-full'}
+            size="sm"
+            className="w-full"
             aria-label={`${actionLabel} ${infobook.title}`}
           >
             {isFree ? (

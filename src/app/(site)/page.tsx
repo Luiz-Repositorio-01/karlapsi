@@ -369,10 +369,10 @@ export default async function HomePage() {
             </MotionBlock>
 
             {infobooks.length > 0 ? (
-              <StaggerList className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={110}>
-                {infobooks.slice(0, 3).map((infobook, index) => (
-                  <li key={infobook.id}>
-                    <InfobookCardMotion infobook={infobook} featured={index === 0 && infobooks.length > 1} />
+              <StaggerList className="mt-10 grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={110}>
+                {infobooks.slice(0, 3).map((infobook) => (
+                  <li key={infobook.id} className="h-full">
+                    <InfobookCardMotion infobook={infobook} />
                   </li>
                 ))}
               </StaggerList>

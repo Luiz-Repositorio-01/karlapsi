@@ -79,7 +79,7 @@ export function StaggerList({
         const el = child as ReactElement<{ className?: string; style?: React.CSSProperties }>;
         return cloneElement(el, {
           className: cn(
-            'motion-reveal motion-reveal--fade-up',
+            'motion-reveal motion-reveal--fade-up h-full',
             visible && 'motion-visible',
             itemClassName,
             el.props.className,
