@@ -38,12 +38,14 @@ export function insertPageNumber(intoHeaderFooter = 'footer') {
   const role = intoHeaderFooter === 'header' ? 'header' : 'footer';
   const pages = Array.from(editor.pagesEl.querySelectorAll('.page'));
   if (!pages.length) return;
-  // Numera todas as páginas de uma vez (sem duplicar onde já existe).
-  pages.forEach((pg, i) => {
-    const holder = pg.querySelector('.page__' + role);
-    if (!holder || holder.querySelector('.page__num')) return;
-    holder.appendChild(el('span', { class: 'page__num', contenteditable: 'false', 'data-num': i + 1 }));
-  });
+  const holders = pages.map((pg) => pg.querySelector('.page__' + role)).filter(Boolean);
+  // Opcional: se já há número nesse local, o botão remove de todas as páginas;
+  // senão, adiciona em todas (sem duplicar).
+  if (holders.some((h) => h.querySelector('.page__num'))) {
+    holders.forEach((h) => h.querySelectorAll('.page__num').forEach((n) => n.remove()));
+  } else {
+    holders.forEach((h) => h.appendChild(el('span', { class: 'page__num', contenteditable: 'false' })));
+  }
   editor._refreshPageNumbers();
   editor.emit('changed', {});
   afterEdit();

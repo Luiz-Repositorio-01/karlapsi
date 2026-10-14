@@ -79,7 +79,7 @@
 }
 
 /* Número de página gerado */
-.page__num::after { content: attr(data-num); }
+/* o número é texto real (preenchido por _refreshPageNumbers), para sempre imprimir */
 
 /* Conteúdo semântico dentro da folha */
 .page__content h1 { font-size: 2em; margin: 0.5em 0 0.3em; font-weight: 700; }
