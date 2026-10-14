@@ -80,6 +80,11 @@
 
 /* Número de página gerado */
 /* o número é texto real (preenchido por _refreshPageNumbers), para sempre imprimir */
+/* Posição segura: impressoras não imprimem nos ~5 mm da borda, então o número
+   fica à direita e recuado da borda (rodapé: acima; cabeçalho: abaixo). */
+.page__num { font-size: 10pt; color: #333; }
+.page__footer .page__num { margin-left: auto; margin-right: 8mm; margin-bottom: 7mm; }
+.page__header .page__num { margin-left: auto; margin-right: 8mm; margin-top: 7mm; }
 
 /* Conteúdo semântico dentro da folha */
 .page__content h1 { font-size: 2em; margin: 0.5em 0 0.3em; font-weight: 700; }
