@@ -21,6 +21,14 @@
   }
   .page:last-child { break-after: auto; page-break-after: auto; }
   .page__margin-guide { display: none !important; }
+
+  /* Textos-guia ("Cabeçalho…", "Rodapé…", "Comece a digitar…") são só de edição:
+     nunca devem sair no papel/PDF. */
+  .page__header::before,
+  .page__footer::before,
+  .page__content::before { content: none !important; display: none !important; }
+  .page__header:empty,
+  .page__footer:empty { visibility: hidden !important; }
   .floatimg { outline: none !important; }
 
   /* @page é reescrito dinamicamente por print.js conforme tamanho/orientação */

@@ -35,12 +35,16 @@ export function insertDate(withTime = false) {
 
 /** Insere um campo de número de página (atualiza sozinho ao paginar). */
 export function insertPageNumber(intoHeaderFooter = 'footer') {
-  const page = editor.activePageEl();
-  if (!page) return;
-  const holder = page.querySelector('.page__' + (intoHeaderFooter === 'header' ? 'header' : 'footer'));
-  if (!holder) return;
-  const span = el('span', { class: 'page__num', contenteditable: 'false', 'data-num': (page.dataset.index | 0) + 1 });
-  holder.appendChild(span);
+  const role = intoHeaderFooter === 'header' ? 'header' : 'footer';
+  const pages = Array.from(editor.pagesEl.querySelectorAll('.page'));
+  if (!pages.length) return;
+  // Numera todas as páginas de uma vez (sem duplicar onde já existe).
+  pages.forEach((pg, i) => {
+    const holder = pg.querySelector('.page__' + role);
+    if (!holder || holder.querySelector('.page__num')) return;
+    holder.appendChild(el('span', { class: 'page__num', contenteditable: 'false', 'data-num': i + 1 }));
+  });
+  editor._refreshPageNumbers();
   editor.emit('changed', {});
   afterEdit();
 }
