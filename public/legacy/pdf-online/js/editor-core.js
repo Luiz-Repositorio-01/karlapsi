@@ -254,7 +254,7 @@ class Editor extends EventTarget {
   _refreshPageNumbers() {
     this.pagesEl.querySelectorAll('.page').forEach((pg, i) => {
       pg.dataset.index = i;
-      pg.querySelectorAll('.page__num').forEach((n) => { n.dataset.num = i + 1; });
+      pg.querySelectorAll('.page__num').forEach((n) => { n.dataset.num = i + 1; n.textContent = String(i + 1); });
     });
   }
 
