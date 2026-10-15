@@ -151,14 +151,14 @@ async function boot() {
 
 function initEditorEvents() {
   const refresh = () => { updateStats(); refreshUndoRedo(); };
-  editor.addEventListener('changed', refresh);
+  editor.addEventListener('changed', () => { refresh(); syncToggleButtons(); });
   editor.addEventListener('doc-loaded', () => {
     $('#docTitle').value = editor.doc.title;
     refresh();
     refreshThumbs();
     UI.renderProps($('#props'));
   });
-  editor.addEventListener('pages-rendered', () => { refreshThumbs(); applyZoom(); });
+  editor.addEventListener('pages-rendered', () => { refreshThumbs(); applyZoom(); syncToggleButtons(); });
   editor.addEventListener('selection-changed', syncToolbarState);
   editor.addEventListener('dirty', () => { updateStats(); });
   editor.history.onChange = (u, r) => {
@@ -205,7 +205,7 @@ function bindRibbon() {
     if (!btn || btn.disabled) return;
     const cmd = btn.dataset.cmd;
     const fn = ACTIONS[cmd];
-    if (fn) { e.preventDefault(); fn(); UI.closeMenu(); }
+    if (fn) { e.preventDefault(); fn(); UI.closeMenu(); syncToggleButtons(); }
   });
   // Preserva a seleção do texto ao clicar em botões do ribbon.
   $$('.ribbon, .table-toolbar').forEach((r) => r.addEventListener('mousedown', (e) => {
@@ -245,6 +245,25 @@ function bindSelectsAndColors() {
   $('#colText')?.addEventListener('input', (e) => F.textColor(e.target.value));
   $('#colHi')?.addEventListener('input', (e) => F.highlight(e.target.value));
   $('#selLine')?.addEventListener('change', (e) => F.lineHeight(e.target.value));
+}
+
+/** Marca (is-active + aria-pressed) os botões liga/desliga que estão ligados. */
+function syncToggleButtons() {
+  const app = document.querySelector('.app');
+  const has = (role) => !!document.querySelector(`.page__${role} .page__num`);
+  const state = {
+    pageNumFooter: has('footer'),
+    pageNumHeader: has('header'),
+    toggleRuler: app.classList.contains('show-ruler'),
+    toggleMargins: !app.classList.contains('hide-margins'),
+    toggleHF: !app.classList.contains('hide-hf'),
+  };
+  Object.entries(state).forEach(([cmd, on]) => {
+    $$(`[data-cmd="${cmd}"]`).forEach((b) => {
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  });
 }
 
 function syncToolbarState() {
