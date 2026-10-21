@@ -77,7 +77,19 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             <p>
               © {year} {identity.professional_name || 'Karla Dias'}. Todos os direitos reservados.
             </p>
-            <p>Produzido por Auryx Media — Soluções Tecnológicas</p>
+            <p>
+              Produzido por{' '}
+              <a
+                href="https://auryxmedia.com.br/"
+                target="_blank"
+                rel="noopener author"
+                title="Auryx Media — criação de sites e sistemas"
+                className="underline decoration-white/25 underline-offset-2 transition-colors hover:text-white hover:decoration-white/60"
+              >
+                Auryx Media
+              </a>
+              <span className="sr-only"> (abre em nova aba)</span> — Soluções Tecnológicas
+            </p>
           </div>
           <p className="mt-2 max-w-3xl text-[0.6875rem] leading-relaxed text-petrol-400">
             As informações deste site têm caráter informativo e não substituem consulta, diagnóstico
