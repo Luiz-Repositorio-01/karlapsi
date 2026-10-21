@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Instagram, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, Instagram, MessageCircle } from 'lucide-react';
 import { Container } from '@/components/ui';
 import { FOOTER_NAV } from '@/components/site/navigation';
 import { formatPhone, whatsappLink } from '@/lib/utils/format';
@@ -78,17 +78,19 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               © {year} {identity.professional_name || 'Karla Dias'}. Todos os direitos reservados.
             </p>
             <p>
-              Produzido por{' '}
               <a
                 href="https://auryxmedia.com.br/"
                 target="_blank"
                 rel="noopener author"
                 title="Auryx Media — criação de sites e sistemas"
-                className="underline decoration-white/25 underline-offset-2 transition-colors hover:text-white hover:decoration-white/60"
+                className="inline-flex items-center gap-1 py-1 text-petrol-200 underline decoration-white/40 underline-offset-2 transition-colors hover:text-white hover:decoration-white focus-visible:text-white"
               >
-                Auryx Media
+                <span>
+                  Produzido por <span className="font-medium text-white/90">Auryx Media</span> — Soluções Tecnológicas
+                </span>
+                <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                <span className="sr-only"> (abre em nova aba)</span>
               </a>
-              <span className="sr-only"> (abre em nova aba)</span> — Soluções Tecnológicas
             </p>
           </div>
           <p className="mt-2 max-w-3xl text-[0.6875rem] leading-relaxed text-petrol-400">
