@@ -26,6 +26,7 @@ import {
   StepList,
 } from '@/components/site/sections';
 import { BlogCard, InfobookCard, ServiceCard } from '@/components/site/cards';
+import { FreeMaterialPopup } from '@/components/site/FreeMaterialPopup';
 import { ProfessionalPortrait } from '@/components/site/ProfessionalPortrait';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
@@ -92,6 +93,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <FreeMaterialPopup />
       {/* ----------------------------------------------------------------- HERO */}
       <section className="relative overflow-hidden surface-warm" aria-labelledby="hero-title">
         <div
