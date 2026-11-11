@@ -83,6 +83,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/downloads/mapa-do-desenvolvimento-infantil.pdf',
+        headers: [
+          {
+            key: 'Content-Disposition',
+            value: 'attachment; filename="Mapa-do-Desenvolvimento-Infantil-Karla-Dias.pdf"',
+          },
+          { key: 'Cache-Control', value: 'public, max-age=3600' },
+        ],
+      },
+      {
         source: '/legacy/pdf-online/:path*',
         headers: [
           { key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' },
